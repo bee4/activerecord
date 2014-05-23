@@ -43,7 +43,7 @@ class Visit extends AbstractDocument {
 	 * Set visit IP address
 	 * @param String $ip
 	 */
-	public function setIP( $ip ) {
+	public function setIp( $ip ) {
 		$this->data->ip = $ip;
 	}
 
@@ -51,7 +51,7 @@ class Visit extends AbstractDocument {
 	 * IP property accessor
 	 * @return String
 	 */
-	public function getIP() {
+	public function getIp() {
 		return $this->data->ip;
 	}
 
@@ -172,8 +172,9 @@ class Visit extends AbstractDocument {
 	 * @return String
 	 */
 	public function getChecksum() {
-		if( !isset($this->parent) || !isset($this->data->ip) || !isset($this->date) )
+		if( !isset($this->parent) || !isset($this->data->ip) || !isset($this->date) ) {
 			throw new \Exception('parent, ip and date must be set before build Visit checkum string...');
+		}
 
 		if( !isset($this->data->checksum) ) {
 			$this->data->checksum = sha1(
