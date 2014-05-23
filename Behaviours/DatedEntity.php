@@ -16,16 +16,26 @@ namespace BeeBot\Entity\Behaviours;
  * @package BeeBot\Entity\Behaviours
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
  */
-interface DatedEntity {
+trait DatedEntity {
 	/**
-	 * Date property setter
-	 * @param \DateTime $date Date details to be used
+	 * Document creation date
+	 * @var \DateTime
 	 */
-	public function setDate( \DateTime $date );
+	protected $date;
 
 	/**
-	 * Retrieve date property
-	 * @return \DateTime
+	 * Set creation date
+	 * @see \BeeBot\Entity\Behaviours\DatedEntity::getDate() DatedEntity::setDate()
 	 */
-	public function getDate();
+	public function setDate( \DateTime $date ) {
+		$this->date = $date;
+	}
+
+	/**
+	 * Get creation date
+	 * @see \BeeBot\Entity\Behaviours\DatedEntity::getDate() DatedEntity::getDate()
+	 */
+	public function getDate() {
+		return $this->date;
+	}
 }

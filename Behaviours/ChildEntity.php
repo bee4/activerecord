@@ -18,16 +18,26 @@ use BeeBot\Entity\Entity;
  * @package BeeBot\Entity\Behaviours
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
  */
-interface ChildEntity {
+trait ChildEntity {
+	/**
+	 * Parent UID
+	 * @var String
+	 */
+	protected $parent;
+
 	/**
 	 * Parent property setter
 	 * @param Entity $oParent Parent entity to be used
 	 */
-	public function setParent( Entity $oParent );
+	public function setParent( Entity $oParent ) {
+		$this->parent = $oParent->getUID();
+	}
 
 	/**
 	 * Retrieve parent property
 	 * @return Mixed depends on the parent implementation
 	 */
-	public function getParent();
+	public function getParent() {
+		return $this->parent;
+	}
 }

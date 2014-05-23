@@ -25,7 +25,9 @@ use Bee4\Http\Client;
  * Define basic elasticsearch document
  * @package BeeBot\Entity\ElasticSearch
  */
-abstract class AbstractDocument extends Entity implements ChildEntity, DatedEntity, \JsonSerializable {
+abstract class AbstractDocument extends Entity implements \JsonSerializable {
+	use DatedEntity, ChildEntity;
+
 	/**
 	 * ElasticSearch index name came from XML configuration
 	 * @var String
@@ -41,18 +43,6 @@ abstract class AbstractDocument extends Entity implements ChildEntity, DatedEnti
 	protected static $ws;
 
 	/**
-	 * Parent UID
-	 * @var String
-	 */
-	protected $parent;
-
-	/**
-	 * Document creation date
-	 * @var \DateTime
-	 */
-	protected $date;
-
-	/**
 	 * Object data
 	 * @var \stdClass
 	 */
@@ -63,42 +53,9 @@ abstract class AbstractDocument extends Entity implements ChildEntity, DatedEnti
 	 */
 	public function __construct() {
 		$this->data = new \stdClass();
-		$this->date = new \DateTime();
-		$this->parent = null;
+		$this->setDate(new \DateTime);
 
 		parent::__construct();
-	}
-
-	/**
-	 * Set parent entity
-	 * @see \BeeBot\Entity\Behaviours\ChildEntity::setParent() ChildEntity::setParent()
-	 */
-	public function setParent( Entity $oParent ) {
-		$this->parent = $oParent->getUID();
-	}
-
-	/**
-	 * Get parent UID
-	 * @see \BeeBot\Entity\Behaviours\ChildEntity::getParent() ChildEntity::getParent()
-	 */
-	public function getParent() {
-		return $this->parent;
-	}
-
-	/**
-	 * Set creation date
-	 * @see \BeeBot\Entity\Behaviours\DatedEntity::getDate() DatedEntity::setDate()
-	 */
-	public function setDate( \DateTime $date ) {
-		$this->date = $date;
-	}
-
-	/**
-	 * Get creation date
-	 * @see \BeeBot\Entity\Behaviours\DatedEntity::getDate() DatedEntity::getDate()
-	 */
-	public function getDate() {
-		return $this->date;
 	}
 
 	/**
