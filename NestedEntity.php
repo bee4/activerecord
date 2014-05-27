@@ -19,12 +19,7 @@ use BeeBot\Entity\Behaviours\FactoryEntity;
  * @package BeeBot\Entity
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
  */
-abstract class NestedEntity implements ActiveRecordModel
+abstract class NestedEntity extends ActiveRecordModel
 {
 	use FactoryEntity;
-
-	/**
-	 * NestedEntity constructor
-	 */
-	public function __construct() {}
 }

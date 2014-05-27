@@ -17,7 +17,7 @@ namespace BeeBot\Entity;
  * @package BeeBot\Action
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
  */
-abstract class Entity implements ActiveRecordModel
+abstract class Entity extends ActiveRecordModel
 {
 	/**
 	 * Unique identifier for the current entity
@@ -30,6 +30,7 @@ abstract class Entity implements ActiveRecordModel
 	 * Entity constructor
 	 */
 	public function __construct() {
+		parent::__construct();
 		$this->uid = uniqid();
 	}
 
