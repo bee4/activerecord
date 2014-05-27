@@ -73,8 +73,10 @@ abstract class AbstractDocument extends Entity implements \JsonSerializable {
 	 * @return String
 	 */
 	public static function getElasticSearchIndex() {
-		if( !isset(self::$index) )
+		if( !isset(self::$index) ) {
 			self::$index = Config::getGlobal('elasticsearch-index');
+		}
+
 		return self::$index;
 	}
 
@@ -86,8 +88,9 @@ abstract class AbstractDocument extends Entity implements \JsonSerializable {
 		if( !isset( self::$ws ) ) {
 			//Build a valid URL
 			self::$ws = Config::getGlobal('elasticsearch-url');
-			if( strrpos(self::$ws, '/') !== strlen(self::$ws)-1 )
+			if( strrpos(self::$ws, '/') !== strlen(self::$ws)-1 ) {
 				self::$ws .= '/';
+			}
 		}
 
 		return self::$ws;
@@ -152,19 +155,21 @@ abstract class AbstractDocument extends Entity implements \JsonSerializable {
 		//If it's standard we add fields else we do noting
 		if( isset( $aRequest['query'] ) ) {
 			//Always return Parent and timestamp property!!
-			if( !isset( $aRequest['fields'] ) )
+			if( !isset( $aRequest['fields'] ) ) {
 				$aRequest['fields'] = array('_parent','_source','_timestamp');
-			else {
-				if( !in_array('_parent', $aRequest['fields']) )
-					$aRequest['fields'][] = '_parent';
-				if( !in_array('_timestamp', $aRequest['fields']) )
-					$aRequest['fields'][] = '_timestamp';
+			}
+			if( !in_array('_parent', $aRequest['fields']) ) {
+				$aRequest['fields'][] = '_parent';
+			}
+			if( !in_array('_timestamp', $aRequest['fields']) ) {
+				$aRequest['fields'][] = '_timestamp';
 			}
 		}
 
 		$sJSON = JsonTransformer::encode($aRequest);
-		if( $sJSON === false )
+		if( $sJSON === false ) {
 			throw new \Exception('An error occured during JSON encoding of the given parameters');
+		}
 		$oRequest->setBody($sJSON);
 
 		$oResponse = $oRequest->send();
@@ -331,8 +336,9 @@ abstract class AbstractDocument extends Entity implements \JsonSerializable {
 				);
 			} elseif( preg_match('/^range:(.*)$/', $mValue, $aParts ) === 1 ) {
 				$aDates = json_decode($aParts[1]);
-				if( $aDates === null )
+				if( $aDates === null ) {
 					$aDates = array($aParts[1],$aParts[1]);
+				}
 				return self::buildQuery($mTerm, $aDates);
 			}
 		}
