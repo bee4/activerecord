@@ -19,7 +19,7 @@ namespace BeeBot\Entity\ElasticSearch;
 class Visit extends AbstractDocument {
 	/**
 	 * Visit origin
-	 * @var String
+	 * @var string
 	 */
 	private $origin = 'anywhere';
 
