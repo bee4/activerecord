@@ -12,37 +12,42 @@
 
 namespace BeeBot\Entity;
 
+use ReflectionClass;
+use ReflectionProperty;
+
 /**
- * Global canvas for all models
+ * Global canvas for all models define property setter and getter logic
  * @package BeeBot\Entity
  */
 abstract class ActiveRecordModel
 {
 	/**
-	 * All already loaded properties
+	 * Cache property for loaded properties
+	 * When a new entity type is built, its property meta data are extracted
 	 * @var array
 	 */
-	private static $PROPERTIES = [];
+	private static $CACHE = [];
+
 	/**
 	 * Property collection used in the current entity
 	 * @var array
 	 */
-	private $_properties;
+	private $properties;
 
 	/**
 	 * Read object properties by using ReflectionClass
 	 */
 	public function __construct() {
-		if( !isset(self::$PROPERTIES[get_called_class()]) ) {
-			$class = new \ReflectionClass($this);
+		if( !isset(self::$CACHE[get_called_class()]) ) {
+			$class = new ReflectionClass($this);
 			$tmp = [];
-			foreach( $class->getProperties() as $property ) {
+			foreach( $class->getProperties(ReflectionProperty::IS_PUBLIC|ReflectionProperty::IS_PROTECTED|ReflectionProperty::IS_PRIVATE) as $property ) {
 				$item = new Property($property);
 				$tmp[$property->getName()] = $item;
 			}
-			self::$PROPERTIES[get_called_class()] = $tmp;
+			self::$CACHE[get_called_class()] = $tmp;
 		}
-		$this->_properties = self::$PROPERTIES[get_called_class()];
+		$this->properties = self::$CACHE[get_called_class()];
 	}
 
 	/**
@@ -57,7 +62,7 @@ abstract class ActiveRecordModel
 			);
 		}
 
-		return $this->_properties[$name]->set($value, $this);
+		return $this->properties[$name]->set($value, $this);
 	}
 
 	/**
@@ -71,6 +76,6 @@ abstract class ActiveRecordModel
 				'Property name given does not exists or is not a writable one: '.$name
 			);
 		}
-		return $this->_properties[$name]->get($this);
+		return $this->properties[$name]->get($this);
 	}
 }
