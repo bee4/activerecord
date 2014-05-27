@@ -11,15 +11,14 @@
 
 namespace BeeBot\Entity;
 
-use BeeBot\Entity\Behaviours\FactoryEntity;
-
 /**
  * Simple entity definition
  * Base of all the extended entities
  * @package BeeBot\Action
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
  */
-abstract class Entity extends FactoryEntity {
+abstract class Entity implements ActiveRecordModel
+{
 	/**
 	 * Unique identifier for the current entity
 	 * In all databases (Document base or relationals), an UID is defined for a document
