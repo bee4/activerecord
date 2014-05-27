@@ -23,7 +23,7 @@ abstract class Entity extends FactoryEntity {
 	/**
 	 * Unique identifier for the current entity
 	 * In all databases (Document base or relationals), an UID is defined for a document
-	 * @var String
+	 * @var string
 	 */
 	protected $uid;
 
@@ -36,7 +36,7 @@ abstract class Entity extends FactoryEntity {
 
 	/**
 	 * Retrieve current UID
-	 * @return String
+	 * @return string
 	 */
 	public function getUID() {
 		return $this->uid;
@@ -52,8 +52,9 @@ abstract class Entity extends FactoryEntity {
 	public static function __callStatic( $sMethod, $aArguments ) {
 		$matches = null;
 
-		if( !isset($aArguments[0]) )
+		if( !isset($aArguments[0]) ) {
 			throw new \InvalidArgumentException("The function must be call with at least 1 parameter: The searched value!!");
+		}
 
 		//Match all fetchByXXX calls
 		if( preg_match('/^(fetchBy|fetchOneBy|countBy)(.+)$/', $sMethod, $matches) ) {
@@ -105,8 +106,9 @@ abstract class Entity extends FactoryEntity {
 	 */
 	final public static function fetchOneBy( $sTerm, $mValue ) {
 		$oCollection = call_user_func(array(get_called_class(),'fetchBy'), $sTerm, $mValue);
-		if( count($oCollection) > 1 )
+		if( count($oCollection) > 1 ) {
 			throw new \LengthException('More than one entities have been found by matching criteria...');
+		}
 
 		return count($oCollection)==1?$oCollection[0]:null;
 	}
