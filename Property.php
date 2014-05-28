@@ -20,6 +20,11 @@ use \ReflectionProperty;
  */
 class Property {
 	/**
+	 * @var \ReflectionProperty
+	 */
+	private $reflection;
+
+	/**
 	 * @var string
 	 */
 	private $name;
@@ -42,12 +47,6 @@ class Property {
 	private $attributes;
 
 	/**
-	 * True if property is public
-	 * @var boolean
-	 */
-	private $public = false;
-
-	/**
 	 * True if property is readable
 	 * @var boolean
 	 */
@@ -64,8 +63,11 @@ class Property {
 	 * @param ReflectionProperty $property
 	 */
 	public function __construct(ReflectionProperty $property) {
+		$property->setAccessible(true);
+
+		$this->reflection = $property;
 		$this->name = $property->getName();
-		$this->public = $property->isPublic();
+
 		$this->setter = 'set'.ucfirst($this->name);
 		$this->getter = 'get'.ucfirst($this->name);
 
@@ -128,13 +130,20 @@ class Property {
 	 */
 	public function set($value, ActiveRecordModel $model) {
 		if( !$this->writable ) {
-			throw new \InvalidArgumentException("You can't set this property because it is not writable: ".$this->name);
+			throw new \InvalidCallException("You can't set this property because it is not writable: ".$this->name);
 		}
 
-		if( $this->public ) {
+		//If the property is public, don't worry just set
+		if( $this->reflection->isPublic() ) {
 			$model->{$this->name} = $value;
 		} else {
-			call_user_func([$model, $this->setter], $value);
+			//If we try to unset the value, use the setValue to avoid setter behaviours
+			if( $value === null ) {
+				$this->reflection->setValue($model, $value);
+			//Else just use the setter to put value
+			} else {
+				call_user_func([$model, $this->setter], $value);
+			}
 		}
 		return $model;
 	}
@@ -147,11 +156,11 @@ class Property {
 	 */
 	public function get(ActiveRecordModel $model) {
 		if( !$this->readable ) {
-			throw new \InvalidArgumentException("You can't get this property because it is not readable: ".$this->name);
+			throw new \InvalidCallException("You can't get this property because it is not readable: ".$this->name);
 		}
 
-		if( $this->public ) {
-			return $model->{$this->name};
+		if( $this->reflection->isPublic() ) {
+			return isset($model->{$this->name})?$model->{$this->name}:null;
 		} else {
 			return call_user_func([$model, $this->getter]);
 		}

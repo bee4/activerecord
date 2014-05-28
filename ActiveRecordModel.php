@@ -56,7 +56,7 @@ abstract class ActiveRecordModel
 	 * @param mixed $value value to be set
 	 */
 	public function __set($name, $value) {
-		if( !isset($this->_properties[$name]) ) {
+		if( !isset($this->properties[$name]) ) {
 			throw new \InvalidArgumentException(
 				'Property name given does not exists in the current object: '.$name
 			);
@@ -71,11 +71,33 @@ abstract class ActiveRecordModel
 	 * @return mixed
 	 */
 	public function __get($name) {
-		if( !isset($this->_properties[$name]) ) {
+		if( !isset($this->properties[$name]) ) {
 			throw new \InvalidArgumentException(
 				'Property name given does not exists or is not a writable one: '.$name
 			);
 		}
 		return $this->properties[$name]->get($this);
+	}
+
+	/**
+	 * Check if the current property exists and is not null
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function __isset($name) {
+		if(!isset($this->properties[$name]) || $this->properties[$name]->get($this) === null) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Unset the given attribute value
+	 * @param string $name
+	 */
+	public function __unset($name) {
+		if( isset($this->properties[$name]) ) {
+			$this->properties[$name]->set(null,$this);
+		}
 	}
 }
