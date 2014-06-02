@@ -18,6 +18,9 @@ use ReflectionProperty;
 /**
  * Global canvas for all models define property setter and getter logic
  * @package BeeBot\Entity
+ * @method boolean isDated()
+ * @method boolean isChild()
+ * @method boolean isFactory()
  */
 abstract class ActiveRecordModel
 {
@@ -33,24 +36,59 @@ abstract class ActiveRecordModel
 	 * @var array
 	 */
 	private $properties;
+	
+	/**
+	 * Behaviour collection for the current entity
+	 * Behaviours are defined by traits and extend Entity capacities
+	 * @var array
+	 */
+	private $behaviours;
 
 	/**
 	 * Read object properties with ReflectionClass
 	 * Only public, protected and private are extracted, not static
 	 */
 	public function __construct() {
-		if( !isset(self::$CACHE[get_called_class()]) ) {
-			$class = new ReflectionClass($this);
-			$tmp = [];
-			foreach( $class->getProperties(ReflectionProperty::IS_PUBLIC|ReflectionProperty::IS_PROTECTED|ReflectionProperty::IS_PRIVATE) as $property ) {
-				//Static are not considered as entity props because of their global scope
-				if( $property->isStatic() ) { continue; }
-				$item = new Property($property);
-				$tmp[$property->getName()] = $item;
-			}
-			self::$CACHE[get_called_class()] = $tmp;
+		$name = get_called_class();
+		if( !isset(self::$CACHE[$name]) ) {
+			$this->generateCache($this);
 		}
-		$this->properties = self::$CACHE[get_called_class()];
+		$this->properties = self::$CACHE[$name]->properties;
+		$this->behaviours = self::$CACHE[$name]->behaviours;
+	}
+	
+	/**
+	 * Generate the entity meta data cache for the given ActiveRecordModel
+	 * @param \BeeBot\Entity\ActiveRecordModel $model
+	 */
+	protected function generateCache(ActiveRecordModel $model) {
+		$meta = new \stdClass();
+		$class = new ReflectionClass($model);
+
+		//Extract properties
+		$meta->properties = [];
+		foreach( $class->getProperties(ReflectionProperty::IS_PUBLIC|ReflectionProperty::IS_PROTECTED|ReflectionProperty::IS_PRIVATE) as $property ) {
+			//Static are not considered as entity props because of their global scope
+			if( $property->isStatic() ) { continue; }
+			$item = new Property($property);
+			$meta->properties[$property->getName()] = $item;
+		}
+
+		//Extract traits
+		$meta->traits = $class->getTraitNames();
+		while(($class = $class->getParentClass()) instanceof \ReflectionClass) {
+			$meta->traits = array_merge($class->getTraitNames(),$meta->traits);
+		}
+		
+		//Extract behaviours from traits
+		$meta->behaviours = [];
+		foreach( $meta->traits as $trait ) {
+			$parts = [];
+			if(preg_match('/Behaviours.([A-Za-z]*)Entity$/', $trait, $parts)===1) {
+				$meta->behaviours[] = strtolower($parts[1]);
+			}
+		}
+		self::$CACHE[get_called_class()] = $meta;
 	}
 
 	/**
@@ -102,5 +140,35 @@ abstract class ActiveRecordModel
 		if( isset($this->properties[$name]) ) {
 			$this->properties[$name]->set(null,$this);
 		}
+	}
+	
+	/**
+	 * Generic wrapper to emulate behaviour detection: isDated, isChild, isFactory, ...
+	 * @param string $name
+	 * @param array $arguments
+	 * @return boolean
+	 * @throws \InvalidArgumentException
+	 * @throws \BadMethodCallException
+	 */
+	public function __call($name, $arguments) {
+		$parts = [];
+		if(preg_match('/^is([A-Za-z]+)/', $name, $parts) === 1) {
+			if( count($arguments) > 0) {
+				throw new \InvalidArgumentException("This method does not required any argument: ".$name);
+			}
+			
+			return $this->is(strtolower($parts[1]));
+		}
+		
+		throw new \BadMethodCallException('Unknown method: '.get_called_class().'::'.$name);
+	}
+	
+	/**
+	 * Check if the current entity has a given behaviour
+	 * @param string $behaviour
+	 * @return boolean
+	 */
+	protected function is($behaviour) {
+		return in_array($this->behaviours[$behaviour]);
 	}
 }
