@@ -35,13 +35,16 @@ abstract class ActiveRecordModel
 	private $properties;
 
 	/**
-	 * Read object properties by using ReflectionClass
+	 * Read object properties with ReflectionClass
+	 * Only public, protected and private are extracted, not static
 	 */
 	public function __construct() {
 		if( !isset(self::$CACHE[get_called_class()]) ) {
 			$class = new ReflectionClass($this);
 			$tmp = [];
 			foreach( $class->getProperties(ReflectionProperty::IS_PUBLIC|ReflectionProperty::IS_PROTECTED|ReflectionProperty::IS_PRIVATE) as $property ) {
+				//Static are not considered as entity props because of their global scope
+				if( $property->isStatic() ) { continue; }
 				$item = new Property($property);
 				$tmp[$property->getName()] = $item;
 			}
