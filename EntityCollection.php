@@ -14,18 +14,19 @@ namespace BeeBot\Entity;
 /**
  * EntityCollection implementation
  * Allow to store multiple entites as a Traversable object
- * @author	Stephane HULARD <s.hulard@chstudio.fr>
  * @package BeeBot\Entity
  */
-class EntityCollection extends \ArrayObject {
+class EntityCollection extends \ArrayObject
+{
 	/**
 	 * Append a new Entity in the collection
 	 * @param Entity $value The new Entity to be added
 	 * @throws \InvalidArgumentException
 	 */
 	public function append( $value ) {
-		if( !($value instanceof Entity) )
+		if( !($value instanceof Entity) ) {
 			throw new \InvalidArgumentException('It\'s an entity collection, you can not append anything else than an Entity object');
+		}
 
 		parent::append($value);
 	}
@@ -37,8 +38,9 @@ class EntityCollection extends \ArrayObject {
 	 * @throws \InvalidArgumentException
 	 */
 	public function offsetSet( $offset, $value ) {
-		if( !($value instanceof Entity) )
+		if( !($value instanceof Entity) ) {
 			throw new \InvalidArgumentException('It\'s an entity collection, you can not append anything else than an Entity object');
+		}
 
 		parent::offsetSet($offset, $value);
 	}
