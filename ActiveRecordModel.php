@@ -169,6 +169,6 @@ abstract class ActiveRecordModel
 	 * @return boolean
 	 */
 	protected function is($behaviour) {
-		return in_array($this->behaviours[$behaviour]);
+		return in_array($behaviour, $this->behaviours);
 	}
 }
