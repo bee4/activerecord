@@ -124,11 +124,11 @@ class Property {
 	/**
 	 * Set the property value on an AbstractRecordModel instance
 	 * @param mixed $value
-	 * @param \BeeBot\Entity\ActiveRecordModel $model
-	 * @return \BeeBot\Entity\ActiveRecordModel
+	 * @param \BeeBot\Entity\ActiveRecord $model
+	 * @return \BeeBot\Entity\ActiveRecord
 	 * @throws \InvalidArgumentException
 	 */
-	public function set($value, ActiveRecordModel $model) {
+	public function set($value, ActiveRecord $model) {
 		if( !$this->writable ) {
 			throw new \InvalidCallException("You can't set this property because it is not writable: ".$this->name);
 		}
@@ -150,11 +150,11 @@ class Property {
 
 	/**
 	 * Get property value from an AbstractRecordModel instance
-	 * @param \BeeBot\Entity\ActiveRecordModel $model
+	 * @param \BeeBot\Entity\ActiveRecord $model
 	 * @return mixed Depends on the property value
 	 * @throws \InvalidArgumentException
 	 */
-	public function get(ActiveRecordModel $model) {
+	public function get(ActiveRecord $model) {
 		if( !$this->readable ) {
 			throw new \InvalidCallException("You can't get this property because it is not readable: ".$this->name);
 		}

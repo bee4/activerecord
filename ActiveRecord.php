@@ -22,7 +22,7 @@ use ReflectionProperty;
  * @method boolean isChild()
  * @method boolean isFactory()
  */
-abstract class ActiveRecordModel
+abstract class ActiveRecord
 {
 	/**
 	 * Cache property for loaded properties
@@ -30,6 +30,12 @@ abstract class ActiveRecordModel
 	 * @var array
 	 */
 	private static $CACHE = [];
+	
+	/**
+	 * The current connection
+	 * @var Connections\ConnectionInterface
+	 */
+	private static $CONNECTION;
 
 	/**
 	 * Property collection used in the current entity
@@ -49,24 +55,23 @@ abstract class ActiveRecordModel
 	 * Only public, protected and private are extracted, not static
 	 */
 	public function __construct() {
-		$name = get_called_class();
-		if( !isset(self::$CACHE[$name]) ) {
-			self::generateCache($this);
-		}
+		$name = self::preload();
 		$this->properties = self::$CACHE[$name]->properties;
 		$this->behaviours = self::$CACHE[$name]->behaviours;
 	}
 	
 	/**
 	 * Generate the entity meta data cache for the given ActiveRecordModel
-	 * @param \BeeBot\Entity\ActiveRecordModel $model
+	 * @param string|\BeeBot\Entity\ActiveRecord $model
 	 */
-	protected static function generateCache(ActiveRecordModel $model) {
+	protected static function generateCache($model) {
 		$meta = new \stdClass();
 		$class = new ReflectionClass($model);
+		
+		//Prepare data
+		$meta->properties = $meta->behaviours = [];
 
 		//Extract properties
-		$meta->properties = [];
 		foreach( $class->getProperties(ReflectionProperty::IS_PUBLIC|ReflectionProperty::IS_PROTECTED|ReflectionProperty::IS_PRIVATE) as $property ) {
 			//Static are not considered as entity props because of their global scope
 			if( $property->isStatic() ) { continue; }
@@ -81,14 +86,99 @@ abstract class ActiveRecordModel
 		}
 		
 		//Extract behaviours from traits
-		$meta->behaviours = [];
 		foreach( $meta->traits as $trait ) {
 			$parts = [];
 			if(preg_match('/Behaviours.([A-Za-z]*)Entity$/', $trait, $parts)===1) {
 				$meta->behaviours[] = strtolower($parts[1]);
 			}
 		}
+		
+		$meta->type = strtolower(array_pop(explode("\\", get_called_class())));
+		//Put meta in cache
 		self::$CACHE[get_called_class()] = $meta;
+	}
+	
+	/**
+	 * Try to boot ActiveRecord from data source name
+	 * A callback can be defined to execute action after boot
+	 * @param string $dsn
+	 * @param \Closure $callback
+	 */
+	final public static function boot($dsn, \Closure $callback = null) {
+		//@todo
+		throw new \BadMethodCallException('boot function must be defined, for the moment use setConnection...');
+	}
+	
+	/**
+	 * Define directly with an object the adapter to be used within ActiveRecord
+	 * @param \BeeBot\Entity\Connections\ConnectionInterface $conn
+	 */
+	final public static function setConnection( Connections\ConnectionInterface $conn ) {
+		self::$CONNECTION = $conn;
+	}
+	
+	/**
+	 * Access the current adapter or throw error if no adapter loaded
+	 * @throws \RuntimeException
+	 * @return Connections\ConnectionInterface
+	 */
+	final public static function getConnection() {
+		if( self::$CONNECTION === null ) {
+			throw new \RuntimeException("There isn't any connection defined, use ActiveRecord::boot or ActiveRecord::setConnexion to define one!!");
+		}
+		return self::$CONNECTION;
+	}
+	
+	/**
+	 * Retrieve current type. This is used as table/index name and must be overidden for specific behaviours
+	 * @return string
+	 */
+	public static function getType() {
+		$name = self::preload();
+		return self::$CACHE[$name]->type;
+	}
+	
+	/**
+	 * Generic wrapper to emulate behaviour detection: isDated, isChild, isFactory, ...
+	 * @param string $name
+	 * @param array $arguments
+	 * @return boolean
+	 * @throws \InvalidArgumentException
+	 * @throws \BadMethodCallException
+	 */
+	public static function __callStatic($name, $arguments) {
+		$parts = [];
+		if(preg_match('/^is([A-Za-z]+)/', $name, $parts) === 1) {
+			if( count($arguments) > 0) {
+				throw new \InvalidArgumentException("This method does not required any argument: ".$name);
+			}
+			
+			return self::is(strtolower($parts[1]));
+		}
+		
+		throw new \BadMethodCallException(get_called_class().'::'.$name.' method does not exists!');
+	}
+	
+	/**
+	 * Check if the current entity has a given behaviour
+	 * @param string $behaviour
+	 * @return boolean
+	 */
+	protected static function is($behaviour) {
+		$name = self::preload();
+		return in_array($behaviour, self::$CACHE[$name]->behaviours);
+	}
+	
+	/**
+	 * Preload class meta cache and return current class name
+	 * @return string
+	 */
+	protected static function preload() {
+		$name = get_called_class();
+		if( !isset(self::$CACHE[$name]) ) {
+			self::generateCache($name);
+		}
+		return $name;
 	}
 
 	/**
@@ -140,35 +230,5 @@ abstract class ActiveRecordModel
 		if( isset($this->properties[$name]) ) {
 			$this->properties[$name]->set(null,$this);
 		}
-	}
-	
-	/**
-	 * Generic wrapper to emulate behaviour detection: isDated, isChild, isFactory, ...
-	 * @param string $name
-	 * @param array $arguments
-	 * @return boolean
-	 * @throws \InvalidArgumentException
-	 * @throws \BadMethodCallException
-	 */
-	public function __call($name, $arguments) {
-		$parts = [];
-		if(preg_match('/^is([A-Za-z]+)/', $name, $parts) === 1) {
-			if( count($arguments) > 0) {
-				throw new \InvalidArgumentException("This method does not required any argument: ".$name);
-			}
-			
-			return $this->is(strtolower($parts[1]));
-		}
-		
-		throw new \BadMethodCallException('Unknown method: '.get_called_class().'::'.$name);
-	}
-	
-	/**
-	 * Check if the current entity has a given behaviour
-	 * @param string $behaviour
-	 * @return boolean
-	 */
-	protected function is($behaviour) {
-		return in_array($behaviour, $this->behaviours);
 	}
 }

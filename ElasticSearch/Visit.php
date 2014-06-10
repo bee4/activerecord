@@ -23,6 +23,8 @@ class Visit extends AbstractDocument {
 	 */
 	private $origin = 'anywhere';
 
+	public $referer;
+
 	/**
 	 * URL entity constructor
 	 */
@@ -140,7 +142,7 @@ class Visit extends AbstractDocument {
 	 * @param Nested\URL $referer
 	 */
 	public function setReferer( Nested\URL $referer ) {
-		$this->data->referer = $referer;
+		$this->referer = $referer;
 	}
 
 	/**
@@ -148,7 +150,7 @@ class Visit extends AbstractDocument {
 	 * @return Nested\URL
 	 */
 	public function getReferer() {
-		return $this->data->referer;
+		return $this->referer;
 	}
 
 	/**
@@ -178,7 +180,7 @@ class Visit extends AbstractDocument {
 
 		if( !isset($this->data->checksum) ) {
 			$this->data->checksum = sha1(
-				$this->getParent().'-'.
+				$this->getParent()->uid.'-'.
 				$this->data->ip.'-'.
 				$this->getDate()->format('YmdHisZ')
 			);

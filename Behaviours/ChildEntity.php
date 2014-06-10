@@ -21,7 +21,7 @@ use BeeBot\Entity\Entity;
 trait ChildEntity {
 	/**
 	 * Parent UID
-	 * @var String
+	 * @var Entity
 	 */
 	protected $parent;
 
@@ -30,12 +30,12 @@ trait ChildEntity {
 	 * @param Entity $oParent Parent entity to be used
 	 */
 	public function setParent( Entity $oParent ) {
-		$this->parent = $oParent->getUID();
+		$this->parent = $oParent;
 	}
 
 	/**
-	 * Retrieve parent property
-	 * @return Mixed depends on the parent implementation
+	 * Retrieve parent entity
+	 * @return Entity
 	 */
 	public function getParent() {
 		return $this->parent;
