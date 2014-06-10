@@ -51,7 +51,7 @@ abstract class ActiveRecordModel
 	public function __construct() {
 		$name = get_called_class();
 		if( !isset(self::$CACHE[$name]) ) {
-			$this->generateCache($this);
+			self::generateCache($this);
 		}
 		$this->properties = self::$CACHE[$name]->properties;
 		$this->behaviours = self::$CACHE[$name]->behaviours;
@@ -61,7 +61,7 @@ abstract class ActiveRecordModel
 	 * Generate the entity meta data cache for the given ActiveRecordModel
 	 * @param \BeeBot\Entity\ActiveRecordModel $model
 	 */
-	protected function generateCache(ActiveRecordModel $model) {
+	protected static function generateCache(ActiveRecordModel $model) {
 		$meta = new \stdClass();
 		$class = new ReflectionClass($model);
 
