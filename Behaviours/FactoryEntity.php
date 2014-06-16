@@ -18,7 +18,8 @@ namespace BeeBot\Entity\Behaviours;
  * @package BeeBot\Entity\Behaviours
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
  */
-trait FactoryEntity {
+trait FactoryEntity
+{
 	/**
 	 * Factory function to build an entity objects from passed data
 	 * Data can be anything than the Entity can understand in its "hydrate" method

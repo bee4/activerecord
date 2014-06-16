@@ -19,6 +19,7 @@ namespace BeeBot\Entity;
  */
 abstract class Entity extends ActiveRecord
 {
+	//Define entity state 
 	const STATE_NEW = 0;
 	const STATE_PERSISTED = 1;
 	const STATE_DELETED = 2;
@@ -43,22 +44,28 @@ abstract class Entity extends ActiveRecord
 		return $this->uid;
 	}
 	
+	/**
+	 * Check if current entity is not already persisted
+	 * @return boolean
+	 */
 	public function isNew() {
 		return $this->state === self::STATE_NEW;
 	}
+	
+	/**
+	 * Check if current entity is persisted
+	 * @return boolean
+	 */
 	public function isPersisted() {
 		return $this->state === self::STATE_PERSISTED;
 	}
-	public function isDeleted() {
-		return $this->state === self::STATE_DELETED;
-	}
 	
 	/**
-	 * Get current entity state
-	 * @return integer
+	 * Check if current entity has been deleted
+	 * @return boolean
 	 */
-	protected function getState() {
-		return $this->state;
+	public function isDeleted() {
+		return $this->state === self::STATE_DELETED;
 	}
 	
 	/**
