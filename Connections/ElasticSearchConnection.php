@@ -69,9 +69,10 @@ class ElasticSearchConnection extends AbstractConnection
 	
 	public function save(\BeeBot\Entity\Entity $entity) {
 		$url = $entity::getType().'/'.$entity->uid;
-		if( $entity::isChild() ) {
+		if( $entity::isChild() && $entity->getParent() !== null ) {
 			$url.='?parent='.$entity->getParent()->uid;
 		}
+		
 		$response = $this->client
 			->put($url)
 			->setBody(JsonTransformer::encode($entity))
