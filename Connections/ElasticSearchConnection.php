@@ -13,7 +13,8 @@
 namespace BeeBot\Entity\Connections;
 
 use BeeBot\Tools\Native\JsonTransformer;
-use BeeBot\Event\LogEvent;
+use Bee4\Http\Client;
+use Bee4\Http\Message\Request\AbstractRequest;
 
 /**
  * ElasticSearch connection adapter
@@ -36,7 +37,15 @@ class ElasticSearchConnection extends AbstractConnection
 		if(strrpos($url,'/')!==strlen($url)-1) {
 			$url .= "/";
 		}
-		$this->client = new \Bee4\Http\Client($url);
+		$this->client = new Client($url);
+		
+		//Register events for debug purpose and performance check
+		$this->client->register(Client::ON_REQUEST, function(AbstractRequest $request) {
+			$this->dispatch(ConnectionEvent::REQUEST, new ConnectionEvent($request));
+		});
+		$this->client->register(Client::ON_ERROR, function(\Exception $error) {
+			$this->dispatch(ConnectionEvent::ERROR, new ConnectionEvent($error));
+		});
 	}
 	
 	public function countBy($type, $term, $value) {
