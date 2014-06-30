@@ -70,6 +70,10 @@ class ElasticSearchConnection extends AbstractConnection
 	public function save(\BeeBot\Entity\Entity $entity) {
 		$url = $entity::getType().'/'.$entity->uid;
 		if( $entity::isChild() && $entity->getParent() !== null ) {
+			if( !$entity->getParent()->isPersisted() ) {
+				throw new \RuntimeException('Parent entity is not a persisted one!');
+			}
+			
 			$url.='?parent='.$entity->getParent()->uid;
 		}
 		
