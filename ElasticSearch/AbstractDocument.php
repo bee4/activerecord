@@ -62,7 +62,7 @@ abstract class AbstractDocument extends Entity implements \JsonSerializable {
 		$oTmp = clone $this->data;
 
 		$oTmp->_id = $this->uid;
-		$oTmp->_timestamp = $this->date->format('Y-m-d\TH:i:sP');
+		$oTmp->_timestamp = $this->getDate()->format('Y-m-d\TH:i:sP');
 
 		return $oTmp;
 	}
