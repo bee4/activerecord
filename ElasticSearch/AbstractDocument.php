@@ -12,15 +12,10 @@
 namespace BeeBot\Entity\ElasticSearch;
 
 
-use BeeBot\Config;
 use BeeBot\Entity\Entity;
 use BeeBot\Entity\Behaviours\ChildEntity;
 use BeeBot\Entity\Behaviours\DatedEntity;
 use BeeBot\Entity\Behaviours\FactoryEntity;
-use BeeBot\Entity\EntityCollection;
-
-use BeeBot\Tools\Native\JsonTransformer;
-use Bee4\Http\Client;
 
 /**
  * Define basic elasticsearch document
