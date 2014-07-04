@@ -105,8 +105,12 @@ abstract class ActiveRecord
 	 * @param \Closure $callback
 	 */
 	final public static function boot($dsn, \Closure $callback = null) {
-		//@todo
-		throw new \BadMethodCallException('boot function must be defined, for the moment use setConnection...');
+		$connection = Connections\ConnectionFactory::build($dsn);
+		self::setConnection($connection);
+		
+		if(is_callable($callback)) {
+			call_user_func($callback, $connection);
+		}
 	}
 	
 	/**

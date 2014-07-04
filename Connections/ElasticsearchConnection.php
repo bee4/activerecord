@@ -21,7 +21,7 @@ use Bee4\Http\Message\Request\AbstractRequest;
  * Allow to perform operations on ES indexes
  * @package BeeBot\Entity\Connections
  */
-class ElasticSearchConnection extends AbstractConnection
+class ElasticsearchConnection extends AbstractConnection
 {
 	/**
 	 * Http client used to communicate with ES
