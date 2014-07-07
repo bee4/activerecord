@@ -241,9 +241,14 @@ class Page extends AbstractDocument {
 	 * @param Mixed $mData
 	 */
 	protected function hydrate( $mData ) {
-		parent::hydrate($mData);
-
-		$this->data->url = Nested\URL::factory($this->data->url);
+		if( is_array($mData) ) {
+			parent::hydrate($mData);
+			$this->data->url = Nested\URL::factory($this->data->url);
+		} elseif( is_string($mData) ) {
+			$this->data->url = Nested\URL::factory($mData);
+		} else {
+			throw new \InvalidArgumentException('Hydate data must be array or string!');
+		}
 	}
 
 	/**
@@ -252,9 +257,10 @@ class Page extends AbstractDocument {
 	 * @throws \Exception
 	 */
 	public function jsonSerialize() {
-		if( !isset($this->data->modified) || !isset($this->data->kind) )
-			throw new \Exception('created, modified and kind need to be set before to save current Page!!!');
-
+		if( !isset($this->data->modified) ) {
+			$this->data->modified = (new \DateTime)->format('Y-m-d\TH:i:sP');
+		}
+		
 		return parent::jsonSerialize();
 	}
 

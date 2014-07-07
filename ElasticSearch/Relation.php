@@ -50,10 +50,11 @@ class Relation extends AbstractDocument {
 	 * @param mixed Type depend of relation Type: INTERNAL => PAGE, EXTERNAL => URL(string)
 	 */
 	public function setTo ($oTo){
-		if( $this->getType() === self::INTERNAL && !($oTo instanceof Page) )
+		if( $this->getType() === self::INTERNAL && !($oTo instanceof Page) ) {
 			throw new \BeeBot\Exception\Native\InvalidArgumentException('To must be a Page instance for INTERNAL Relations!!', $oTo);
-		elseif( $this->getType() === self::EXTERNAL && !is_string($oTo) )
+		} elseif( $this->getType() === self::EXTERNAL && !is_string($oTo) ) {
 			throw new \BeeBot\Exception\Native\InvalidArgumentException('To must be an URL for EXTERNAL Relation!!', $oTo);
+		}
 
 		$this->data->to = method_exists ($oTo, 'getUID')?$oTo->getUID():$oTo;
 	}
@@ -72,8 +73,9 @@ class Relation extends AbstractDocument {
 	 * @throws \BeeBot\Exception\Native\InvalidArgumentException
 	 */
 	public function setType($type){
-		if (!in_array($type, self::$types))
+		if (!in_array($type, self::$types)) {
 			throw new \BeeBot\Exception\Native\InvalidArgumentException('Expected valide type', $type);
+		}
 		$this->data->type = $type;
 	}
 
@@ -91,8 +93,9 @@ class Relation extends AbstractDocument {
 	 * @throws \BeeBot\Exception\Native\InvalidArgumentException
 	 */
 	public function setIsRecursive($isRecursive){
-		if (!is_bool($isRecursive))
+		if (!is_bool($isRecursive)) {
 			throw new \BeeBot\Exception\Native\InvalidArgumentException('Expected boolean', $isRecursive);
+		}
 		$this->data->recursive['is'] = $isRecursive;
 	}
 
@@ -110,8 +113,9 @@ class Relation extends AbstractDocument {
 	 * @throws \BeeBot\Exception\Native\InvalidArgumentException
 	 */
 	public function setNbRecursiveRepeat($nbRecursiveRepeat){
-		if (!is_int($nbRecursiveRepeat))
+		if (!is_int($nbRecursiveRepeat)) {
 			throw new \BeeBot\Exception\Native\InvalidArgumentException('Expected integer', $nbRecursiveRepeat);
+		}
 		$this->data->recursive['repeat'] = $nbRecursiveRepeat;
 	}
 
@@ -129,8 +133,9 @@ class Relation extends AbstractDocument {
 	 * @throws \BeeBot\Exception\Native\InvalidArgumentException
 	 */
 	public function setNbRepeat($nbRepeat){
-		if (!is_int($nbRepeat))
+		if (!is_int($nbRepeat)) {
 			throw new \BeeBot\Exception\Native\InvalidArgumentException('Expected integer', $nbRepeat);
+		}
 		$this->data->repeat = $nbRepeat;
 	}
 
@@ -150,12 +155,13 @@ class Relation extends AbstractDocument {
 	 * @throws \BeeBot\Exception\Native\InvalidArgumentException
 	 */
 	public function addLabel($label, $position, $type = self::TEXT, $rel =  null){
-		if (!is_string($label))
+		if (!is_string($label)) {
 			throw new \BeeBot\Exception\Native\InvalidArgumentException('Expected string', $label);
-		if (!is_int($position))
+		} if (!is_int($position)) {
 			throw new \BeeBot\Exception\Native\InvalidArgumentException('Expected integer', $position);
-		if (isset($rel) && !is_string($rel))
+		}	if (isset($rel) && !is_string($rel)) {
 			throw new \BeeBot\Exception\Native\InvalidArgumentException('Expected string', $rel);
+		}
 
 		if(($key = array_search($label, $this->labels)) === false ) {
 			$key = count($this->labels);
@@ -172,8 +178,9 @@ class Relation extends AbstractDocument {
 		$this->data->labels[$key]['type'][$type][] = $position;
 
 		if( !is_null($rel) ) {
-			if(!isset($this->data->labels[$key][$rel]))
+			if(!isset($this->data->labels[$key][$rel])) {
 				$this->data->labels[$key][$rel] = [];
+			}
 			$this->data->labels[$key][$rel][] = $position;
 		}
 	}
@@ -191,7 +198,7 @@ class Relation extends AbstractDocument {
 	 * @param \DateTime $oDate
 	 */
 	public function setModified( \DateTime $oDate ) {
-		$this->data->modified= $oDate->format('Y-m-d\TH:i:sP');
+		$this->data->modified = $oDate->format('Y-m-d\TH:i:sP');
 	}
 
 	/**
@@ -208,14 +215,15 @@ class Relation extends AbstractDocument {
 	 * @throws \BeeBot\Exception\Native\InvalidArgumentException
 	 */
 	public function jsonSerialize() {
-		if( !isset($this->parent))
-		   throw new \BeeBot\Exception\Native\InvalidArgumentException('from need to be set before to save current Page!!!');
-		if( !isset($this->data->to))
-				throw new \BeeBot\Exception\Native\InvalidArgumentException('to need to be set before to save current Page!!!');
-		if( !isset($this->data->type))
-				throw new \BeeBot\Exception\Native\InvalidArgumentException('type need to be set before to save current Page!!!');
-		if( !isset($this->data->modified))
-				throw new \BeeBot\Exception\Native\InvalidArgumentException('modified need to be set before to save current Page!!!');
+		if( !isset($this->parent)) {
+			throw new \BeeBot\Exception\Native\InvalidArgumentException('from need to be set before to save current Page!!!');
+		} if( !isset($this->data->to)) {
+			throw new \BeeBot\Exception\Native\InvalidArgumentException('to need to be set before to save current Page!!!');
+		} if( !isset($this->data->type)) {
+			throw new \BeeBot\Exception\Native\InvalidArgumentException('type need to be set before to save current Page!!!');
+		} if( !isset($this->data->modified)) {
+			throw new \BeeBot\Exception\Native\InvalidArgumentException('modified need to be set before to save current Page!!!');
+		}
 
 		return parent::jsonSerialize();
 	}
