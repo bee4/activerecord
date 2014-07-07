@@ -154,7 +154,7 @@ abstract class Entity extends ActiveRecord
 	final public static function fetchOneBy( $term, $value ) {
 		$collection = call_user_func(array(get_called_class(),'fetchBy'), $term, $value);
 		if( count($collection) > 1 ) {
-			throw new \LengthException('More than one entities have been found by matching criteria...');
+			throw new \LengthException('More than one entities have been found by matching criteria: {term:"'.$term.'", value:"'.$value.'"}');
 		}
 
 		return count($collection)==1?$collection[0]:null;
