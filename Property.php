@@ -156,7 +156,7 @@ class Property {
 	 */
 	public function get(ActiveRecord $model) {
 		if( !$this->readable ) {
-			throw new \InvalidCallException("You can't get this property because it is not readable: ".$this->name);
+			throw new \BadMethodCallException("You can't get this property because it is not readable: ".$this->name);
 		}
 
 		if( $this->reflection->isPublic() ) {

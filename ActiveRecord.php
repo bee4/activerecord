@@ -56,8 +56,7 @@ abstract class ActiveRecord
 	 */
 	public function __construct() {
 		$name = self::preload();
-		$this->properties = self::$CACHE[$name]->properties;
-		$this->behaviours = self::$CACHE[$name]->behaviours;
+		$this->init();
 	}
 	
 	/**
@@ -182,7 +181,16 @@ abstract class ActiveRecord
 		if( !isset(self::$CACHE[$name]) ) {
 			self::generateCache($name);
 		}
+		
 		return $name;
+	}
+	
+	/**
+	 * Initialize current instance context
+	 */
+	protected function init() {
+		$this->properties = self::$CACHE[get_called_class()]->properties;
+		$this->behaviours = self::$CACHE[get_called_class()]->behaviours;
 	}
 
 	/**
@@ -234,5 +242,28 @@ abstract class ActiveRecord
 		if( isset($this->properties[$name]) ) {
 			$this->properties[$name]->set(null,$this);
 		}
+	}
+	
+	/**
+	 * Manage entity serialize
+	 * @return array
+	 */
+	public function __sleep() {
+		$serialized = [];
+		foreach( $this->properties as $name => $prop ) {
+			if( $prop->isReadable() ) {
+				$prop->get($this);
+			}
+			$serialized[] = $name;
+		}
+		return $serialized;
+	}
+	
+	/**
+	 * Manage entity unserialize
+	 */
+	public function __wakeup() {
+		self::preload();
+		$this->init();
 	}
 }

@@ -24,7 +24,7 @@ abstract class Entity extends ActiveRecord
 	const STATE_PERSISTED = 1;
 	const STATE_DELETED = 2;
 	
-	private $state = self::STATE_NEW;
+	protected $state = self::STATE_NEW;
 	
 	/**
 	 * Unique identifier for the current entity
