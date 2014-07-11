@@ -55,4 +55,10 @@ interface ConnectionInterface {
 	 * @return boolean
 	 */
 	public function delete(\BeeBot\Entity\Entity $entity);
+	
+	/**
+	 * Define how the connection will flush a transaction
+	 * @param \BeeBot\Entity\Transactions\TransactionInterface $transaction
+	 */
+	public function flush(\BeeBot\Entity\Transactions\TransactionInterface $transaction);
 }

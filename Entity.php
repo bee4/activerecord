@@ -19,13 +19,17 @@ namespace BeeBot\Entity;
  */
 abstract class Entity extends ActiveRecord
 {
-	//Define entity state 
+	//Define entity state
 	const STATE_NEW = 0;
 	const STATE_PERSISTED = 1;
 	const STATE_DELETED = 2;
-	
-	protected $state = self::STATE_NEW;
-	
+
+	/**
+	 * Entity state to avoid invalid operations
+	 * @var integer
+	 */
+	protected $_state = self::STATE_NEW;
+
 	/**
 	 * Unique identifier for the current entity
 	 * In all databases (Document base or relationals), an UID is defined for a document
@@ -43,31 +47,31 @@ abstract class Entity extends ActiveRecord
 		}
 		return $this->uid;
 	}
-	
+
 	/**
 	 * Check if current entity is not already persisted
 	 * @return boolean
 	 */
 	public function isNew() {
-		return $this->state === self::STATE_NEW;
+		return $this->_state === self::STATE_NEW;
 	}
-	
+
 	/**
 	 * Check if current entity is persisted
 	 * @return boolean
 	 */
 	public function isPersisted() {
-		return $this->state === self::STATE_PERSISTED;
+		return $this->_state === self::STATE_PERSISTED;
 	}
-	
+
 	/**
 	 * Check if current entity has been deleted
 	 * @return boolean
 	 */
 	public function isDeleted() {
-		return $this->state === self::STATE_DELETED;
+		return $this->_state === self::STATE_DELETED;
 	}
-	
+
 	/**
 	 * Magic method to match specific calls and redirect to the right method
 	 * @param string $name Method name
@@ -82,7 +86,7 @@ abstract class Entity extends ActiveRecord
 			if( !isset($arguments[0]) ) {
 				throw new \InvalidArgumentException("The function must be call with at least 1 parameter: The searched value!!");
 			}
-			
+
 			array_unshift($arguments, strtolower($matches[2]));
 			return call_user_func_array(
 				[	get_called_class(), $matches[1] ],
@@ -107,7 +111,7 @@ abstract class Entity extends ActiveRecord
 	public static function fetchBy($term, $value, $count = null, $from = null, array $sort = null) {
 		//Retrieve results from connection
 		$results = self::getConnection()->fetchBy(self::getType(), $term, $value);
-		
+
 		//Then prepare Entity collection construction
 		$name = get_called_class();
 		$collection = new EntityCollection;
@@ -123,8 +127,8 @@ abstract class Entity extends ActiveRecord
 				$tmp = new $name;
 				array_walk($data, $fillEntity, $tmp);
 			}
-			
-			$tmp->state = self::STATE_PERSISTED;
+
+			$tmp->_state = self::STATE_PERSISTED;
 			$collection->append($tmp);
 		}
 
@@ -165,12 +169,7 @@ abstract class Entity extends ActiveRecord
 	 * @return boolean
 	 */
 	final public function save() {
-		if( self::getConnection()->save($this) === true ) {
-			$this->state = self::STATE_PERSISTED;
-			return true;
-		} else {
-			return false;
-		}
+		return $this->executeOnConnection('save', self::STATE_PERSISTED);
 	}
 
 	/**
@@ -178,8 +177,21 @@ abstract class Entity extends ActiveRecord
 	 * @return boolean
 	 */
 	final public function delete() {
-		if( self::getConnection()->delete($this) === true ) {
-			$this->state = self::STATE_DELETED;
+		return $this->executeOnConnection('delete', self::STATE_DELETED);
+	}
+
+	/**
+	 * Execute an action on the loaded connection
+	 * @param string $name Connection method that will be called
+	 * @param integer $state A state constant defined in Entity
+	 * @return boolean
+	 * @throws \BadMethodCallException
+	 */
+	private function executeOnConnection( $name, $state ) {
+		//@todo Check that current entity is not attached to a transaction because we can't update it if transaction is in progress
+
+		if( call_user_func([self::getConnection(), $name], $this) === true ) {
+			$this->_state = $state;
 			return true;
 		} else {
 			return false;

@@ -109,6 +109,35 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 	}
 	
+	public function flush(\BeeBot\Entity\Transactions\TransactionInterface $transaction) {
+		//Make bulk loading more powerful (by disabling autorefreshing)
+		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "-1" }}')->send();
+
+		$request = $this->client
+			->post('_bulk')
+			->addCurlOption(CURLOPT_TIMEOUT, 120);
+		
+		//Then start the import
+		$string = "";
+		foreach( $transaction as $entity ) {
+			$type = "index";
+			if( $entity->isDeleted() ) {
+				$type = "delete";
+			} elseif( $entity->isPersisted() ) {
+				$type = "update";
+			}
+			
+			$string .= '{ "'.$type.'" : { "_type": "'.$entity::getType().'", "_id": "'.$entity->getUID().'"'.($entity::isChild()?', "_parent": "'.$entity->getParent()->getUID().'"':'').' } }';
+			if( $type !== 'delete' ) {
+				$string .= PHP_EOL.JsonTransformer::encode($entity).PHP_EOL;
+			}
+		}
+		$request->setBody($string)->send();
+
+		//When done restore standard parameters
+		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "1s" }}')->send();
+	}
+	
 	/**
 	 * Make a search request on requested documents
 	 * @param string $type Document type to be searched

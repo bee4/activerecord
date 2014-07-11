@@ -30,7 +30,7 @@ abstract class ActiveRecord
 	 * @var array
 	 */
 	private static $CACHE = [];
-	
+
 	/**
 	 * The current connection
 	 * @var Connections\ConnectionInterface
@@ -42,7 +42,7 @@ abstract class ActiveRecord
 	 * @var array
 	 */
 	private $properties;
-	
+
 	/**
 	 * Behaviour collection for the current entity
 	 * Behaviours are defined by traits and extend Entity capacities
@@ -55,10 +55,10 @@ abstract class ActiveRecord
 	 * Only public, protected and private are extracted, not static
 	 */
 	public function __construct() {
-		$name = self::preload();
+		self::preload();
 		$this->init();
 	}
-	
+
 	/**
 	 * Generate the entity meta data cache for the given ActiveRecordModel
 	 * @param string|\BeeBot\Entity\ActiveRecord $model
@@ -66,7 +66,7 @@ abstract class ActiveRecord
 	protected static function generateCache($model) {
 		$meta = new \stdClass();
 		$class = new ReflectionClass($model);
-		
+
 		//Prepare data
 		$meta->properties = $meta->behaviours = [];
 
@@ -83,7 +83,7 @@ abstract class ActiveRecord
 		while(($class = $class->getParentClass()) instanceof \ReflectionClass) {
 			$meta->traits = array_merge($class->getTraitNames(),$meta->traits);
 		}
-		
+
 		//Extract behaviours from traits
 		foreach( $meta->traits as $trait ) {
 			$parts = [];
@@ -91,12 +91,12 @@ abstract class ActiveRecord
 				$meta->behaviours[] = strtolower($parts[1]);
 			}
 		}
-		
+
 		$meta->type = strtolower(array_pop(explode("\\", get_called_class())));
 		//Put meta in cache
 		self::$CACHE[get_called_class()] = $meta;
 	}
-	
+
 	/**
 	 * Try to boot ActiveRecord from data source name
 	 * A callback can be defined to execute action after boot
@@ -106,12 +106,12 @@ abstract class ActiveRecord
 	final public static function boot($dsn, \Closure $callback = null) {
 		$connection = Connections\ConnectionFactory::build($dsn);
 		self::setConnection($connection);
-		
+
 		if(is_callable($callback)) {
 			call_user_func($callback, $connection);
 		}
 	}
-	
+
 	/**
 	 * Define directly with an object the adapter to be used within ActiveRecord
 	 * @param \BeeBot\Entity\Connections\ConnectionInterface $conn
@@ -119,7 +119,7 @@ abstract class ActiveRecord
 	final public static function setConnection( Connections\ConnectionInterface $conn ) {
 		self::$CONNECTION = $conn;
 	}
-	
+
 	/**
 	 * Access the current adapter or throw error if no adapter loaded
 	 * @throws \RuntimeException
@@ -131,7 +131,7 @@ abstract class ActiveRecord
 		}
 		return self::$CONNECTION;
 	}
-	
+
 	/**
 	 * Retrieve current type. This is used as table/index name and must be overidden for specific behaviours
 	 * @return string
@@ -140,7 +140,7 @@ abstract class ActiveRecord
 		$name = self::preload();
 		return self::$CACHE[$name]->type;
 	}
-	
+
 	/**
 	 * Generic wrapper to emulate behaviour detection: isDated, isChild, isFactory, ...
 	 * @param string $name
@@ -155,13 +155,13 @@ abstract class ActiveRecord
 			if( count($arguments) > 0) {
 				throw new \InvalidArgumentException("This method does not required any argument: ".$name);
 			}
-			
+
 			return self::is(strtolower($parts[1]));
 		}
-		
+
 		throw new \BadMethodCallException(get_called_class().'::'.$name.' method does not exists!');
 	}
-	
+
 	/**
 	 * Check if the current entity has a given behaviour
 	 * @param string $behaviour
@@ -171,7 +171,7 @@ abstract class ActiveRecord
 		$name = self::preload();
 		return in_array($behaviour, self::$CACHE[$name]->behaviours);
 	}
-	
+
 	/**
 	 * Preload class meta cache and return current class name
 	 * @return string
@@ -181,10 +181,10 @@ abstract class ActiveRecord
 		if( !isset(self::$CACHE[$name]) ) {
 			self::generateCache($name);
 		}
-		
+
 		return $name;
 	}
-	
+
 	/**
 	 * Initialize current instance context
 	 */
@@ -243,7 +243,7 @@ abstract class ActiveRecord
 			$this->properties[$name]->set(null,$this);
 		}
 	}
-	
+
 	/**
 	 * Manage entity serialize
 	 * @return array
@@ -258,7 +258,7 @@ abstract class ActiveRecord
 		}
 		return $serialized;
 	}
-	
+
 	/**
 	 * Manage entity unserialize
 	 */
