@@ -1,5 +1,5 @@
 {
-	"name": "beebot/active-record",
+	"name": "bee4/activerecord",
 	"description": "Generic ActiveRecord model implementation to detach data manipulation from the used database (NoSQL, Graph, Relational...)",
 	"license": "proprietary",
 	"authors": [
@@ -13,7 +13,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"BeeBot\\Entity": "src"
+			"BeeBot\\Entity\\": "src"
 		}
 	},
 	"require": {
