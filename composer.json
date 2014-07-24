@@ -1,0 +1,33 @@
+{
+	"name": "beebot/active-record",
+	"description": "Generic ActiveRecord model implementation to detach data manipulation from the used database (NoSQL, Graph, Relational...)",
+	"license": "proprietary",
+	"authors": [
+		{
+			"name": "Stephane HULARD",
+			"email": "s.hulard@chstudio.fr"
+		}
+	],
+	"config": {
+		"bin-dir": "bin"
+	},
+	"autoload": {
+		"psr-4": {
+			"BeeBot\\Entity": "src"
+		}
+	},
+	"require": {
+		"php": ">=5.4.0",
+		"ext-spl": "*",
+		"ext-pcre": "*",
+		"symfony/event-dispatcher": "2.*"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "4.*",
+		"behat/behat": "3.*"
+	},
+	"suggest": {
+		"ext-json": "*",
+		"ext-curl": "*"
+	}
+}
