@@ -28,6 +28,11 @@ class DocBlockParser
 	protected $lineno;
 	protected $cursor;
 
+	/**
+	 * Parse a doc block and extract meta data
+	 * @param string $comment The comment docblock to process
+	 * @return array
+	 */
 	public function parse($comment) {
 		// remove comment characters and normalize
 		$comment = preg_replace(array('#^/\*\*\s*#', '#\s*\*/$#', '#^\s*\*#m'), '', trim($comment));
@@ -121,6 +126,11 @@ class DocBlockParser
 		}
 	}
 
+	/**
+	 * Parse additional information on the property type
+	 * @param type $hint
+	 * @return type
+	 */
 	protected function parseHint($hint) {
 		$hints = array();
 		foreach (explode('|', $hint) as $hint) {
@@ -134,10 +144,19 @@ class DocBlockParser
 		return $hints;
 	}
 
+	/**
+	 * Normalize the string by removing EOL characters
+	 * @param string $str
+	 * @return string
+	 */
 	protected function normalizeString($str) {
 		return preg_replace('/\s*\n\s*/', ' ', trim($str));
 	}
 
+	/**
+	 * Move the parser cursor in the text
+	 * @param string $text
+	 */
 	protected function move($text) {
 		$this->lineno += substr_count($text, "\n");
 		$this->cursor += strlen($text);
