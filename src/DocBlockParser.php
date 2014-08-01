@@ -23,9 +23,28 @@ class DocBlockParser
 	 */
 	const TAG_REGEX = '@([^ ]+)(?:\s+(.*?))?(?=(\n[ \t]*@|\s*$))';
 
+	/**
+	 * Keyword to identify which type of data is going to be processed (desc, tag)
+	 * @var sring
+	 */
 	protected $position;
+
+	/**
+	 * Cleanup comment string
+	 * @var string
+	 */
 	protected $comment;
+
+	/**
+	 * Contain the number of comment lines
+	 * @var integer
+	 */
 	protected $lineno;
+
+	/**
+	 * Pointer position in the doc block
+	 * @var integer
+	 */
 	protected $cursor;
 
 	/**
