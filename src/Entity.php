@@ -19,7 +19,7 @@ namespace BeeBot\Entity;
  */
 abstract class Entity extends ActiveRecord
 {
-	//Define entity state
+	//Define entity states
 	const STATE_NEW = 0;
 	const STATE_PERSISTED = 1;
 	const STATE_DELETED = 2;
@@ -70,6 +70,14 @@ abstract class Entity extends ActiveRecord
 	 */
 	public function isDeleted() {
 		return $this->_state === self::STATE_DELETED;
+	}
+
+	/**
+	 * Initialize the current entity state
+	 * @param integer $state Entity state value
+	 */
+	private function setState($state) {
+		$this->_state = $state;
 	}
 
 	/**
@@ -128,7 +136,7 @@ abstract class Entity extends ActiveRecord
 				array_walk($data, $fillEntity, $tmp);
 			}
 
-			$tmp->_state = self::STATE_PERSISTED;
+			$tmp->setState(self::STATE_PERSISTED);
 			$collection->append($tmp);
 		}
 
@@ -191,7 +199,7 @@ abstract class Entity extends ActiveRecord
 		//@todo Check that current entity is not attached to a transaction because we can't update it if transaction is in progress
 
 		if( call_user_func([self::getConnection(), $name], $this) === true ) {
-			$this->_state = $state;
+			$this->setState($state);
 			return true;
 		} else {
 			return false;

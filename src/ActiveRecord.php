@@ -80,7 +80,7 @@ abstract class ActiveRecord
 
 		//Extract traits
 		$meta->traits = $class->getTraitNames();
-		while(($class = $class->getParentClass()) instanceof \ReflectionClass) {
+		while(($class = $class->getParentClass()) instanceof ReflectionClass) {
 			$meta->traits = array_merge($class->getTraitNames(),$meta->traits);
 		}
 
@@ -216,7 +216,7 @@ abstract class ActiveRecord
 	public function __get($name) {
 		if( !isset($this->properties[$name]) ) {
 			throw new \InvalidArgumentException(
-				'Property name given does not exists or is not a writable one: '.$name
+				'Property name given does not exists in the current object: '.$name
 			);
 		}
 		return $this->properties[$name]->get($this);
