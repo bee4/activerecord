@@ -18,13 +18,16 @@ use \ReflectionProperty;
  * Define an entity property with its specific rules
  * @package BeeBot\Entity
  */
-class Property {
+class Property
+{
 	/**
+	 * PHP Reflection instance for the current property
 	 * @var \ReflectionProperty
 	 */
 	private $reflection;
 
 	/**
+	 * Property name
 	 * @var string
 	 */
 	private $name;
@@ -42,6 +45,7 @@ class Property {
 	private $getter;
 
 	/**
+	 * Doc block properties
 	 * @var array
 	 */
 	private $attributes;
@@ -89,6 +93,7 @@ class Property {
 	}
 
 	/**
+	 * Parse property block comment and extract meta data
 	 * @param string $comment
 	 */
 	private function parseDocComment($comment) {
@@ -108,6 +113,7 @@ class Property {
 	}
 
 	/**
+	 * Check if property is readable
 	 * @return boolean
 	 */
 	public function isReadable() {
@@ -115,6 +121,7 @@ class Property {
 	}
 
 	/**
+	 * Check if property is writable
 	 * @return boolean
 	 */
 	public function isWritable() {

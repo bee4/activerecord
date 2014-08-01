@@ -20,6 +20,7 @@ use Bee4\Http\Message\Request\AbstractRequest;
  * ElasticSearch connection adapter
  * Allow to perform operations on ES indexes
  * @package BeeBot\Entity\Connections
+ * @see ConnectionInterface
  */
 class ElasticsearchConnection extends AbstractConnection
 {
@@ -28,7 +29,7 @@ class ElasticsearchConnection extends AbstractConnection
 	 * @var \Bee4\Http\Client
 	 */
 	protected $client;
-	
+
 	/**
 	 * Initialize ES adapter
 	 * @param string $url ElasticSearch index URL
@@ -38,7 +39,7 @@ class ElasticsearchConnection extends AbstractConnection
 			$url .= "/";
 		}
 		$this->client = new Client($url);
-		
+
 		//Register events for debug purpose and performance check
 		$this->client->register(Client::ON_REQUEST, function(AbstractRequest $request) {
 			$this->dispatch(ConnectionEvent::REQUEST, new ConnectionEvent($request));
@@ -47,41 +48,41 @@ class ElasticsearchConnection extends AbstractConnection
 			$this->dispatch(ConnectionEvent::ERROR, new ConnectionEvent($error));
 		});
 	}
-	
+
 	public function countBy($type, $term, $value) {
 		$response = $this->run($type, ["query" => self::buildQuery($term, $value)], '_count');
 		return $response['count'];
 	}
-	
+
 	public function fetchBy($type, $term, $value) {
 		$response = $this->run($type, [
-			"query" => self::buildQuery($term, $value), 
+			"query" => self::buildQuery($term, $value),
 			"fields" => ['_source','_parent','_timestamp']
 		]);
-		
+
 		return $this->extractResults($response);
 	}
-	
+
 	public function raw($type, $query) {
 		$response = $this->run($type, $query);
 		return $this->extractResults($response);
 	}
-	
+
 	public function save(\BeeBot\Entity\Entity $entity) {
 		$url = $entity::getType().'/'.$entity->uid;
 		if( $entity::isChild() && $entity->getParent() !== null ) {
 			if( !$entity->getParent()->isPersisted() ) {
 				throw new \RuntimeException('Parent entity is not a persisted one!');
 			}
-			
+
 			$url.='?parent='.$entity->getParent()->uid;
 		}
-		
+
 		$response = $this->client
 			->put($url)
 			->setBody(JsonTransformer::encode($entity))
 			->send()->json();
-		
+
 		try {
 			return $this->checkErrors($response);
 		} catch( \Exception $error ) {
@@ -90,12 +91,12 @@ class ElasticsearchConnection extends AbstractConnection
 			return false;
 		}
 	}
-	
+
 	public function delete(\BeeBot\Entity\Entity $entity) {
 		$response = $this->client
 			->delete($entity::getType().'/'.$entity->uid)
 			->send()->json();
-		
+
 		try {
 			$this->checkErrors($response);
 			if( $response['found'] === false ) {
@@ -108,7 +109,7 @@ class ElasticsearchConnection extends AbstractConnection
 			return false;
 		}
 	}
-	
+
 	public function flush(\BeeBot\Entity\Transactions\TransactionInterface $transaction) {
 		//Make bulk loading more powerful (by disabling autorefreshing)
 		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "-1" }}')->send();
@@ -116,7 +117,7 @@ class ElasticsearchConnection extends AbstractConnection
 		$request = $this->client
 			->post('_bulk')
 			->addCurlOption(CURLOPT_TIMEOUT, 120);
-		
+
 		//Then start the import
 		$string = "";
 		foreach( $transaction as $entity ) {
@@ -126,7 +127,7 @@ class ElasticsearchConnection extends AbstractConnection
 			} elseif( $entity->isPersisted() ) {
 				$type = "update";
 			}
-			
+
 			$string .= '{ "'.$type.'" : { "_type": "'.$entity::getType().'", "_id": "'.$entity->getUID().'"'.($entity::isChild()?', "_parent": "'.$entity->getParent()->getUID().'"':'').' } }';
 			if( $type !== 'delete' ) {
 				$string .= PHP_EOL.JsonTransformer::encode($entity).PHP_EOL;
@@ -137,7 +138,7 @@ class ElasticsearchConnection extends AbstractConnection
 		//When done restore standard parameters
 		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "1s" }}')->send();
 	}
-	
+
 	/**
 	 * Make a search request on requested documents
 	 * @param string $type Document type to be searched
@@ -156,11 +157,11 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 		$response = $post->setBody($json)->send()->json();
 		$this->checkErrors($response);
-			
+
 		//It's a search answer, we extract only the needed document
 		return $response;
 	}
-	
+
 	/**
 	 * Check if the current response contain invalid codes
 	 * @param array $response
@@ -174,10 +175,10 @@ class ElasticsearchConnection extends AbstractConnection
 		if( isset($response['_shards']) && $response['_shards']['failed'] > 0 ) {
 			throw new \RuntimeException('Some shards failed to give result: '.  print_r($response, true));
 		}
-		
+
 		return true;
 	}
-		
+
 	/**
 	 * Extract data from given ES result (hits array)
 	 * Make some adjustement (uid) and prepare for Entity building
@@ -192,7 +193,7 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Compute a valid elasticsearch query from term and value
 	 * This method is a helper for search methods (count, fetch, ...)

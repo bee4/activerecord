@@ -19,7 +19,7 @@ namespace BeeBot\Entity;
  */
 abstract class Entity extends ActiveRecord
 {
-	//Define entity state
+	//Define entity states
 	const STATE_NEW = 0;
 	const STATE_PERSISTED = 1;
 	const STATE_DELETED = 2;
