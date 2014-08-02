@@ -19,5 +19,5 @@ namespace BeeBot\Entity\Connections;
 abstract class AbstractConnection implements ConnectionInterface
 {
 	//Add Event dispatcher behaviour to allow events
-	use \BeeBot\EventDispatcherAwareTrait;
+	use \BeeBot\Event\EventDispatcherAwareTrait;
 }

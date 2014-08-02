@@ -4,8 +4,50 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9daa8b183ef99541d1de51a217a73e4d",
+    "hash": "b493a61970f4dfc2f41a8016ee3ac8fd",
     "packages": [
+        {
+            "name": "beebot/events",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/beebot/events.git",
+                "reference": "6487e6bd47f34209ed3f7f3f679eab3a1fd7a441"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/beebot/events/get/6487e6bd47f34209ed3f7f3f679eab3a1fd7a441.zip",
+                "reference": "6487e6bd47f34209ed3f7f3f679eab3a1fd7a441",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "ext-spl": "*",
+                "php": ">=5.4.0",
+                "symfony/event-dispatcher": "2.*"
+            },
+            "require-dev": {
+                "behat/behat": "3.*",
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BeeBot\\Event\\": "src"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Stephane HULARD",
+                    "email": "s.hulard@chstudio.fr"
+                }
+            ],
+            "description": "Implementation of the EventDispatcher pattern used in BeeBot and based of Symfony2 component",
+            "time": "2014-08-02 09:47:05"
+        },
         {
             "name": "symfony/event-dispatcher",
             "version": "v2.5.2",
@@ -1271,9 +1313,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "beebot/events": 20
+    },
     "platform": {
         "php": ">=5.4.0",
         "ext-spl": "*",
