@@ -1,5 +1,5 @@
 {
-	"name": "bee4/activerecord",
+	"name": "beebot/activerecord",
 	"description": "Generic ActiveRecord model implementation to detach data manipulation from the used database (NoSQL, Graph, Relational...)",
 	"license": "proprietary",
 	"authors": [
