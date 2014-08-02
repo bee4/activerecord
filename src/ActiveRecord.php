@@ -70,7 +70,7 @@ abstract class ActiveRecord
 		//Prepare data
 		$meta->properties = $meta->behaviours = [];
 
-		//Extract properties
+		//Extract properties except static ones
 		foreach( $class->getProperties(ReflectionProperty::IS_PUBLIC|ReflectionProperty::IS_PROTECTED|ReflectionProperty::IS_PRIVATE) as $property ) {
 			//Static are not considered as entity props because of their global scope
 			if( $property->isStatic() ) { continue; }
