@@ -17,7 +17,7 @@ namespace BeeBot\Entity;
  * @package BeeBot\Action
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
  */
-abstract class Entity extends ActiveRecord
+abstract class Entity extends ActiveRecord implements \Serializable
 {
 	//Define entity states
 	const STATE_NEW = 0;
@@ -28,7 +28,7 @@ abstract class Entity extends ActiveRecord
 	 * Entity state to avoid invalid operations
 	 * @var integer
 	 */
-	protected $_state = self::STATE_NEW;
+	private $_state = self::STATE_NEW;
 
 	/**
 	 * Unique identifier for the current entity
@@ -38,13 +38,18 @@ abstract class Entity extends ActiveRecord
 	protected $uid;
 
 	/**
+	 * Initialize Entity
+	 */
+	public function __construct() {
+		parent::__construct();
+		$this->uid = uniqid();
+	}
+
+	/**
 	 * Retrieve current UID
 	 * @return string
 	 */
 	public function getUID() {
-		if( !isset($this->uid) ) {
-			$this->uid = uniqid();
-		}
 		return $this->uid;
 	}
 
@@ -203,6 +208,28 @@ abstract class Entity extends ActiveRecord
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	/**
+	 * Manage entity serialize
+	 * @return array
+	 */
+	public function serialize() {
+		return serialize(get_object_vars($this));
+	}
+
+	/**
+	 * Manage entity unserialize
+	 * @param string $serialized
+	 */
+	public function unserialize($serialized) {
+		self::preload();
+		$this->init();
+
+		$data = unserialize($serialized);
+		foreach( $data as $name => $value ) {
+			$this->{$name} = $value;
 		}
 	}
 }

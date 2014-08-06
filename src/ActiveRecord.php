@@ -243,27 +243,4 @@ abstract class ActiveRecord
 			$this->properties[$name]->set(null,$this);
 		}
 	}
-
-	/**
-	 * Manage entity serialize
-	 * @return array
-	 */
-	public function __sleep() {
-		$serialized = [];
-		foreach( $this->properties as $name => $prop ) {
-			if( $prop->isReadable() ) {
-				$prop->get($this);
-			}
-			$serialized[] = $name;
-		}
-		return $serialized;
-	}
-
-	/**
-	 * Manage entity unserialize
-	 */
-	public function __wakeup() {
-		self::preload();
-		$this->init();
-	}
 }
