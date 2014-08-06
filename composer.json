@@ -34,6 +34,7 @@
 	},
 	"suggest": {
 		"ext-json": "*",
-		"ext-curl": "*"
+		"ext-curl": "*",
+		"bee4/httpclient": "~0"
 	}
 }
