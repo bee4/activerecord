@@ -12,7 +12,6 @@
 
 namespace BeeBot\Entity\Connections;
 
-use BeeBot\Tools\Native\JsonTransformer;
 use Bee4\Http\Client;
 use Bee4\Http\Message\Request\AbstractRequest;
 
@@ -80,7 +79,7 @@ class ElasticsearchConnection extends AbstractConnection
 
 		$response = $this->client
 			->put($url)
-			->setBody(JsonTransformer::encode($entity))
+			->setBody(json_encode($entity))
 			->send()->json();
 
 		try {
@@ -130,7 +129,7 @@ class ElasticsearchConnection extends AbstractConnection
 
 			$string .= '{ "'.$type.'" : { "_type": "'.$entity::getType().'", "_id": "'.$entity->getUID().'"'.($entity::isChild()?', "_parent": "'.$entity->getParent()->getUID().'"':'').' } }';
 			if( $type !== 'delete' ) {
-				$string .= PHP_EOL.JsonTransformer::encode($entity).PHP_EOL;
+				$string .= PHP_EOL.json_encode($entity).PHP_EOL;
 			}
 		}
 		$request->setBody($string)->send();
@@ -151,7 +150,7 @@ class ElasticsearchConnection extends AbstractConnection
 		$post = $this->client->post($type.'/'.$endpoint.'?pretty');
 
 		//Always return Parent and timestamp property!!
-		$json = JsonTransformer::encode($request);
+		$json = json_encode($request);
 		if( $json === false ) {
 			throw new \RuntimeException('An error occured during JSON encoding of the given parameters: '.$request);
 		}
