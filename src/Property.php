@@ -133,11 +133,11 @@ class Property
 	 * @param mixed $value
 	 * @param \BeeBot\Entity\ActiveRecord $model
 	 * @return \BeeBot\Entity\ActiveRecord
-	 * @throws \InvalidArgumentException
+	 * @throws \BadMethodCallException
 	 */
 	public function set($value, ActiveRecord $model) {
 		if( !$this->writable ) {
-			throw new \InvalidCallException("You can't set this property because it is not writable: ".$this->name);
+			throw new \BadMethodCallException("You can't set this property because it is not writable: ".$this->name);
 		}
 
 		//If the property is public, don't worry just set
@@ -159,7 +159,7 @@ class Property
 	 * Get property value from an AbstractRecordModel instance
 	 * @param \BeeBot\Entity\ActiveRecord $model
 	 * @return mixed Depends on the property value
-	 * @throws \InvalidArgumentException
+	 * @throws \BadMethodCallException
 	 */
 	public function get(ActiveRecord $model) {
 		if( !$this->readable ) {
