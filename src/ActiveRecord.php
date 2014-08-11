@@ -38,6 +38,12 @@ abstract class ActiveRecord
 	private static $CONNECTION;
 
 	/**
+	 * List of all PHP interface that are considered behaviours
+	 * @var array
+	 */
+	private static $BEHAVIOUR_INTERFACE = ["Serializable", "JsonSerializable"];
+
+	/**
 	 * Property collection used in the current entity
 	 * @var array
 	 */
@@ -66,8 +72,6 @@ abstract class ActiveRecord
 	protected static function generateCache($model) {
 		$meta = new \stdClass();
 		$class = new ReflectionClass($model);
-
-		//Prepare data
 		$meta->properties = $meta->behaviours = [];
 
 		//Extract properties except static ones
@@ -78,6 +82,9 @@ abstract class ActiveRecord
 			$meta->properties[$property->getName()] = $item;
 		}
 
+		//Extract interfaces
+		$meta->interfaces = $class->getInterfaceNames();
+
 		//Extract traits
 		$meta->traits = $class->getTraitNames();
 		while(($class = $class->getParentClass()) instanceof ReflectionClass) {
@@ -87,12 +94,22 @@ abstract class ActiveRecord
 		//Extract behaviours from traits
 		foreach( $meta->traits as $trait ) {
 			$parts = [];
-			if(preg_match('/Behaviours.([A-Za-z]*)Entity$/', $trait, $parts)===1) {
+			if(preg_match('/Behaviours.([A-Za-z]*)Entity$/', $trait, $parts) === 1) {
 				$meta->behaviours[] = strtolower($parts[1]);
 			}
 		}
 
+		//Combine trait behaviours with interface ones
+		$behavioursInterface = array_intersect(self::$BEHAVIOUR_INTERFACE, $meta->interfaces);
+		$meta->behaviours = array_unique(
+			array_merge(
+				$meta->behaviours,
+				array_map('strtolower', $behavioursInterface)
+			)
+		);
+
 		$meta->type = strtolower(array_pop(explode("\\", get_called_class())));
+		
 		//Put meta in cache
 		self::$CACHE[get_called_class()] = $meta;
 	}
