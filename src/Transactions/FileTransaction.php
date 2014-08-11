@@ -16,32 +16,32 @@ namespace BeeBot\Entity\Transactions;
  * Description of BaseTransaction
  * @package BeeBot\Entity\Transactions
  */
-class FileTransaction implements TransactionInterface 
+class FileTransaction implements TransactionInterface
 {
 	/**
 	 * Transactionable entities
 	 * @var resource
 	 */
 	protected $stream;
-	
+
 	/**
 	 * Number of entities
 	 * @var integer
 	 */
 	protected $nb;
-	
+
 	/**
 	 * Number of bytes read in the stream
 	 * @var integer
 	 */
 	protected $pos;
-	
+
 	/**
 	 * The current line
 	 * @var string
 	 */
 	protected $current;
-	
+
 	/**
 	 * Initialize entity collection
 	 */
@@ -52,7 +52,7 @@ class FileTransaction implements TransactionInterface
 			throw new \RuntimeException("Can't create tmp stream !!");
 		}
 	}
-	
+
 	public function __destruct() {
 		fclose($this->stream);
 	}
@@ -88,6 +88,10 @@ class FileTransaction implements TransactionInterface
 	}
 
 	public function persist(\BeeBot\Entity\Entity $entity) {
+		if( !$entity->isSerializable() ) {
+			throw new \InvalidArgumentException('Entity given must be serializable when using FileTransaction (use SerializableEntity trait or Serializable interface...)');
+		}
+
 		$this->nb++;
 		$s = serialize($entity).PHP_EOL;
 		fseek($this->stream, 0, SEEK_END);
