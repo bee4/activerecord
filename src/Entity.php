@@ -35,7 +35,7 @@ abstract class Entity extends ActiveRecord implements \Serializable
 	 * In all databases (Document base or relationals), an UID is defined for a document
 	 * @var string
 	 */
-	protected $uid;
+	private $uid;
 
 	/**
 	 * Initialize Entity
@@ -58,7 +58,7 @@ abstract class Entity extends ActiveRecord implements \Serializable
 	 * @return boolean
 	 */
 	public function isNew() {
-		return $this->_state === self::STATE_NEW;
+		return $this->state === self::STATE_NEW;
 	}
 
 	/**
@@ -66,7 +66,7 @@ abstract class Entity extends ActiveRecord implements \Serializable
 	 * @return boolean
 	 */
 	public function isPersisted() {
-		return $this->_state === self::STATE_PERSISTED;
+		return $this->state === self::STATE_PERSISTED;
 	}
 
 	/**
@@ -74,7 +74,7 @@ abstract class Entity extends ActiveRecord implements \Serializable
 	 * @return boolean
 	 */
 	public function isDeleted() {
-		return $this->_state === self::STATE_DELETED;
+		return $this->state === self::STATE_DELETED;
 	}
 
 	/**
@@ -82,7 +82,7 @@ abstract class Entity extends ActiveRecord implements \Serializable
 	 * @param integer $state Entity state value
 	 */
 	private function setState($state) {
-		$this->_state = $state;
+		$this->state = $state;
 	}
 
 	/**

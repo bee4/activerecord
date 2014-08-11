@@ -68,13 +68,13 @@ class ElasticsearchConnection extends AbstractConnection
 	}
 
 	public function save(\BeeBot\Entity\Entity $entity) {
-		$url = $entity::getType().'/'.$entity->uid;
+		$url = $entity::getType().'/'.$entity->getUID();
 		if( $entity::isChild() && $entity->getParent() !== null ) {
 			if( !$entity->getParent()->isPersisted() ) {
 				throw new \RuntimeException('Parent entity is not a persisted one!');
 			}
 
-			$url.='?parent='.$entity->getParent()->uid;
+			$url.='?parent='.$entity->getParent()->getUID();
 		}
 
 		$response = $this->client
@@ -93,7 +93,7 @@ class ElasticsearchConnection extends AbstractConnection
 
 	public function delete(\BeeBot\Entity\Entity $entity) {
 		$response = $this->client
-			->delete($entity::getType().'/'.$entity->uid)
+			->delete($entity::getType().'/'.$entity->getUID())
 			->send()->json();
 
 		try {
