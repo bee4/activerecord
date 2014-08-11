@@ -6,18 +6,20 @@
  *
  * @copyright Bee4 2013
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
- * @package BeeBot\Action
+ * @package BeeBot\Entity
  */
 
 namespace BeeBot\Entity;
 
 /**
- * Simple entity definition
- * Base of all the extended entities
- * @package BeeBot\Action
+ * Entity abstract definition
+ * Used to define global canvas with state and connection management around entities
+ * @package BeeBot\Entity
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
+ * @method Entity fetchOneByUID(string $uid) Fetch an entity by its unique identifier
+ * @method EntityCollection fetchByUID(string $uid) Fetch a collection of entities which use given unique identifier
  */
-abstract class Entity extends ActiveRecord implements \Serializable
+abstract class Entity extends ActiveRecord
 {
 	//Define entity states
 	const STATE_NEW = 0;
@@ -28,7 +30,7 @@ abstract class Entity extends ActiveRecord implements \Serializable
 	 * Entity state to avoid invalid operations
 	 * @var integer
 	 */
-	private $_state = self::STATE_NEW;
+	private $state = self::STATE_NEW;
 
 	/**
 	 * Unique identifier for the current entity
@@ -128,6 +130,7 @@ abstract class Entity extends ActiveRecord implements \Serializable
 		//Then prepare Entity collection construction
 		$name = get_called_class();
 		$collection = new EntityCollection;
+
 		//Callback used when an Entity does not use Factory behaviour
 		$fillEntity = function($value, $prop, &$entity) {
 			$entity->{$prop} = $value;
@@ -208,28 +211,6 @@ abstract class Entity extends ActiveRecord implements \Serializable
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	/**
-	 * Manage entity serialize
-	 * @return array
-	 */
-	public function serialize() {
-		return serialize(get_object_vars($this));
-	}
-
-	/**
-	 * Manage entity unserialize
-	 * @param string $serialized
-	 */
-	public function unserialize($serialized) {
-		self::preload();
-		$this->init();
-
-		$data = unserialize($serialized);
-		foreach( $data as $name => $value ) {
-			$this->{$name} = $value;
 		}
 	}
 }
