@@ -21,6 +21,8 @@ use ReflectionProperty;
  * @method boolean isDated()
  * @method boolean isChild()
  * @method boolean isFactory()
+ * @method boolean isJsonSerializable()
+ * @method boolean isSerializable()
  */
 abstract class ActiveRecord
 {
