@@ -32,6 +32,7 @@ trait JsonSerializableEntity
 			}
 			$tmp->{$key} = $value;
 		}
+		$tmp->uid = $this->getUID();
 
 		return $tmp;
 	}
