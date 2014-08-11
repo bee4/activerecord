@@ -48,6 +48,17 @@ abstract class Entity extends ActiveRecord
 	}
 
 	/**
+	 * Initialized the entity even without construct (unserialize)
+	 * @param string $uid
+	 * @param integer $state Entity state
+	 */
+	protected function init( $uid = null, $state = self::STATE_NEW ) {
+		parent::init();
+		$this->uid = $uid;
+		$this->state = $state;
+	}
+
+	/**
 	 * Retrieve current UID
 	 * @return string
 	 */
