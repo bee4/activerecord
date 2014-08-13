@@ -68,7 +68,7 @@ class ElasticsearchConnection extends AbstractConnection
 	}
 
 	public function save(\BeeBot\Entity\Entity $entity) {
-		if( !$entity->isJsonSerializable() ) {
+		if( !$entity::isJsonSerializable() ) {
 			throw new \InvalidArgumentException('Given entity must use JsonSerializable behaviour');
 		}
 
@@ -95,7 +95,7 @@ class ElasticsearchConnection extends AbstractConnection
 	}
 
 	public function delete(\BeeBot\Entity\Entity $entity) {
-		if( !$entity->isJsonSerializable() ) {
+		if( !$entity::isJsonSerializable() ) {
 			throw new \InvalidArgumentException('Given entity must use JsonSerializable behaviour');
 		}
 
