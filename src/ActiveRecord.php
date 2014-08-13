@@ -24,7 +24,7 @@ use ReflectionProperty;
  * @method boolean isJsonSerializable()
  * @method boolean isSerializable()
  */
-abstract class ActiveRecord
+abstract class ActiveRecord implements \IteratorAggregate
 {
 	/**
 	 * Cache property for loaded properties
@@ -261,5 +261,19 @@ abstract class ActiveRecord
 		if( isset($this->properties[$name]) ) {
 			$this->properties[$name]->set(null,$this);
 		}
+	}
+
+	/**
+	 * Allow to crawl active record instance and retrieve object properties
+	 * @return \ArrayIterator
+	 */
+	public function getIterator() {
+		$props = [];
+		foreach( $this->properties as $name => $prop ) {
+			if( $prop->isReadable() ) {
+				$props[$name] = $prop->get($this);
+			}
+		}
+		return new \ArrayIterator($props);
 	}
 }

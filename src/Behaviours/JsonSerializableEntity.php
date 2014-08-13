@@ -26,11 +26,11 @@ trait JsonSerializableEntity
 	public function jsonSerialize()
 	{
 		$tmp = new \stdClass();
-		foreach( $this as $key => $value ) {
+		foreach( $this->getIterator() as $name => $value ) {
 			if( is_null($value) ) {
 				continue;
 			}
-			$tmp->{$key} = $value;
+			$tmp->{$name} = $value;
 		}
 		$tmp->uid = $this->getUID();
 
