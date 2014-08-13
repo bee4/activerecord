@@ -111,7 +111,7 @@ abstract class ActiveRecord
 		);
 
 		$meta->type = strtolower(array_pop(explode("\\", get_called_class())));
-		
+
 		//Put meta in cache
 		self::$CACHE[get_called_class()] = $meta;
 	}
