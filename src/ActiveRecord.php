@@ -102,11 +102,11 @@ abstract class ActiveRecord implements \IteratorAggregate
 		}
 
 		//Combine trait behaviours with interface ones
-		$behavioursInterface = array_intersect(self::$BEHAVIOUR_INTERFACE, $meta->interfaces);
+		$behaviourInterfaces = array_intersect(self::$BEHAVIOUR_INTERFACE, $meta->interfaces);
 		$meta->behaviours = array_unique(
 			array_merge(
 				$meta->behaviours,
-				array_fill_keys(array_map('strtolower', $behavioursInterface), true)
+				array_fill_keys(array_map('strtolower', $behaviourInterfaces), true)
 			)
 		);
 
