@@ -143,6 +143,7 @@ class ElasticsearchConnection extends AbstractConnection
 
 		//When done restore standard parameters
 		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "1s" }}')->send();
+		return true;
 	}
 
 	/**
