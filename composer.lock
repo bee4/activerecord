@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f4adf5c36f8500cbc3237117301a8384",
+    "hash": "a3b35b3faf2a486478034519346fd170",
     "packages": [
         {
             "name": "bee4/httpclient",
@@ -1454,10 +1454,12 @@
     "stability-flags": {
         "beebot/events": 20
     },
+    "prefer-stable": false,
     "platform": {
         "php": ">=5.4.0",
         "ext-spl": "*",
-        "ext-pcre": "*"
+        "ext-pcre": "*",
+        "ext-json": "*"
     },
     "platform-dev": [
 
