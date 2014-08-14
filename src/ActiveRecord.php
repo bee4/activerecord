@@ -97,7 +97,7 @@ abstract class ActiveRecord implements \IteratorAggregate
 		foreach( $meta->traits as $trait ) {
 			$parts = [];
 			if(preg_match('/Behaviours.([A-Za-z]*)Entity$/', $trait, $parts) === 1) {
-				$meta->behaviours[] = strtolower($parts[1]);
+				$meta->behaviours[strtolower($parts[1])] = true;
 			}
 		}
 
@@ -106,7 +106,7 @@ abstract class ActiveRecord implements \IteratorAggregate
 		$meta->behaviours = array_unique(
 			array_merge(
 				$meta->behaviours,
-				array_map('strtolower', $behavioursInterface)
+				array_fill_keys(array_map('strtolower', $behavioursInterface), true)
 			)
 		);
 
@@ -188,7 +188,7 @@ abstract class ActiveRecord implements \IteratorAggregate
 	 */
 	protected static function is($behaviour) {
 		$name = self::preload();
-		return in_array($behaviour, self::$CACHE[$name]->behaviours);
+		return isset(self::$CACHE[$name]->behaviours[$behaviour]);
 	}
 
 	/**
