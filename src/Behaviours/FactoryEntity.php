@@ -37,6 +37,7 @@ trait FactoryEntity
 	/**
 	 * Update object details from given Data
 	 * @param mixed $data The data to use to wake up
+	 * @idea Maybe use Traversable as data type is a good idea ...
 	 */
 	abstract protected function hydrate( $data );
 }
