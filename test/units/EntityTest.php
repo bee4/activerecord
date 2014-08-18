@@ -36,7 +36,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 		//Initiate the ActiveRecord connection instance
 		\BeeBot\Entity\ActiveRecord::setConnection($this->connexion);
-		$this->object = $this->getMockForAbstractClass("\BeeBot\Entity\Entity");
+		$this->object = $this->getMockForAbstractClass("\BeeBot\Entity\Entity", [], "MockedEntity");
 	}
 
 	/**
@@ -67,7 +67,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 			->method("countBy")
 			->will($this->onConsecutiveCalls(1, 100));
 
-		$o = get_class($this->object);
+		$o = "MockedEntity";
 		$this->assertEquals(1, $o::countBy('uid', 'XXX'));
 		$this->assertEquals(100, $o::countByUID('XXX'));
 	}
@@ -87,7 +87,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 				[['uid'=>"XXX"], ['uid'=>"YYY"]]
 			));
 
-		$o = get_class($this->object);
+		$o = "MockedEntity";
 		$this->assertInstanceOf("\BeeBot\Entity\EntityCollection", $o::fetchBy('uid', 'XXX'));
 		$collection = $o::fetchByUID('XXX');
 		$this->assertCount(2, $collection);
@@ -106,7 +106,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 	 * @expectedException \InvalidArgumentException
 	 */
 	public function testInvalidMagicStatic() {
-		$o = get_class($this->object);
+		$o = "MockedEntity";
 		$o::fetchByUID();
 	}
 }
