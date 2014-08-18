@@ -15,7 +15,8 @@ use BeeBot\Entity\Behaviours\FactoryEntity;
 
 /**
  * Nested Entity definition
- * Used to encapsulate data inside an entity as object
+ * Used to encapsulate data inside an entity as object. These objects used the
+ * ActiveRecord logic but can't be searched or saved directly
  * @package BeeBot\Entity
  * @author	Stephane HULARD <s.hulard@chstudio.fr>
  */

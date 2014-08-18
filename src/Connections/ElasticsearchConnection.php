@@ -68,6 +68,12 @@ class ElasticsearchConnection extends AbstractConnection
 	}
 
 	public function save(\BeeBot\Entity\Entity $entity) {
+		parent::save($entity);
+
+		if( !$entity::isJsonSerializable() ) {
+			throw new \InvalidArgumentException('Given entity must use JsonSerializable behaviour');
+		}
+
 		$url = $entity::getType().'/'.$entity->getUID();
 		if( $entity::isChild() && $entity->getParent() !== null ) {
 			if( !$entity->getParent()->isPersisted() ) {
@@ -78,8 +84,7 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 
 		$response = $this->client
-			->put($url)
-			->setBody(json_encode($entity))
+			->put($url)->setBody(json_encode($entity))
 			->send()->json();
 
 		try {
@@ -92,6 +97,12 @@ class ElasticsearchConnection extends AbstractConnection
 	}
 
 	public function delete(\BeeBot\Entity\Entity $entity) {
+		parent::delete($entity);
+
+		if( !$entity::isJsonSerializable() ) {
+			throw new \InvalidArgumentException('Given entity must use JsonSerializable behaviour');
+		}
+
 		$response = $this->client
 			->delete($entity::getType().'/'.$entity->getUID())
 			->send()->json();
@@ -136,6 +147,7 @@ class ElasticsearchConnection extends AbstractConnection
 
 		//When done restore standard parameters
 		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "1s" }}')->send();
+		return true;
 	}
 
 	/**

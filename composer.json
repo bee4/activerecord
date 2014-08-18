@@ -26,15 +26,12 @@
 		"php": ">=5.4.0",
 		"ext-spl": "*",
 		"ext-pcre": "*",
-		"beebot/events": "dev-master"
+		"ext-json": "*",
+		"beebot/events": "dev-master",
+		"bee4/httpclient": "~0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "4.*",
 		"behat/behat": "3.*"
-	},
-	"suggest": {
-		"ext-json": "*",
-		"ext-curl": "*",
-		"bee4/httpclient": "~0"
 	}
 }

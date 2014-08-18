@@ -4,8 +4,48 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c6af4ef71a6ba7ecfb37a753f73423aa",
+    "hash": "a3b35b3faf2a486478034519346fd170",
     "packages": [
+        {
+            "name": "bee4/httpclient",
+            "version": "v0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bee4/httpclient.git",
+                "reference": "5ff4f7145706a504710853b238a0d07fd6677909"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bee4/httpclient/zipball/5ff4f7145706a504710853b238a0d07fd6677909",
+                "reference": "5ff4f7145706a504710853b238a0d07fd6677909",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Bee4": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Stephane HULARD",
+                    "email": "s.hulard@chstudio.fr"
+                }
+            ],
+            "description": "A simple chainable HTTP client. Built for intensive HTTP calls!",
+            "time": "2014-06-10 16:25:49"
+        },
         {
             "name": "beebot/events",
             "version": "dev-master",
@@ -288,16 +328,16 @@
         },
         {
             "name": "ocramius/instantiator",
-            "version": "1.0.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/Instantiator.git",
-                "reference": "cc754c2289ffd4483c319f6ed6ee88ce21676f64"
+                "reference": "8aa99efa86c51319afc26d23254fe6a8b5a5144a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/Instantiator/zipball/cc754c2289ffd4483c319f6ed6ee88ce21676f64",
-                "reference": "cc754c2289ffd4483c319f6ed6ee88ce21676f64",
+                "url": "https://api.github.com/repos/Ocramius/Instantiator/zipball/8aa99efa86c51319afc26d23254fe6a8b5a5144a",
+                "reference": "8aa99efa86c51319afc26d23254fe6a8b5a5144a",
                 "shasum": ""
             },
             "require": {
@@ -306,6 +346,7 @@
             },
             "require-dev": {
                 "athletic/athletic": "~0.1.8",
+                "ext-pdo": "*",
                 "ext-phar": "*",
                 "phpunit/phpunit": "~4.0",
                 "squizlabs/php_codesniffer": "2.0.*@ALPHA"
@@ -329,8 +370,7 @@
                 {
                     "name": "Marco Pivetta",
                     "email": "ocramius@gmail.com",
-                    "homepage": "http://ocramius.github.com/",
-                    "role": "Developer"
+                    "homepage": "http://ocramius.github.com/"
                 }
             ],
             "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
@@ -339,7 +379,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2014-06-15 11:44:46"
+            "time": "2014-08-11 23:48:35"
         },
         {
             "name": "ocramius/lazy-map",
@@ -649,16 +689,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.1.4",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "a71c4842c5fb836d8b200624583b859ec34e8a26"
+                "reference": "58db726aa45fe26bca93f692cb3d77e9a46b7830"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a71c4842c5fb836d8b200624583b859ec34e8a26",
-                "reference": "a71c4842c5fb836d8b200624583b859ec34e8a26",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/58db726aa45fe26bca93f692cb3d77e9a46b7830",
+                "reference": "58db726aa45fe26bca93f692cb3d77e9a46b7830",
                 "shasum": ""
             },
             "require": {
@@ -672,7 +712,7 @@
                 "phpunit/php-file-iterator": "~1.3.1",
                 "phpunit/php-text-template": "~1.2",
                 "phpunit/php-timer": "~1.0.2",
-                "phpunit/phpunit-mock-objects": "~2.1",
+                "phpunit/phpunit-mock-objects": "~2.2",
                 "sebastian/comparator": "~1.0",
                 "sebastian/diff": "~1.1",
                 "sebastian/environment": "~1.0",
@@ -689,7 +729,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1.x-dev"
+                    "dev-master": "4.2.x-dev"
                 }
             },
             "autoload": {
@@ -719,7 +759,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-07-18 07:15:58"
+            "time": "2014-08-08 05:13:30"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1414,10 +1454,12 @@
     "stability-flags": {
         "beebot/events": 20
     },
+    "prefer-stable": false,
     "platform": {
         "php": ">=5.4.0",
         "ext-spl": "*",
-        "ext-pcre": "*"
+        "ext-pcre": "*",
+        "ext-json": "*"
     },
     "platform-dev": [
 

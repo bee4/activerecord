@@ -23,7 +23,7 @@ trait ChildEntity {
 	 * Parent UID
 	 * @var Entity
 	 */
-	protected $parent;
+	private $parent;
 
 	/**
 	 * Parent property setter

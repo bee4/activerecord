@@ -21,8 +21,10 @@ use ReflectionProperty;
  * @method boolean isDated()
  * @method boolean isChild()
  * @method boolean isFactory()
+ * @method boolean isJsonSerializable()
+ * @method boolean isSerializable()
  */
-abstract class ActiveRecord
+abstract class ActiveRecord implements \IteratorAggregate
 {
 	/**
 	 * Cache property for loaded properties
@@ -36,6 +38,15 @@ abstract class ActiveRecord
 	 * @var Connections\ConnectionInterface
 	 */
 	private static $CONNECTION;
+
+	/**
+	 * List of all PHP interface that are considered behaviours
+	 * @var array
+	 */
+	private static $BEHAVIOUR_INTERFACE = [
+		"serializable" => "Serializable",
+		"jsonserializable" => "JsonSerializable"
+	];
 
 	/**
 	 * Property collection used in the current entity
@@ -66,8 +77,6 @@ abstract class ActiveRecord
 	protected static function generateCache($model) {
 		$meta = new \stdClass();
 		$class = new ReflectionClass($model);
-
-		//Prepare data
 		$meta->properties = $meta->behaviours = [];
 
 		//Extract properties except static ones
@@ -78,6 +87,9 @@ abstract class ActiveRecord
 			$meta->properties[$property->getName()] = $item;
 		}
 
+		//Extract interfaces
+		$meta->interfaces = $class->getInterfaceNames();
+
 		//Extract traits
 		$meta->traits = $class->getTraitNames();
 		while(($class = $class->getParentClass()) instanceof ReflectionClass) {
@@ -87,12 +99,23 @@ abstract class ActiveRecord
 		//Extract behaviours from traits
 		foreach( $meta->traits as $trait ) {
 			$parts = [];
-			if(preg_match('/Behaviours.([A-Za-z]*)Entity$/', $trait, $parts)===1) {
-				$meta->behaviours[] = strtolower($parts[1]);
+			if(preg_match('/Behaviours.([A-Za-z]*)Entity$/', $trait, $parts) === 1) {
+				$b = strtolower($parts[1]);
+				$meta->behaviours[$b] = isset(self::$BEHAVIOUR_INTERFACE[$b])?false:true;
 			}
 		}
 
+		//Combine trait behaviours with interface ones
+		$behaviourInterfaces = array_intersect(self::$BEHAVIOUR_INTERFACE, $meta->interfaces);
+		$meta->behaviours = array_unique(
+			array_merge(
+				$meta->behaviours,
+				array_fill_keys(array_keys($behaviourInterfaces), true)
+			)
+		);
+
 		$meta->type = strtolower(array_pop(explode("\\", get_called_class())));
+
 		//Put meta in cache
 		self::$CACHE[get_called_class()] = $meta;
 	}
@@ -163,13 +186,15 @@ abstract class ActiveRecord
 	}
 
 	/**
-	 * Check if the current entity has a given behaviour
+	 * Check if the current entity has a given behaviour (behaviour exists with true)
 	 * @param string $behaviour
 	 * @return boolean
 	 */
 	protected static function is($behaviour) {
 		$name = self::preload();
-		return in_array($behaviour, self::$CACHE[$name]->behaviours);
+		return
+			isset(self::$CACHE[$name]->behaviours[$behaviour]) &&
+			self::$CACHE[$name]->behaviours[$behaviour] === true;
 	}
 
 	/**
@@ -219,6 +244,7 @@ abstract class ActiveRecord
 				'Property name given does not exists in the current object: '.$name
 			);
 		}
+		
 		return $this->properties[$name]->get($this);
 	}
 
@@ -242,5 +268,19 @@ abstract class ActiveRecord
 		if( isset($this->properties[$name]) ) {
 			$this->properties[$name]->set(null,$this);
 		}
+	}
+
+	/**
+	 * Allow to crawl active record instance and retrieve object properties
+	 * @return \ArrayIterator
+	 */
+	public function getIterator() {
+		$props = [];
+		foreach( $this->properties as $name => $prop ) {
+			if( $prop->isReadable() ) {
+				$props[$name] = $prop->get($this);
+			}
+		}
+		return new \ArrayIterator($props);
 	}
 }

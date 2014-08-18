@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit
+  bootstrap="test/bootstrap.php"
+  colors="true"
+  stopOnError="false"
+  stopOnFailure="false"
+  stopOnSkipped="false"
+  stopOnIncomplete="false"
+	backupGlobals="false"
+	processIsolation="false"
+  strict="true"
+  verbose="false"
+  mapTestClassNameToCoveredClassName="true"
+>
+  <testsuites>
+    <testsuite name="beebot/activerecord">
+      <directory>test/units</directory>
+    </testsuite>
+  </testsuites>
+  <filter>
+    <blacklist>
+      <directory suffix=".php">vendor</directory>
+			<directory suffix=".php">test</directory>
+    </blacklist>
+  </filter>
+  <logging>
+    <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+	</logging>
+</phpunit>
