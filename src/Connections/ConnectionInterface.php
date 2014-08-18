@@ -33,7 +33,7 @@ interface ConnectionInterface {
 	 * @return integer
 	 */
 	public function countBy($type, $term, $value);
-	
+
 	/**
 	 * Run a raw query against current connection
 	 * @param string $type Entity type to be manipulated
@@ -41,24 +41,25 @@ interface ConnectionInterface {
 	 * @return \BeeBot\Entity\EntityCollection
 	 */
 	public function raw($type, $query);
-	
+
 	/**
 	 * Save the given entity
 	 * @param \BeeBot\Entity\Entity $entity
 	 * @return boolean
 	 */
 	public function save(\BeeBot\Entity\Entity $entity);
-	
+
 	/**
 	 * Delete the given entity
 	 * @param \BeeBot\Entity\Entity $entity
 	 * @return boolean
 	 */
 	public function delete(\BeeBot\Entity\Entity $entity);
-	
+
 	/**
 	 * Define how the connection will flush a transaction
 	 * @param \BeeBot\Entity\Transactions\TransactionInterface $transaction
+	 * @return boolean
 	 */
 	public function flush(\BeeBot\Entity\Transactions\TransactionInterface $transaction);
 }

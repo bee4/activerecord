@@ -20,4 +20,12 @@ abstract class AbstractConnection implements ConnectionInterface
 {
 	//Add Event dispatcher behaviour to allow events
 	use \BeeBot\Event\EventDispatcherAwareTrait;
+
+	public function save(\BeeBot\Entity\Entity $entity) {
+		$this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
+	}
+
+	public function delete(\BeeBot\Entity\Entity $entity) {
+		$this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
+	}
 }
