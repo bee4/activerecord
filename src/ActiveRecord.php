@@ -229,9 +229,6 @@ abstract class ActiveRecord implements \IteratorAggregate
 				'Property name given does not exists in the current object: '.$name
 			);
 		}
-		if( !$this->properties[$name]->isWritable() ) {
-			throw new \OutOfRangeException("Property can't be set: ".$name);
-		}
 
 		return $this->properties[$name]->set($value, $this);
 	}
@@ -247,10 +244,7 @@ abstract class ActiveRecord implements \IteratorAggregate
 				'Property name given does not exists in the current object: '.$name
 			);
 		}
-		if( !$this->properties[$name]->isReadable() ) {
-			throw new \OutOfRangeException("Property can't be get: ".$name);
-		}
-
+		
 		return $this->properties[$name]->get($this);
 	}
 

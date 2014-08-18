@@ -27,6 +27,13 @@ class ActiveRecordTest extends \PHPUnit_Framework_TestCase
 	public function testBehaviour() {
 		$this->assertInstanceOf("\ArrayIterator", $this->object->getIterator());
 		$this->assertEquals('mockedrecord', call_user_func([$this->object, 'getType']));
+
+		$object = new Samples\SampleEntity();
+		$this->assertFalse(isset($object->editable));
+		$object->editable = "truite";
+		$this->assertTrue(isset($object->editable));
+		unset($object->editable);
+		$this->assertFalse(isset($object->editable));
 	}
 
 	/**
@@ -56,5 +63,29 @@ class ActiveRecordTest extends \PHPUnit_Framework_TestCase
 	public function testInvalidStaticMethod() {
 		$o = $this->object;
 		$o::invalidMethod();
+	}
+
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testUnreadableGet() {
+		$object = new Samples\SampleEntity();
+		$object->writable;
+	}
+
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testUnwritableSet() {
+		$object = new Samples\SampleEntity();
+		$object->readable = "truite";
+	}
+
+	/**
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testInvalidIs() {
+		$object = new Samples\SampleEntity();
+		$object::isChild("unwantedargument");
 	}
 }
