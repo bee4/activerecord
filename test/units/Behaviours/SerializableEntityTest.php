@@ -56,4 +56,15 @@ class SerializableEntityTest extends \PHPUnit_Framework_TestCase
 		$deleted = unserialize(serialize($this->object));
 		$this->assertEquals($this->object->isDeleted(),$deleted->isDeleted());
 	}
+
+	/**
+	 * @expectedException \UnexpectedValueException
+	 */
+	public function testInvalidStateSerialize() {
+		$stateProperty = (new \ReflectionClass("\BeeBot\Entity\Entity"))->getProperty('state');
+		$stateProperty->setAccessible('true');
+		$stateProperty->setValue($this->object, -1);
+
+		serialize($this->object);
+	}
 }
