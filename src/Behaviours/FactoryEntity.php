@@ -23,18 +23,20 @@ trait FactoryEntity
 	/**
 	 * Factory function to build an entity objects from passed data
 	 * Data can be anything than the Entity can understand in its "hydrate" method
-	 * @param Mixed $mData Something than can be used to populate needed object
+	 * @param mixed $data Something than can be used to populate needed object
+	 * @return \BeeBot\Entity\Entity
 	 */
-	public static function factory($mData) {
-		$sClass = get_called_class();
-		$oResult = new $sClass;
-		$oResult->hydrate($mData);
-		return $oResult;
+	public static function factory($data) {
+		$class = get_called_class();
+		$result = new $class;
+		$result->hydrate($data);
+
+		return $result;
 	}
 
 	/**
 	 * Update object details from given Data
-	 * @param Mixed $mData The data to use to wake up
+	 * @param mixed $data The data to use to wake up
 	 */
-	abstract protected function hydrate( $mData );
+	abstract protected function hydrate( $data );
 }
