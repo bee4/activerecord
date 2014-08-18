@@ -31,6 +31,9 @@ class PdoConnection extends AbstractConnection {
 		$this->client = new \PDO($dsn);
 	}
 
+	/**
+	 * Close PDO connection when finished
+	 */
 	public function __destruct() {
 		$this->client = null;
 	}
@@ -45,6 +48,8 @@ class PdoConnection extends AbstractConnection {
 	}
 
 	public function delete(\BeeBot\Entity\Entity $entity) {
+		parent::delete($entity);
+
 		$st = $this->client->prepare("
 			DELETE FROM {$entity->getType()}
 			WHERE uid = :uid");
@@ -76,7 +81,7 @@ class PdoConnection extends AbstractConnection {
 				return false;
 			}
 		}
-		
+
 		$this->client->commit();
 		return true;
 	}
@@ -91,6 +96,8 @@ class PdoConnection extends AbstractConnection {
 	}
 
 	public function save(\BeeBot\Entity\Entity $entity) {
+		parent::save($entity);
+
 		$props = $entity->getIterator()->getArrayCopy();
 		$props['uid'] = $entity->getUID();
 
