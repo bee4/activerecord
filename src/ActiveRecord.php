@@ -43,7 +43,10 @@ abstract class ActiveRecord implements \IteratorAggregate
 	 * List of all PHP interface that are considered behaviours
 	 * @var array
 	 */
-	private static $BEHAVIOUR_INTERFACE = ["Serializable", "JsonSerializable"];
+	private static $BEHAVIOUR_INTERFACE = [
+		"serializable" => "Serializable",
+		"jsonserializable" => "JsonSerializable"
+	];
 
 	/**
 	 * Property collection used in the current entity
@@ -97,7 +100,8 @@ abstract class ActiveRecord implements \IteratorAggregate
 		foreach( $meta->traits as $trait ) {
 			$parts = [];
 			if(preg_match('/Behaviours.([A-Za-z]*)Entity$/', $trait, $parts) === 1) {
-				$meta->behaviours[strtolower($parts[1])] = true;
+				$b = strtolower($parts[1]);
+				$meta->behaviours[$b] = isset(self::$BEHAVIOUR_INTERFACE[$b])?false:true;
 			}
 		}
 
@@ -106,7 +110,7 @@ abstract class ActiveRecord implements \IteratorAggregate
 		$meta->behaviours = array_unique(
 			array_merge(
 				$meta->behaviours,
-				array_fill_keys(array_map('strtolower', $behaviourInterfaces), true)
+				array_fill_keys(array_keys($behaviourInterfaces), true)
 			)
 		);
 
@@ -182,13 +186,15 @@ abstract class ActiveRecord implements \IteratorAggregate
 	}
 
 	/**
-	 * Check if the current entity has a given behaviour
+	 * Check if the current entity has a given behaviour (behaviour exists with true)
 	 * @param string $behaviour
 	 * @return boolean
 	 */
 	protected static function is($behaviour) {
 		$name = self::preload();
-		return isset(self::$CACHE[$name]->behaviours[$behaviour]);
+		return
+			isset(self::$CACHE[$name]->behaviours[$behaviour]) &&
+			self::$CACHE[$name]->behaviours[$behaviour] === true;
 	}
 
 	/**
