@@ -27,7 +27,7 @@
 		"ext-spl": "*",
 		"ext-pcre": "*",
 		"ext-json": "*",
-		"beebot/events": "v0.0.1",
+		"beebot/events": "~0",
 		"bee4/httpclient": "~0"
 	},
 	"require-dev": {

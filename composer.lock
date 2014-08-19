@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "455f61a56bef874e1eb6db3195009d63",
+    "hash": "76e60765413885e02c18b4654a4ce538",
     "packages": [
         {
             "name": "bee4/httpclient",
-            "version": "v0.0.3",
+            "version": "v0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bee4/httpclient.git",
-                "reference": "5ff4f7145706a504710853b238a0d07fd6677909"
+                "reference": "e55590a1002ed8d48eb5178fec75ff3648e6ab4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bee4/httpclient/zipball/5ff4f7145706a504710853b238a0d07fd6677909",
-                "reference": "5ff4f7145706a504710853b238a0d07fd6677909",
+                "url": "https://api.github.com/repos/bee4/httpclient/zipball/e55590a1002ed8d48eb5178fec75ff3648e6ab4c",
+                "reference": "e55590a1002ed8d48eb5178fec75ff3648e6ab4c",
                 "shasum": ""
             },
             "require": {
@@ -25,12 +25,18 @@
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.*"
+                "behat/behat": "3.*",
+                "pdepend/pdepend": "~2",
+                "phploc/phploc": "*",
+                "phpmd/phpmd": "~2",
+                "phpunit/phpunit": "4.*",
+                "sebastian/phpcpd": "~2",
+                "squizlabs/php_codesniffer": "1.*"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Bee4": "src"
+                "psr-4": {
+                    "Bee4\\Http\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -39,12 +45,12 @@
             ],
             "authors": [
                 {
-                    "name": "Stephane HULARD",
+                    "name": "Stéphane HULARD",
                     "email": "s.hulard@chstudio.fr"
                 }
             ],
             "description": "A simple chainable HTTP client. Built for intensive HTTP calls!",
-            "time": "2014-06-10 16:25:49"
+            "time": "2014-08-19 11:02:46"
         },
         {
             "name": "beebot/events",
