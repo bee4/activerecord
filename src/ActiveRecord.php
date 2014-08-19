@@ -107,11 +107,9 @@ abstract class ActiveRecord implements \IteratorAggregate
 
 		//Combine trait behaviours with interface ones
 		$behaviourInterfaces = array_intersect(self::$BEHAVIOUR_INTERFACE, $meta->interfaces);
-		$meta->behaviours = array_unique(
-			array_merge(
-				$meta->behaviours,
-				array_fill_keys(array_keys($behaviourInterfaces), true)
-			)
+		$meta->behaviours = array_merge(
+			$meta->behaviours,
+			array_fill_keys(array_keys($behaviourInterfaces), true)
 		);
 
 		$meta->type = strtolower(array_pop(explode("\\", get_called_class())));
@@ -244,7 +242,7 @@ abstract class ActiveRecord implements \IteratorAggregate
 				'Property name given does not exists in the current object: '.$name
 			);
 		}
-		
+
 		return $this->properties[$name]->get($this);
 	}
 
