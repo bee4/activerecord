@@ -25,7 +25,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 	private $object;
 
 	/**
-	 *
+	 * Mocked connection
 	 * @var \BeeBot\Entity\Connections\AbstractConnection
 	 */
 	private $connexion;
