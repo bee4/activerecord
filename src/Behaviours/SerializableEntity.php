@@ -31,17 +31,19 @@ trait SerializableEntity
 
 		//Manage private properties
 		//Backup UID
-		$vars['_uid'] = $this->getUID();
+		if( $this instanceof Entity ) {
+			$vars['_uid'] = $this->getUID();
 
-		//Retrieve valid state and backup value
-		if( $this->isNew() ) {
-			$vars['_state'] = Entity::STATE_NEW;
-		} elseif( $this->isPersisted() ) {
-			$vars['_state'] = Entity::STATE_PERSISTED;
-		} elseif( $this->isDeleted() ) {
-			$vars['_state'] = Entity::STATE_DELETED;
-		} else {
-			throw new \UnexpectedValueException('Entity state must be a valid one: STATE_NEW, STATE_PERSISTED, STATE_DELETED');
+			//Retrieve valid state and backup value
+			if( $this->isNew() ) {
+				$vars['_state'] = Entity::STATE_NEW;
+			} elseif( $this->isPersisted() ) {
+				$vars['_state'] = Entity::STATE_PERSISTED;
+			} elseif( $this->isDeleted() ) {
+				$vars['_state'] = Entity::STATE_DELETED;
+			} else {
+				throw new \UnexpectedValueException('Entity state must be a valid one: STATE_NEW, STATE_PERSISTED, STATE_DELETED');
+			}
 		}
 
 		return serialize($vars);
@@ -58,8 +60,12 @@ trait SerializableEntity
 
 		//Initialized the new instance with its default and load class meta
 		$data = unserialize($serialized);
-		$this->init($data['_uid'], $data['_state']);
-		unset($data['_uid'], $data['_state']);
+		if( $this instanceof Entity ) {
+			$this->init($data['_uid'], $data['_state']);
+			unset($data['_uid'], $data['_state']);
+		} else {
+			$this->init();
+		}
 
 		//Populate all properties from their unserialized form
 		foreach( $data as $name => $value ) {
