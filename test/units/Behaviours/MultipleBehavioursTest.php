@@ -33,7 +33,6 @@ class MultipleBehavioursTest extends \PHPUnit_Framework_TestCase
 
 	public function testBehaviour() {
 		$this->assertTrue(Samples\SampleMultipleBehavioursEntity::isChild());
-		$this->assertTrue(Samples\SampleMultipleBehavioursEntity::isFactory());
 		$this->assertTrue(Samples\SampleMultipleBehavioursEntity::isDated());
 		$this->assertTrue(Samples\SampleMultipleBehavioursEntity::isJsonSerializable());
 		$this->assertTrue(Samples\SampleMultipleBehavioursEntity::isSerializable());
