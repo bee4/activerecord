@@ -32,7 +32,11 @@ trait JsonSerializableEntity
 			}
 			$tmp->{$name} = $value;
 		}
-		$tmp->uid = $this->getUID();
+
+		//When we try to JSON an entity, add UID else its a nested one, so just get props
+		if( $this instanceof \BeeBot\Entity\Entity ) {
+			$tmp->uid = $this->getUID();
+		}
 
 		return $tmp;
 	}
