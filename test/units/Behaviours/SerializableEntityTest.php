@@ -13,6 +13,7 @@
 namespace BeeBot\Entity\Tests\Behaviours;
 
 require_once __DIR__.'/../../samples/SampleSerializableEntity.php';
+require_once __DIR__.'/../../samples/SampleMultipleBehavioursEntity.php';
 
 use \BeeBot\Entity\Tests\Samples;
 
@@ -66,5 +67,21 @@ class SerializableEntityTest extends \PHPUnit_Framework_TestCase
 		$stateProperty->setValue($this->object, -1);
 
 		serialize($this->object);
+	}
+
+	public function testParentSerialize() {
+		$child = new Samples\SampleMultipleBehavioursEntity();
+		$parent = new Samples\SampleSerializableEntity();
+		$child->setParent($parent);
+
+		$parent->editable = "I'm the parent";
+		$child->editable = "I'm the child";
+
+		$undead = unserialize(serialize($child));
+
+		$this->assertEquals($parent->getUID(), $undead->getParent()->getUID());
+		$this->assertEquals($child->getUID(), $undead->getUID());
+		$this->assertEquals($parent->editable, $undead->getParent()->editable);
+		$this->assertEquals($child->editable, $undead->editable);
 	}
 }

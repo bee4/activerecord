@@ -46,6 +46,10 @@ trait SerializableEntity
 			}
 		}
 
+		if( $this::isChild() ) {
+			$vars['_parent'] = $this->getParent();
+		}
+
 		return serialize($vars);
 	}
 
@@ -65,6 +69,11 @@ trait SerializableEntity
 			unset($data['_uid'], $data['_state']);
 		} else {
 			$this->init();
+		}
+
+		if( $this::isChild() ) {
+			$this->setParent($data['_parent']);
+			unset($data['_parent']);
 		}
 
 		//Populate all properties from their unserialized form
