@@ -88,7 +88,7 @@ class FileTransaction implements TransactionInterface
 	}
 
 	public function persist(\BeeBot\Entity\Entity $entity) {
-		if( !$entity->isSerializable() ) {
+		if( !$entity::isSerializable() ) {
 			throw new \InvalidArgumentException('Entity given must be serializable when using FileTransaction (use SerializableEntity trait or Serializable interface...)');
 		}
 
