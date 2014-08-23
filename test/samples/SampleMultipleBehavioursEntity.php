@@ -12,13 +12,13 @@
 
 namespace BeeBot\Entity\Tests\Samples;
 
-require_once __DIR__.'/SampleFactoryEntity.php';
+require_once __DIR__.'/SampleEntity.php';
 
 /**
  * Sample to test Serializable behaviour
  * @package BeeBot\Entity\Tests\Samples
  */
-class SampleMultipleBehavioursEntity extends SampleFactoryEntity implements \Serializable, \JsonSerializable
+class SampleMultipleBehavioursEntity extends SampleEntity implements \Serializable, \JsonSerializable
 {
 	use
 		\BeeBot\Entity\Behaviours\SerializableEntity,
