@@ -145,6 +145,7 @@ class ElasticsearchConnection extends AbstractConnection
 			if( $response['found'] === false ) {
 				throw new \InvalidArgumentException('Given entity does not exists in ElasticSearch!!');
 			}
+            $this->client->post('_refresh');
 			return $response['found'];
 		} catch( \Exception $error ) {
 			$event = new ExceptionEvent($error);
@@ -182,8 +183,9 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 		$request->setBody($string)->send();
 
-		//When done restore standard parameters
-		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "1s" }}')->send();
+        //When done restore standard parameters and trigger a refresh
+        $this->client->post('_refresh');
+        $this->client->put('_settings')->setBody('{ index: { refresh_interval: "1s" }}')->send();
 		return true;
 	}
 
