@@ -12,6 +12,9 @@
 
 namespace BeeBot\Entity\Connections;
 
+use BeeBot\Entity\Entity;
+use BeeBot\Entity\Transactions\TransactionInterface;
+
 /**
  * Description of PdoConnection
  * @package BeeBot\Entity\Connections
@@ -38,7 +41,13 @@ class PdoConnection extends AbstractConnection {
 		$this->client = null;
 	}
 
-	public function countBy($type, $term, $value) {
+    /**
+     * @param string $type
+     * @param string $term
+     * @param mixed $value
+     * @return string
+     */
+    public function countBy($type, $term, $value) {
 		$st = $this->client->prepare("
 			SELECT COUNT(*)
 			FROM $type
@@ -47,7 +56,11 @@ class PdoConnection extends AbstractConnection {
 		return $st->fetchColumn();
 	}
 
-	public function delete(\BeeBot\Entity\Entity $entity) {
+    /**
+     * @param Entity $entity
+     * @return bool
+     */
+    public function delete(Entity $entity) {
 		parent::delete($entity);
 
 		$st = $this->client->prepare("
@@ -58,7 +71,13 @@ class PdoConnection extends AbstractConnection {
 		]);
 	}
 
-	public function fetchBy($type, $term, $value) {
+    /**
+     * @param string $type
+     * @param string $term
+     * @param mixed $value
+     * @return array
+     */
+    public function fetchBy($type, $term, $value) {
 		$st = $this->client->prepare("
 			SELECT *
 			FROM $type
@@ -67,7 +86,11 @@ class PdoConnection extends AbstractConnection {
 		return $st->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
-	public function flush(\BeeBot\Entity\Transactions\TransactionInterface $transaction) {
+    /**
+     * @param TransactionInterface $transaction
+     * @return bool
+     */
+    public function flush(TransactionInterface $transaction) {
 		$this->client->beginTransaction();
 		foreach( $transaction as $entity ) {
 			if( $entity->isDeleted() ) {
@@ -86,7 +109,12 @@ class PdoConnection extends AbstractConnection {
 		return true;
 	}
 
-	public function raw($type, $query) {
+    /**
+     * @param string $type
+     * @param string $query
+     * @return array
+     */
+    public function raw($type, $query) {
 		$st = $this->client->prepare("
 			SELECT *
 			FROM $type
@@ -95,7 +123,11 @@ class PdoConnection extends AbstractConnection {
 		return $st->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
-	public function save(\BeeBot\Entity\Entity $entity) {
+    /**
+     * @param Entity $entity
+     * @return bool
+     */
+    public function save(Entity $entity) {
 		parent::save($entity);
 
 		$props = $entity->getIterator()->getArrayCopy();

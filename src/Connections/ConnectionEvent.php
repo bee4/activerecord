@@ -12,11 +12,13 @@
 
 namespace BeeBot\Entity\Connections;
 
+use BeeBot\Event\AbstractEvent;
+
 /**
  * Event used on connection object. It allow to log all connection calls.
  * @package BeeBot\Entity\Connections
  */
-class ConnectionEvent extends \BeeBot\Event\AbstractEvent {
+class ConnectionEvent extends AbstractEvent {
 	const REQUEST = "data.request";
 	const ERROR = "data.error";
 	const RESULT = "data.result";

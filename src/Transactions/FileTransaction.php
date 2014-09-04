@@ -12,6 +12,8 @@
 
 namespace BeeBot\Entity\Transactions;
 
+use BeeBot\Entity\Entity;
+
 /**
  * Description of BaseTransaction
  * @package BeeBot\Entity\Transactions
@@ -87,7 +89,7 @@ class FileTransaction implements TransactionInterface
 		return !feof($this->stream);
 	}
 
-	public function persist(\BeeBot\Entity\Entity $entity) {
+	public function persist(Entity $entity) {
 		if( !$entity::isSerializable() ) {
 			throw new \InvalidArgumentException('Entity given must be serializable when using FileTransaction (use SerializableEntity trait or Serializable interface...)');
 		}

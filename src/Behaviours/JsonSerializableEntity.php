@@ -11,6 +11,8 @@
 
 namespace BeeBot\Entity\Behaviours;
 
+use BeeBot\Entity\Entity;
+
 /**
  * Implements the \JsonSerializable interface methods with the default entity behaviour
  * This trait must be used only with ActiveRecord objects
@@ -34,7 +36,7 @@ trait JsonSerializableEntity
 		}
 
 		//When we try to JSON an entity, add UID else its a nested one, so just get props
-		if( $this instanceof \BeeBot\Entity\Entity ) {
+		if( $this instanceof Entity ) {
 			$tmp->uid = $this->getUID();
 		}
 
