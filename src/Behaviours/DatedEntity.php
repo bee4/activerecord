@@ -23,17 +23,17 @@ trait DatedEntity {
 	 */
 	protected $date;
 
-	/**
-	 * Set creation date
-	 * @see \BeeBot\Entity\Behaviours\DatedEntity::getDate() DatedEntity::setDate()
-	 */
-	public function setDate( \DateTime $date ) {
+    /**
+     * Set creation date
+     * @param \DateTime $date
+     */
+    public function setDate( \DateTime $date ) {
 		$this->date = $date;
 	}
 
 	/**
 	 * Get creation date
-	 * @see \BeeBot\Entity\Behaviours\DatedEntity::getDate() DatedEntity::getDate()
+	 * @return \DateTime
 	 */
 	public function getDate() {
 		return $this->date;

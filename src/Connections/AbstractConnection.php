@@ -12,6 +12,9 @@
 
 namespace BeeBot\Entity\Connections;
 
+use BeeBot\Entity\Entity;
+use BeeBot\Event\EventDispatcherAwareTrait;
+
 /**
  * Define a global canvas for connection adapters.
  * @package BeeBot\Entity\Connections
@@ -19,13 +22,23 @@ namespace BeeBot\Entity\Connections;
 abstract class AbstractConnection implements ConnectionInterface
 {
 	//Add Event dispatcher behaviour to allow events
-	use \BeeBot\Event\EventDispatcherAwareTrait;
+	use EventDispatcherAwareTrait;
 
-	public function save(\BeeBot\Entity\Entity $entity) {
+    /**
+     * @param Entity $entity
+     * @return boolean
+     */
+    public function save(Entity $entity) {
 		$this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
+        return true;
 	}
 
-	public function delete(\BeeBot\Entity\Entity $entity) {
+    /**
+     * @param Entity $entity
+     * @return boolean
+     */
+    public function delete(Entity $entity) {
 		$this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
+        return true;
 	}
 }

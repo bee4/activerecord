@@ -12,6 +12,8 @@
 
 namespace BeeBot\Entity\Transactions;
 
+use BeeBot\Entity\Entity;
+
 /**
  * Description of BaseTransaction
  * @package BeeBot\Entity\Transactions
@@ -61,7 +63,10 @@ class MemoryTransaction implements TransactionInterface
 		return isset($this->entities[$this->index]);
 	}
 
-	public function persist(\BeeBot\Entity\Entity $entity) {
+    /**
+     * @param Entity $entity
+     */
+    public function persist(Entity $entity) {
 		$this->entities[] = $entity;
 	}
 }

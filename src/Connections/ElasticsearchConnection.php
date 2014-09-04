@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the beebot package.
+ * This file is part of the BeeBot package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
@@ -14,6 +14,9 @@ namespace BeeBot\Entity\Connections;
 
 use Bee4\Http\Client;
 use Bee4\Http\Message\Request\AbstractRequest;
+use BeeBot\Entity\Entity;
+use BeeBot\Entity\Transactions\TransactionInterface;
+use BeeBot\Event\ExceptionEvent;
 
 /**
  * ElasticSearch connection adapter
@@ -48,12 +51,24 @@ class ElasticsearchConnection extends AbstractConnection
 		});
 	}
 
-	public function countBy($type, $term, $value) {
+    /**
+     * @param string $type
+     * @param string $term
+     * @param mixed $value
+     * @return int
+     */
+    public function countBy($type, $term, $value) {
 		$response = $this->run($type, ["query" => self::buildQuery($term, $value)], '_count');
 		return $response['count'];
 	}
 
-	public function fetchBy($type, $term, $value) {
+    /**
+     * @param string $type
+     * @param string $term
+     * @param mixed $value
+     * @return array
+     */
+    public function fetchBy($type, $term, $value) {
 		$response = $this->run($type, [
 			"query" => self::buildQuery($term, $value),
 			"fields" => ['_source','_parent','_timestamp']
@@ -62,12 +77,21 @@ class ElasticsearchConnection extends AbstractConnection
 		return $this->extractResults($response);
 	}
 
-	public function raw($type, $query) {
+    /**
+     * @param string $type
+     * @param string $query
+     * @return array
+     */
+    public function raw($type, $query) {
 		$response = $this->run($type, $query);
 		return $this->extractResults($response);
 	}
 
-	public function save(\BeeBot\Entity\Entity $entity) {
+    /**
+     * @param Entity $entity
+     * @return bool
+     */
+    public function save(Entity $entity) {
 		parent::save($entity);
 
 		if( !$entity::isJsonSerializable() ) {
@@ -84,19 +108,28 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 
 		$response = $this->client
-			->put($url)->setBody(json_encode($entity))
-			->send()->json();
+			->put($url)
+            ->setBody(json_encode($entity))
+			->send()
+            ->json();
 
 		try {
-			return $this->checkErrors($response);
+			if( $this->checkErrors($response) ) {
+                $this->client->post('_refresh');
+                return true;
+            }
 		} catch( \Exception $error ) {
-			$event = new \BeeBot\Event\ExceptionEvent($error);
+			$event = new ExceptionEvent($error);
 			$this->dispatch($event::WARNING, $event);
 			return false;
 		}
 	}
 
-	public function delete(\BeeBot\Entity\Entity $entity) {
+    /**
+     * @param Entity $entity
+     * @return bool
+     */
+    public function delete(Entity $entity) {
 		parent::delete($entity);
 
 		if( !$entity::isJsonSerializable() ) {
@@ -114,14 +147,18 @@ class ElasticsearchConnection extends AbstractConnection
 			}
 			return $response['found'];
 		} catch( \Exception $error ) {
-			$event = new \BeeBot\Event\ExceptionEvent($error);
+			$event = new ExceptionEvent($error);
 			$this->dispatch($event::WARNING, $event);
 			return false;
 		}
 	}
 
-	public function flush(\BeeBot\Entity\Transactions\TransactionInterface $transaction) {
-		//Make bulk loading more powerful (by disabling autorefreshing)
+    /**
+     * @param TransactionInterface $transaction
+     * @return bool
+     */
+    public function flush(TransactionInterface $transaction) {
+		//Make bulk loading more powerful (by disabling auto refreshing)
 		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "-1" }}')->send();
 
 		$request = $this->client
