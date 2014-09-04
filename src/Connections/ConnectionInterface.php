@@ -12,6 +12,9 @@
 
 namespace BeeBot\Entity\Connections;
 
+use BeeBot\Entity\Entity;
+use BeeBot\Entity\Transactions\TransactionInterface;
+
 /**
  * Define standard behaviours for database connection
  * @package BeeBot\Entity\Connections
@@ -22,7 +25,7 @@ interface ConnectionInterface {
 	 * @param string $type Entity type to be manipulated
 	 * @param string $term Term name to be processed
 	 * @param mixed $value Searched term value
-	 * @return \BeeBot\Entity\EntityCollection
+	 * @return array
 	 */
 	public function fetchBy($type, $term, $value);
 	/**
@@ -38,28 +41,28 @@ interface ConnectionInterface {
 	 * Run a raw query against current connection
 	 * @param string $type Entity type to be manipulated
 	 * @param string $query
-	 * @return \BeeBot\Entity\EntityCollection
+	 * @return array
 	 */
 	public function raw($type, $query);
 
 	/**
 	 * Save the given entity
-	 * @param \BeeBot\Entity\Entity $entity
+	 * @param Entity $entity
 	 * @return boolean
 	 */
-	public function save(\BeeBot\Entity\Entity $entity);
+	public function save(Entity $entity);
 
 	/**
 	 * Delete the given entity
-	 * @param \BeeBot\Entity\Entity $entity
+	 * @param Entity $entity
 	 * @return boolean
 	 */
-	public function delete(\BeeBot\Entity\Entity $entity);
+	public function delete(Entity $entity);
 
 	/**
 	 * Define how the connection will flush a transaction
-	 * @param \BeeBot\Entity\Transactions\TransactionInterface $transaction
+	 * @param TransactionInterface $transaction
 	 * @return boolean
 	 */
-	public function flush(\BeeBot\Entity\Transactions\TransactionInterface $transaction);
+	public function flush(TransactionInterface $transaction);
 }

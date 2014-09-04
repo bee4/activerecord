@@ -147,8 +147,8 @@ class DocBlockParser
 
 	/**
 	 * Parse additional information on the property type
-	 * @param type $hint
-	 * @return type
+	 * @param string $hint
+	 * @return array
 	 */
 	protected function parseHint($hint) {
 		$hints = array();
