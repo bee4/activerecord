@@ -24,7 +24,7 @@ trait FactoryEntity
 	 * Factory function to build an entity objects from passed data
 	 * Data can be anything than the Entity can understand in its "hydrate" method
 	 * @param mixed $data Something than can be used to populate needed object
-	 * @return \BeeBot\Entity\Entity
+	 * @return \BeeBot\Entity\Entity|\BeeBot\Entity\NestedEntity
 	 */
 	public static function factory($data) {
 		$class = get_called_class();

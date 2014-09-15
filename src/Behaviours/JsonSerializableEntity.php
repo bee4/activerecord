@@ -23,7 +23,7 @@ trait JsonSerializableEntity
 {
 	/**
 	 * Transform current object to JSON
-	 * @return stdClass|Array
+	 * @return \stdClass
 	 */
 	public function jsonSerialize()
 	{
