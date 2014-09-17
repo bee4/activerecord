@@ -67,7 +67,16 @@ class FileTransaction implements TransactionInterface
 		if( $this->current == "" ) {
 			$this->rewind();
 		}
-		return unserialize($this->current);
+        //If the unserialize fail, try to get the next line !
+        try {
+            return unserialize($this->current);
+        } catch( \Exception $error ) {
+            if( feof($this->stream) ) {
+                throw new \Exception('Current item is not a valid serialized Entity: '.PHP_EOL.$this->current);
+            }
+            $this->current .= fgets($this->stream);
+            return $this->current();
+        }
 	}
 
 	public function key() {
