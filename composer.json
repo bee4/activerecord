@@ -28,7 +28,7 @@
 		"ext-pcre": "*",
 		"ext-json": "*",
 		"beebot/events": "~0",
-		"bee4/httpclient": "~0"
+		"bee4/transport": "~1"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "4.*",

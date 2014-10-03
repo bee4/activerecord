@@ -12,8 +12,9 @@
 
 namespace BeeBot\Entity\Connections;
 
-use Bee4\Http\Client;
-use Bee4\Http\Message\Request\AbstractRequest;
+use Bee4\Transport\Client;
+use Bee4\Transport\Events\ErrorEvent;
+use Bee4\Transport\Events\MessageEvent;
 use BeeBot\Entity\Entity;
 use BeeBot\Entity\Transactions\TransactionInterface;
 use BeeBot\Event\ExceptionEvent;
@@ -28,7 +29,7 @@ class ElasticsearchConnection extends AbstractConnection
 {
 	/**
 	 * Http client used to communicate with ES
-	 * @var \Bee4\Http\Client
+	 * @var \Bee4\Transport\Client
 	 */
 	protected $client;
 
@@ -41,14 +42,17 @@ class ElasticsearchConnection extends AbstractConnection
 			$url .= "/";
 		}
 		$this->client = new Client($url);
-
-		//Register events for debug purpose and performance check
-		$this->client->register(Client::ON_REQUEST, function(AbstractRequest $request) {
-			$this->dispatch(ConnectionEvent::REQUEST, new ConnectionEvent($request));
-		});
-		$this->client->register(Client::ON_ERROR, function(\Exception $error) {
-			$this->dispatch(ConnectionEvent::ERROR, new ConnectionEvent($error));
-		});
+		if( $this->hasDispatcher() ) {
+			$this->getDispatcher()->addListener(MessageEvent::REQUEST, function(MessageEvent $event) {
+				$this->dispatch(ConnectionEvent::REQUEST, new ConnectionEvent($event->getMessage()));
+			});
+			$this->getDispatcher()->addListener(MessageEvent::RESPONSE, function(MessageEvent $event) {
+				$this->dispatch(ConnectionEvent::RESULT, new ConnectionEvent($event->getMessage()));
+			});
+			$this->getDispatcher()->addListener(ErrorEvent::ERROR, function(ErrorEvent $event) {
+				$this->dispatch(ConnectionEvent::ERROR, new ConnectionEvent($event->getError()));
+			});
+		}
 	}
 
     /**
