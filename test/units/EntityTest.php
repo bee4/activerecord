@@ -11,6 +11,7 @@
  */
 
 namespace BeeBot\Entity\Tests;
+use BeeBot\Entity\ActiveRecord;
 
 /**
  * Test on Entity object
@@ -32,11 +33,11 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 	protected function setUp() {
 		//Build a valid mocked connection
-		$this->connexion = $this->getMock("\BeeBot\Entity\Connections\AbstractConnection");
+		$this->connexion = $this->getMock("\\BeeBot\\Entity\\Connections\\AbstractConnection");
 
 		//Initiate the ActiveRecord connection instance
-		\BeeBot\Entity\ActiveRecord::setConnection($this->connexion);
-		$this->object = $this->getMockForAbstractClass("\BeeBot\Entity\Entity", [], "MockedEntity");
+		ActiveRecord::setConnection($this->connexion);
+		$this->object = $this->getMockForAbstractClass("\\BeeBot\\Entity\\Entity", [], "MockedEntity");
 	}
 
 	/**
@@ -86,9 +87,8 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 				[],
 				[['uid'=>"XXX"], ['uid'=>"YYY"]]
 			));
-
 		$o = "MockedEntity";
-		$this->assertInstanceOf("\BeeBot\Entity\EntityCollection", $o::fetchBy('uid', 'XXX'));
+		$this->assertInstanceOf("\\BeeBot\\Entity\\EntityCollection", $o::fetchBy('uid', 'XXX'));
 		$collection = $o::fetchByUID('XXX');
 		$this->assertCount(2, $collection);
 		$this->assertEquals("XXX", $collection[0]->getUID());
