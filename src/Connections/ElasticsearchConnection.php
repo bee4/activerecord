@@ -168,7 +168,7 @@ class ElasticsearchConnection extends AbstractConnection
 
 		$request = $this->client
 			->post('_bulk')
-			->addCurlOption(CURLOPT_TIMEOUT, 120);
+			->addOption(CURLOPT_TIMEOUT, 120);
 
 		//Then start the import
 		$string = "";
