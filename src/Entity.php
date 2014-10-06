@@ -144,7 +144,11 @@ abstract class Entity extends ActiveRecord
 
 		//Callback used when an Entity does not use Factory behaviour
 		$fillEntity = function($value, $prop, &$entity) {
-			$entity->{$prop} = $value;
+			if( $prop === 'uid' ) {
+				$entity->init($value);
+			} else {
+				$entity->{$prop} = $value;
+			}
 		};
 		//Crawl extracted data and build entities
 		foreach( $results as $data ) {
