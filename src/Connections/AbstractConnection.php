@@ -12,8 +12,8 @@
 
 namespace BeeBot\Entity\Connections;
 
+use Bee4\Events\DispatcherAwareTrait;
 use BeeBot\Entity\Entity;
-use BeeBot\Event\EventDispatcherAwareTrait;
 
 /**
  * Define a global canvas for connection adapters.
@@ -22,7 +22,7 @@ use BeeBot\Event\EventDispatcherAwareTrait;
 abstract class AbstractConnection implements ConnectionInterface
 {
 	//Add Event dispatcher behaviour to allow events
-	use EventDispatcherAwareTrait;
+	use DispatcherAwareTrait;
 
     /**
      * @param Entity $entity

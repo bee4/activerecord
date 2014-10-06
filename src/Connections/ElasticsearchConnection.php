@@ -43,6 +43,7 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 		$this->client = new Client($url);
 		if( $this->hasDispatcher() ) {
+			$this->client->setDispatcher($this->getDispatcher());
 			$this->getDispatcher()->addListener(MessageEvent::REQUEST, function(MessageEvent $event) {
 				$this->dispatch(ConnectionEvent::REQUEST, new ConnectionEvent($event->getMessage()));
 			});
