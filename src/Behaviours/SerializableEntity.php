@@ -72,7 +72,9 @@ trait SerializableEntity
 		}
 
 		if( $this::isChild() ) {
-			$this->setParent($data['_parent']);
+			if( !is_null($data['_parent']) ) {
+				$this->setParent($data['_parent']);
+			}
 			unset($data['_parent']);
 		}
 
