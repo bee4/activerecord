@@ -56,24 +56,24 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 	}
 
-  /**
-   * @param string $type
-   * @param string $term
-   * @param mixed $value
-   * @return int
-   */
-  public function countBy($type, $term, $value) {
+	/**
+	 * @param string $type
+	 * @param string $term
+	 * @param mixed $value
+	 * @return int
+	 */
+	public function countBy($type, $term, $value) {
 		$response = $this->run($type, ["query" => self::buildQuery($term, $value)], '_count');
 		return $response['count'];
 	}
 
-  /**
-   * @param string $type
-   * @param string $term
-   * @param mixed $value
-   * @return array
-   */
-  public function fetchBy($type, $term, $value) {
+	/**
+	 * @param string $type
+	 * @param string $term
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function fetchBy($type, $term, $value) {
 		$response = $this->run($type, [
 			"query" => self::buildQuery($term, $value),
 			"fields" => ['_source','_parent','_timestamp']
@@ -82,21 +82,21 @@ class ElasticsearchConnection extends AbstractConnection
 		return $this->extractResults($response);
 	}
 
-  /**
-   * @param string $type
-   * @param string $query
-   * @return array
-   */
-  public function raw($type, $query) {
+	/**
+	 * @param string $type
+	 * @param string $query
+	 * @return array
+	 */
+	public function raw($type, $query) {
 		$response = $this->run($type, $query);
 		return $this->extractResults($response);
 	}
 
-  /**
-   * @param Entity $entity
-   * @return bool
-   */
-  public function save(Entity $entity) {
+	/**
+	 * @param Entity $entity
+	 * @return bool
+	 */
+	public function save(Entity $entity) {
 		parent::save($entity);
 
 		if( !$entity::isJsonSerializable() ) {
@@ -114,15 +114,15 @@ class ElasticsearchConnection extends AbstractConnection
 
 		$response = $this->client
 			->put($url)
-        ->setBody(json_encode($entity))
+			->setBody(json_encode($entity))
 			->send()
-        ->json();
+			->json();
 
 		try {
 			if( $this->checkErrors($response) ) {
 				$this->client->post('_refresh')->send();
 				return true;
-      }
+			}
 		} catch( \Exception $error ) {
 			$event = new ExceptionEvent($error);
 			$this->dispatch($event::WARNING, $event);
@@ -130,11 +130,11 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 	}
 
-  /**
-   * @param Entity $entity
-   * @return bool
-   */
-  public function delete(Entity $entity) {
+	/**
+	 * @param Entity $entity
+	 * @return bool
+	 */
+	public function delete(Entity $entity) {
 		parent::delete($entity);
 
 		if( !$entity::isJsonSerializable() ) {
@@ -159,11 +159,11 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 	}
 
-  /**
-   * @param TransactionInterface $transaction
-   * @return bool
-   */
-  public function flush(TransactionInterface $transaction) {
+	/**
+	 * @param TransactionInterface $transaction
+	 * @return bool
+	 */
+	public function flush(TransactionInterface $transaction) {
 		//Make bulk loading more powerful (by disabling auto refreshing)
 		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "-1" }}')->send();
 
@@ -188,9 +188,9 @@ class ElasticsearchConnection extends AbstractConnection
 		}
 		$request->setBody($string)->send();
 
-    //When done restore standard parameters and trigger a refresh
-    $this->client->post('_refresh')->send();
-    $this->client->put('_settings')->setBody('{ index: { refresh_interval: "1s" }}')->send();
+		//When done restore standard parameters and trigger a refresh
+		$this->client->post('_refresh')->send();
+		$this->client->put('_settings')->setBody('{ index: { refresh_interval: "1s" }}')->send();
 		return true;
 	}
 

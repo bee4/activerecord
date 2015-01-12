@@ -104,13 +104,13 @@ class Property
 		}
 	}
 
-    /**
-     * Retrieve the parsed comments
-     * @return array
-     */
-    public function getDocComment() {
-        return $this->attributes;
-    }
+	/**
+	 * Retrieve the parsed comments
+	 * @return array
+	 */
+	public function getDocComment() {
+		return $this->attributes;
+	}
 
 	/**
 	 * Retrieve property name

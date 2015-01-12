@@ -23,11 +23,11 @@ trait DatedEntity {
 	 */
 	protected $date;
 
-    /**
-     * Set creation date
-     * @param \DateTime $date
-     */
-    public function setDate( \DateTime $date ) {
+		/**
+		 * Set creation date
+		 * @param \DateTime $date
+		 */
+		public function setDate( \DateTime $date ) {
 		$this->date = $date;
 	}
 
