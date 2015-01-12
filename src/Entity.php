@@ -153,7 +153,7 @@ abstract class Entity extends ActiveRecord
 		//Crawl extracted data and build entities
 		foreach( $results as $data ) {
 			if( $name::isFactory() ) {
-				$tmp = $name->{'factory'}($data);
+				$tmp = $name::{'factory'}($data);
 			} else {
 				$tmp = new $name;
 				array_walk($data, $fillEntity, $tmp);
