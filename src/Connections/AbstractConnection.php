@@ -24,21 +24,21 @@ abstract class AbstractConnection implements ConnectionInterface
 	//Add Event dispatcher behaviour to allow events
 	use DispatcherAwareTrait;
 
-    /**
-     * @param Entity $entity
-     * @return boolean
-     */
-    public function save(Entity $entity) {
+	/**
+	 * @param Entity $entity
+	 * @return boolean
+	 */
+	public function save(Entity $entity) {
 		$this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
-        return true;
+		return true;
 	}
 
-    /**
-     * @param Entity $entity
-     * @return boolean
-     */
-    public function delete(Entity $entity) {
+	/**
+	 * @param Entity $entity
+	 * @return boolean
+	 */
+	public function delete(Entity $entity) {
 		$this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
-        return true;
+		return true;
 	}
 }

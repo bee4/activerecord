@@ -9,18 +9,26 @@ build_settings:
 
 setup:
   composer:
-    action: "install"
+    action: "install --no-dev"
+    prefer_dist: true
 
 test:
   php_unit:
+  php_code_sniffer:
+    standard: "./phpcs.xml"
   php_mess_detector:
     allow_failures: true
     zero_config: true
-    path: "src"
   php_cpd:
     allow_failures: true
-    path: "src"
   php_loc:
-    directory: "src"
 
-complete:
+success:
+  email:
+    committer: false
+    addresses: ["dev@bee4.fr"]
+
+failure:
+  email:
+    committer: true
+    addresses: ["dev@bee4.fr"]

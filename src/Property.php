@@ -104,13 +104,13 @@ class Property
 		}
 	}
 
-    /**
-     * Retrieve the parsed comments
-     * @return array
-     */
-    public function getDocComment() {
-        return $this->attributes;
-    }
+	/**
+	 * Retrieve the parsed comments
+	 * @return array
+	 */
+	public function getDocComment() {
+		return $this->attributes;
+	}
 
 	/**
 	 * Retrieve property name
@@ -157,7 +157,7 @@ class Property
 				$this->reflection->setValue($model, $value);
 			//Else just use the setter to put value
 			} else {
-				call_user_func([$model, $this->setter], $value);
+				$model->{$this->setter}($value);
 			}
 		}
 		return $model;
@@ -177,7 +177,7 @@ class Property
 		if( $this->reflection->isPublic() ) {
 			return isset($model->{$this->name})?$model->{$this->name}:null;
 		} else {
-			return call_user_func([$model, $this->getter]);
+			return $model->{$this->getter}();
 		}
 	}
 }

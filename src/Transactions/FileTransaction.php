@@ -55,28 +55,39 @@ class FileTransaction implements TransactionInterface
 		}
 	}
 
+	/**
+	 * Destroy the stream
+	 */
 	public function __destruct() {
 		fclose($this->stream);
 	}
 
+	/**
+	 * Retrieve number of persisted items (implementaiton of \Countable)
+	 * @return int
+	 */
 	public function count() {
 		return $this->nb;
 	}
 
+	/**
+	 * Retrieve the current entity
+	 * @return Entity
+	 */
 	public function current() {
 		if( $this->current == "" ) {
 			$this->rewind();
 		}
-        //If the unserialize fail, try to get the next line !
-        try {
-            return unserialize($this->current);
-        } catch( \Exception $error ) {
-            if( feof($this->stream) ) {
-                throw new \Exception('Current item is not a valid serialized Entity: '.PHP_EOL.$this->current);
-            }
-            $this->current .= fgets($this->stream);
-            return $this->current();
-        }
+		//If the unserialize fail, try to get the next line !
+		try {
+			return unserialize($this->current);
+		} catch( \Exception $error ) {
+			if( feof($this->stream) ) {
+				throw new \Exception('Current item is not a valid serialized Entity: '.PHP_EOL.$this->current);
+			}
+			$this->current .= fgets($this->stream);
+			return $this->current();
+		}
 	}
 
 	public function key() {

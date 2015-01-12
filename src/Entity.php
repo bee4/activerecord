@@ -153,7 +153,7 @@ abstract class Entity extends ActiveRecord
 		//Crawl extracted data and build entities
 		foreach( $results as $data ) {
 			if( $name::isFactory() ) {
-				$tmp = call_user_func([$name, 'factory'],$data);
+				$tmp = $name::{'factory'}($data);
 			} else {
 				$tmp = new $name;
 				array_walk($data, $fillEntity, $tmp);
@@ -187,7 +187,8 @@ abstract class Entity extends ActiveRecord
 	 * @throws \LengthException
 	 */
 	final public static function fetchOneBy( $term, $value ) {
-		$collection = call_user_func(array(get_called_class(),'fetchBy'), $term, $value);
+		$class = get_called_class();
+		$collection = $class::{'fetchBy'}($term, $value);
 		if( count($collection) > 1 ) {
 			throw new \LengthException('More than one entities have been found by matching criteria: {term:"'.$term.'", value:"'.$value.'"}');
 		}
@@ -221,7 +222,8 @@ abstract class Entity extends ActiveRecord
 	private function executeOnConnection( $name, $state ) {
 		//@todo Check that current entity is not attached to a transaction because we can't update it if transaction is in progress
 
-		if( call_user_func([self::getConnection(), $name], $this) === true ) {
+		$class = self::getConnection();
+		if( $class->$name($this) === true ) {
 			$this->setState($state);
 			return true;
 		} else {
