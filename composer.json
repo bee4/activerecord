@@ -22,11 +22,21 @@
 		"ext-pcre": "*",
 		"ext-json": "*",
 		"bee4/events": "~0.1",
-		"bee4/transport": "~1.0"
+		"bee4/transport": "~1.1"
 	},
-	"require-dev": {
-		"phpunit/phpunit": "4.*",
-		"behat/behat": "3.*",
-		"squizlabs/php_codesniffer": "2.*"
+	"scripts": {
+		"install:phpmetrics": [
+			"php -r \"file_put_contents('bin/phpmetrics', file_get_contents('https://github.com/Halleck45/PhpMetrics/raw/master/build/phpmetrics.phar'));\"",
+			"chmod 755 bin/phpmetrics"
+		],
+		"install:phpunit": [
+			"php -r \"file_put_contents('bin/phpunit', file_get_contents('https://phar.phpunit.de/phpunit-4.6.7.phar'));\"",
+			"chmod 755 bin/phpunit"
+		],
+		"install:phpcodesniffer": [
+			"php -r \"file_put_contents('bin/phpcs', file_get_contents('https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar'));\"",
+			"php -r \"file_put_contents('bin/phpcbf', file_get_contents('https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar'));\"",
+			"chmod 755 bin/phpcs bin/phpcbf"
+		]
 	}
 }
