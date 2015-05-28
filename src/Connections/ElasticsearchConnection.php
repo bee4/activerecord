@@ -12,7 +12,7 @@
 
 namespace BeeBot\Entity\Connections;
 
-use Bee4\Transport\Client;
+use Bee4\Transport\MagicHandler;
 use Bee4\Transport\Events\ErrorEvent;
 use Bee4\Transport\Events\MessageEvent;
 use BeeBot\Entity\Entity;
@@ -41,7 +41,7 @@ class ElasticsearchConnection extends AbstractConnection
 		if(strrpos($url,'/')!==strlen($url)-1) {
 			$url .= "/";
 		}
-		$this->client = new Client($url);
+		$this->client = new MagicHandler($url);
 		if( $this->hasDispatcher() ) {
 			$this->client->setDispatcher($this->getDispatcher());
 			$this->getDispatcher()->addListener(MessageEvent::REQUEST, function(MessageEvent $event) {
