@@ -1,5 +1,5 @@
-BeeBot - Active Record v0.0.11
-==============================
+BeeBot - Active Record v1.0.0
+=============================
 
 [![Latest Stable Version](http://ci.dev.beebot.fr/build-status/image/2)](http://ci.dev.beebot.fr/build-status/view/2)
 
