@@ -7,19 +7,20 @@
  *
  * @copyright Bee4 2014
  * @author Stephane HULARD <s.hulard@chstudio.fr>
- * @package BeeBot\Entity\Connections
+ * @package BeeBot\Entity\Connections\Events
  */
 
-namespace BeeBot\Entity\Connections;
+namespace BeeBot\Entity\Connections\Events;
 
 use Bee4\Events\EventInterface;
 use BeeBot\Event\AbstractEvent;
 
 /**
  * Event used on connection object. It allow to log all connection calls.
- * @package BeeBot\Entity\Connections
+ * @package BeeBot\Entity\Connections\Events
  */
-class ConnectionEvent implements EventInterface {
+class ConnectionEvent implements EventInterface
+{
 	const REQUEST = "data.request";
 	const ERROR = "data.error";
 	const RESULT = "data.result";

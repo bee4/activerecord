@@ -20,6 +20,7 @@ use BeeBot\Entity\Entity;
 use BeeBot\Entity\Transactions\TransactionInterface;
 use BeeBot\Event\ExceptionEvent;
 use BeeBot\Events\DispatcherInterface;
+use BeeBot\Connections\Events\ConnectionEvent;
 
 /**
  * ElasticSearch connection adapter
