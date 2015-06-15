@@ -19,6 +19,8 @@ use Bee4\Transport\Events\MessageEvent;
 use BeeBot\Entity\Entity;
 use BeeBot\Entity\Transactions\TransactionInterface;
 use BeeBot\Event\ExceptionEvent;
+use BeeBot\Events\DispatcherInterface;
+use BeeBot\Connections\Events\ConnectionEvent;
 
 /**
  * ElasticSearch connection adapter
@@ -43,18 +45,39 @@ class ElasticsearchConnection extends AbstractConnection
 			$url .= "/";
 		}
 		$this->client = new MagicHandler(new Client($url));
-		if( $this->hasDispatcher() ) {
-			$this->client->setDispatcher($this->getDispatcher());
-			$this->getDispatcher()->addListener(MessageEvent::REQUEST, function(MessageEvent $event) {
-				$this->dispatch(ConnectionEvent::REQUEST, new ConnectionEvent($event->getMessage()));
+	}
+
+	/**
+	 * Initialize Bee4\Transport\Client dispatcher
+	 * @param DispatcherInterface $dispatcher
+	 */
+	public function setDispatcher(DispatcherInterface $dispatcher) {
+		parent::setDispatcher($dispatcher);
+
+		$this->client->setDispatcher($this->getDispatcher());
+		$this->getDispatcher()->addListener(
+			MessageEvent::REQUEST, function(MessageEvent $event) {
+				$this->dispatch(
+					ConnectionEvent::REQUEST,
+					new ConnectionEvent($event->getMessage())
+				);
 			});
-			$this->getDispatcher()->addListener(MessageEvent::RESPONSE, function(MessageEvent $event) {
-				$this->dispatch(ConnectionEvent::RESULT, new ConnectionEvent($event->getMessage()));
-			});
-			$this->getDispatcher()->addListener(ErrorEvent::ERROR, function(ErrorEvent $event) {
-				$this->dispatch(ConnectionEvent::ERROR, new ConnectionEvent($event->getError()));
-			});
-		}
+		$this->getDispatcher()->addListener(
+			MessageEvent::RESPONSE, function(MessageEvent $event) {
+				$this->dispatch(
+					ConnectionEvent::RESULT,
+					new ConnectionEvent($event->getMessage())
+				);
+			}
+		);
+		$this->getDispatcher()->addListener(
+			ErrorEvent::ERROR, function(ErrorEvent $event) {
+				$this->dispatch(
+					ConnectionEvent::ERROR,
+					new ConnectionEvent($event->getError())
+				);
+			}
+		);
 	}
 
 	/**

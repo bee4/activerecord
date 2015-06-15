@@ -38,7 +38,7 @@ abstract class AbstractConnection implements ConnectionInterface
 	 * @return boolean
 	 */
 	public function delete(Entity $entity) {
-		$this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
+		$this->dispatch(ConnectionEvent::DELETE, new ConnectionEvent($entity));
 		return true;
 	}
 }
