@@ -19,7 +19,7 @@ use Bee4\Transport\Events\MessageEvent;
 use Bee4\Events\DispatcherInterface;
 use BeeBot\Entity\Entity;
 use BeeBot\Entity\Transactions\TransactionInterface;
-use BeeBot\Connections\Events\ConnectionEvent;
+use BeeBot\Entity\Connections\Events\ConnectionEvent;
 
 /**
  * ElasticSearch connection adapter
