@@ -21,9 +21,9 @@ use BeeBot\Event\AbstractEvent;
  */
 class ConnectionEvent implements EventInterface
 {
-	const REQUEST = "data.request";
-	const ERROR = "data.error";
-	const RESULT = "data.result";
+	const REQUEST = "connection.data.request";
+	const ERROR = "connection.data.error";
+	const RESULT = "connection.data.result";
 
 	const SAVE = "connection.save";
 	const DELETE = "connection.delete";

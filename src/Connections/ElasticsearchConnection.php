@@ -16,10 +16,9 @@ use Bee4\Transport\MagicHandler;
 use Bee4\Transport\Client;
 use Bee4\Transport\Events\ErrorEvent;
 use Bee4\Transport\Events\MessageEvent;
+use Bee4\Events\DispatcherInterface;
 use BeeBot\Entity\Entity;
 use BeeBot\Entity\Transactions\TransactionInterface;
-use BeeBot\Event\ExceptionEvent;
-use BeeBot\Events\DispatcherInterface;
 use BeeBot\Connections\Events\ConnectionEvent;
 
 /**
@@ -142,15 +141,9 @@ class ElasticsearchConnection extends AbstractConnection
 			->send()
 			->json();
 
-		try {
-			if( $this->checkErrors($response) ) {
-				$this->client->post('_refresh')->send();
-				return true;
-			}
-		} catch( \Exception $error ) {
-			$event = new ExceptionEvent($error);
-			$this->dispatch($event::WARNING, $event);
-			return false;
+		if( $this->checkErrors($response) ) {
+			$this->client->post('_refresh')->send();
+			return true;
 		}
 	}
 
@@ -169,18 +162,12 @@ class ElasticsearchConnection extends AbstractConnection
 			->delete($entity::getType().'/'.$entity->getUID())
 			->send()->json();
 
-		try {
-			$this->checkErrors($response);
-			if( $response['found'] === false ) {
-				throw new \InvalidArgumentException('Given entity does not exists in ElasticSearch!!');
-			}
-			$this->client->post('_refresh')->send();
-			return $response['found'];
-		} catch( \Exception $error ) {
-			$event = new ExceptionEvent($error);
-			$this->dispatch($event::WARNING, $event);
-			return false;
+		$this->checkErrors($response);
+		if( $response['found'] === false ) {
+			throw new \InvalidArgumentException('Given entity does not exists in ElasticSearch!!');
 		}
+		$this->client->post('_refresh')->send();
+		return $response['found'];
 	}
 
 	/**
