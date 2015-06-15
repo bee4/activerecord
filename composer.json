@@ -33,6 +33,14 @@
 			"php -r \"file_put_contents('bin/phpunit', file_get_contents('https://phar.phpunit.de/phpunit-4.6.7.phar'));\"",
 			"chmod 755 bin/phpunit"
 		],
+		"install:phpcpd": [
+			"php -r \"file_put_contents('bin/phpcpd', file_get_contents('https://phar.phpunit.de/phpcpd-2.0.2.phar'));\"",
+			"chmod 755 bin/phpcpd"
+		],
+		"install:phploc": [
+			"php -r \"file_put_contents('bin/phploc', file_get_contents('https://phar.phpunit.de/phploc-2.1.3.phar'));\"",
+			"chmod 755 bin/phploc"
+		],
 		"install:phpcodesniffer": [
 			"php -r \"file_put_contents('bin/phpcs', file_get_contents('https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar'));\"",
 			"php -r \"file_put_contents('bin/phpcbf', file_get_contents('https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar'));\"",
