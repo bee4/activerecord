@@ -54,14 +54,14 @@ class ElasticsearchConnection extends AbstractConnection
 		parent::setDispatcher($dispatcher);
 
 		$this->client->setDispatcher($this->getDispatcher());
-		$this->getDispatcher()->addListener(
+		$this->getDispatcher()->add(
 			MessageEvent::REQUEST, function(MessageEvent $event) {
 				$this->dispatch(
 					ConnectionEvent::REQUEST,
 					new ConnectionEvent($event->getMessage())
 				);
 			});
-		$this->getDispatcher()->addListener(
+		$this->getDispatcher()->add(
 			MessageEvent::RESPONSE, function(MessageEvent $event) {
 				$this->dispatch(
 					ConnectionEvent::RESULT,
@@ -69,7 +69,7 @@ class ElasticsearchConnection extends AbstractConnection
 				);
 			}
 		);
-		$this->getDispatcher()->addListener(
+		$this->getDispatcher()->add(
 			ErrorEvent::ERROR, function(ErrorEvent $event) {
 				$this->dispatch(
 					ConnectionEvent::ERROR,
