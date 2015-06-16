@@ -14,6 +14,7 @@ namespace BeeBot\Entity\Connections;
 
 use Bee4\Events\DispatcherAwareTrait;
 use BeeBot\Entity\Entity;
+use BeeBot\Entity\Connections\Events\ConnectionEvent;
 
 /**
  * Define a global canvas for connection adapters.

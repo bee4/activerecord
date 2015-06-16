@@ -4,30 +4,33 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5524e74f8c11b1a025680231cda69ea5",
+    "hash": "d70aa31658589d0fbc6dd531bdd44ccb",
     "packages": [
         {
             "name": "bee4/events",
-            "version": "v0.1.1",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bee4/events.git",
-                "reference": "8cf372fb6ca1f1876dfc78e12b915a4363c6b488"
+                "reference": "88f29948224de43c6618fdd0fb1310b70a1625be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bee4/events/zipball/8cf372fb6ca1f1876dfc78e12b915a4363c6b488",
-                "reference": "8cf372fb6ca1f1876dfc78e12b915a4363c6b488",
+                "url": "https://api.github.com/repos/bee4/events/zipball/88f29948224de43c6618fdd0fb1310b70a1625be",
+                "reference": "88f29948224de43c6618fdd0fb1310b70a1625be",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.3"
+                "evenement/evenement": "~2.0.0",
+                "phpunit/phpunit": "~4.3",
+                "symfony/event-dispatcher": "~2.5"
             },
             "suggest": {
-                "symfony/event-dispatcher": "Required if using Symfony event dispatcher adapter"
+                "evenement/evenement": "Required if using Événement dispatcher adapter",
+                "symfony/event-dispatcher": "Required if using Symfony dispatcher adapter"
             },
             "type": "library",
             "autoload": {
@@ -41,29 +44,29 @@
             ],
             "authors": [
                 {
-                    "name": "Stéphane HULARD",
+                    "name": "Stephane HULARD",
                     "email": "s.hulard@chstudio.fr"
                 }
             ],
             "description": "Basic event dispatcher definition, to allow a project to allow to manage events",
-            "time": "2014-10-06 14:07:07"
+            "time": "2015-06-15 10:33:48"
         },
         {
             "name": "bee4/transport",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bee4/transport.git",
-                "reference": "c66247b28e86b120586e0f2a1f4b1c1c4e2f346e"
+                "reference": "8acbf565640c98e7eee66ab19aa632275b11ad18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bee4/transport/zipball/c66247b28e86b120586e0f2a1f4b1c1c4e2f346e",
-                "reference": "c66247b28e86b120586e0f2a1f4b1c1c4e2f346e",
+                "url": "https://api.github.com/repos/bee4/transport/zipball/8acbf565640c98e7eee66ab19aa632275b11ad18",
+                "reference": "8acbf565640c98e7eee66ab19aa632275b11ad18",
                 "shasum": ""
             },
             "require": {
-                "bee4/events": "~0.0",
+                "bee4/events": "~1.0",
                 "ext-curl": "*",
                 "php": ">=5.4.0"
             },
@@ -88,7 +91,7 @@
                 }
             ],
             "description": "A simple chainable HTTP client. Built for intensive HTTP calls!",
-            "time": "2015-05-28 12:01:43"
+            "time": "2015-06-15 10:42:48"
         }
     ],
     "packages-dev": [],
