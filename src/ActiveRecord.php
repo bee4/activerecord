@@ -112,7 +112,9 @@ abstract class ActiveRecord implements \IteratorAggregate
 			array_fill_keys(array_keys($behaviourInterfaces), true)
 		);
 
-		$meta->type = strtolower(array_pop(explode("\\", get_called_class())));
+
+		$tmp = explode("\\", get_called_class());
+		$meta->type = strtolower(array_pop($tmp));
 
 		//Put meta in cache
 		self::$CACHE[get_called_class()] = $meta;
