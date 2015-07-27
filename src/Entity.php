@@ -44,7 +44,7 @@ abstract class Entity extends ActiveRecord
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->uid = uniqid();
+		$this->uid = str_replace('.', '', uniqid('', true));
 	}
 
 	/**
