@@ -155,7 +155,9 @@ class ElasticsearchConnection extends AbstractConnection
 		parent::delete($entity);
 
 		if( !$entity::isJsonSerializable() ) {
-			throw new \InvalidArgumentException('Given entity must use JsonSerializable behaviour');
+			throw new \InvalidArgumentException(
+				'Given entity must use JsonSerializable behaviour'
+			);
 		}
 
 		$response = $this->client
@@ -164,7 +166,9 @@ class ElasticsearchConnection extends AbstractConnection
 
 		$this->checkErrors($response);
 		if( $response['found'] === false ) {
-			throw new \InvalidArgumentException('Given entity does not exists in ElasticSearch!!');
+			throw new \InvalidArgumentException(
+				'Given entity does not exists in ElasticSearch!!'
+			);
 		}
 		$this->client->post('_refresh')->send();
 		return $response['found'];
@@ -271,10 +275,10 @@ class ElasticsearchConnection extends AbstractConnection
 	private static function buildQuery( $term, $value ) {
 		//If value is an array of 2 elements
 		if( is_array($value) ) {
-			if( count($value) == 2 ) {
-				return array( 'range' => array( $term => array( 'from' => $value[0], 'to' => $value[1] ) ) );
-			} elseif( count($value) === 1 ) {
+			if( count($value) === 1 ) {
 				return self::buildQuery($term, $value[0]);
+			} else {
+				return array( 'terms' => array( $term => array_values($value) ) );
 			}
 		} elseif( is_string( $value ) ) {
 			$parts = array();
