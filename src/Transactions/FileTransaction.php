@@ -83,7 +83,10 @@ class FileTransaction implements TransactionInterface
 			return unserialize($this->current);
 		} catch( \Exception $error ) {
 			if( feof($this->stream) ) {
-				throw new \Exception('Current item is not a valid serialized Entity: '.PHP_EOL.$this->current);
+				throw new \Exception(
+					'Current item is not a valid serialized Entity: '.
+					PHP_EOL.$this->current
+				);
 			}
 			$this->current .= fgets($this->stream);
 			return $this->current();
@@ -111,7 +114,9 @@ class FileTransaction implements TransactionInterface
 
 	public function persist(Entity $entity) {
 		if( !$entity::isSerializable() ) {
-			throw new \InvalidArgumentException('Entity given must be serializable when using FileTransaction (use SerializableEntity trait or Serializable interface...)');
+			throw new \InvalidArgumentException(
+				'Entity given must be serializable when using FileTransaction '.
+				'(use SerializableEntity trait or Serializable interface...)');
 		}
 
 		$this->nb++;
