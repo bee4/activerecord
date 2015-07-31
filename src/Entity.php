@@ -134,7 +134,13 @@ abstract class Entity extends ActiveRecord
 	 * @return EntityCollection
 	 * @throws \RuntimeException
 	 */
-	public static function fetchBy($term, $value, $count = null, $from = null, array $sort = null) {
+	public static function fetchBy(
+		$term,
+		$value,
+		$count = null,
+		$from = null,
+		array $sort = null
+	) {
 		//Retrieve results from connection
 		$results = self::getConnection()->fetchBy(self::getType(), $term, $value);
 
