@@ -278,29 +278,29 @@ class ElasticsearchConnection extends AbstractConnection
 			if( count($value) === 1 ) {
 				return self::buildQuery($term, $value[0]);
 			} else {
-				return array( 'terms' => array( $term => array_values($value) ) );
+				return [ 'terms' => [ $term => array_values($value) ] ];
 			}
 		} elseif( is_string( $value ) ) {
-			$parts = array();
+			$parts = [];
 			//Regexp or wildcard or prefix queries
 			// => Warning about which Regexp are expensives
 			// => Wildcard used to retrieve items by wildcard * match multi characters and ? match single ones
 			// => Prefix used to search terms that starts with $aParts[1]
 			if( preg_match('/^(regexp|wildcard|prefix):(.*)$/', $value, $parts ) === 1 ) {
-				return array( $parts[1] => array($term => $parts[2]) );
+				return [ $parts[1] => [$term => $parts[2]] ];
 			//Specific range queries lesser than, greater than, lesser or equal and greater or equal
 			} elseif( preg_match('/^(lt|gt|gte|lte):(.*)$/', $value, $parts ) === 1 ) {
-				return array(
-					'range' => array( $term => array($parts[1] => $parts[2]) )
-				);
+				return [
+					'range' => [ $term => [$parts[1] => $parts[2]] ]
+				];
 			//Or complete range with specific values given as JSON array
 			} elseif( preg_match('/^range:(.*)$/', $value, $parts) === 1 ) {
 				$dates = json_decode($parts[1]);
-				return self::buildQuery($term, $dates===null?array($parts[1],$parts[1]):$dates);
+				return self::buildQuery($term, $dates===null?[$parts[1],$parts[1]]:$dates);
 			}
 		}
 
 		//Standard one is the term query
-		return array( 'term' => array( $term => $value ) );
+		return [ 'term' => [ $term => $value ] ];
 	}
 }
