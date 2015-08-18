@@ -20,109 +20,119 @@ use BeeBot\Entity\Entity;
  */
 class FileTransaction implements TransactionInterface
 {
-	/**
-	 * Transactionable entities
-	 * @var resource
-	 */
-	protected $stream;
+    /**
+     * Transactionable entities
+     * @var resource
+     */
+    protected $stream;
 
-	/**
-	 * Number of entities
-	 * @var integer
-	 */
-	protected $nb;
+    /**
+     * Number of entities
+     * @var integer
+     */
+    protected $nb;
 
-	/**
-	 * Number of bytes read in the stream
-	 * @var integer
-	 */
-	protected $pos;
+    /**
+     * Number of bytes read in the stream
+     * @var integer
+     */
+    protected $pos;
 
-	/**
-	 * The current line
-	 * @var string
-	 */
-	protected $current;
+    /**
+     * The current line
+     * @var string
+     */
+    protected $current;
 
-	/**
-	 * Initialize entity collection
-	 */
-	public function __construct() {
-		$this->nb = $this->pos = 0;
-		$this->stream = tmpfile();
-		if( $this->stream === false ) {
-			throw new \RuntimeException("Can't create tmp stream !!");
-		}
-	}
+    /**
+     * Initialize entity collection
+     */
+    public function __construct()
+    {
+        $this->nb = $this->pos = 0;
+        $this->stream = tmpfile();
+        if ($this->stream === false) {
+            throw new \RuntimeException("Can't create tmp stream !!");
+        }
+    }
 
-	/**
-	 * Destroy the stream
-	 */
-	public function __destruct() {
-		fclose($this->stream);
-	}
+    /**
+     * Destroy the stream
+     */
+    public function __destruct()
+    {
+        fclose($this->stream);
+    }
 
-	/**
-	 * Retrieve number of persisted items (implementaiton of \Countable)
-	 * @return int
-	 */
-	public function count() {
-		return $this->nb;
-	}
+    /**
+     * Retrieve number of persisted items (implementaiton of \Countable)
+     * @return int
+     */
+    public function count()
+    {
+        return $this->nb;
+    }
 
-	/**
-	 * Retrieve the current entity
-	 * @return Entity
-	 */
-	public function current() {
-		if( $this->current == "" ) {
-			$this->rewind();
-		}
-		//If the unserialize fail, try to get the next line !
-		try {
-			return unserialize($this->current);
-		} catch( \Exception $error ) {
-			if( feof($this->stream) ) {
-				throw new \Exception(
-					'Current item is not a valid serialized Entity: '.
-					PHP_EOL.$this->current
-				);
-			}
-			$this->current .= fgets($this->stream);
-			return $this->current();
-		}
-	}
+    /**
+     * Retrieve the current entity
+     * @return Entity
+     */
+    public function current()
+    {
+        if ($this->current == "") {
+            $this->rewind();
+        }
+        //If the unserialize fail, try to get the next line !
+        try {
+            return unserialize($this->current);
+        } catch (\Exception $error) {
+            if (feof($this->stream)) {
+                throw new \Exception(
+                    'Current item is not a valid serialized Entity: '.
+                    PHP_EOL.$this->current
+                );
+            }
+            $this->current .= fgets($this->stream);
+            return $this->current();
+        }
+    }
 
-	public function key() {
-		return $this->pos;
-	}
+    public function key()
+    {
+        return $this->pos;
+    }
 
-	public function next() {
-		$this->pos += strlen($this->current);
-		$this->current = fgets($this->stream);
-	}
+    public function next()
+    {
+        $this->pos += strlen($this->current);
+        $this->current = fgets($this->stream);
+    }
 
-	public function rewind() {
-		$this->pos = 0;
-		fseek($this->stream, $this->pos);
-		$this->current = fgets($this->stream);
-	}
+    public function rewind()
+    {
+        $this->pos = 0;
+        fseek($this->stream, $this->pos);
+        $this->current = fgets($this->stream);
+    }
 
-	public function valid() {
-		return !feof($this->stream);
-	}
+    public function valid()
+    {
+        return !feof($this->stream);
+    }
 
-	public function persist(Entity $entity) {
-		if( !$entity::isSerializable() ) {
-			throw new \InvalidArgumentException(
-				'Entity given must be serializable when using FileTransaction '.
-				'(use SerializableEntity trait or Serializable interface...)');
-		}
+    public function persist(Entity $entity)
+    {
+        if (!$entity::isSerializable()) {
+            throw new \InvalidArgumentException(
+                'Entity given must be serializable when using FileTransaction '.
+                '(use SerializableEntity trait or Serializable interface...)'
+            );
+        }
 
-		$this->nb++;
-		$s = serialize($entity).PHP_EOL;
-		fseek($this->stream, 0, SEEK_END);
-		fwrite($this->stream, $s);
-		rewind($this->stream);
-	}
+        $this->nb++;
+        $s = serialize($entity).PHP_EOL;
+        fseek($this->stream, 0, SEEK_END);
+        fwrite($this->stream, $s);
+        rewind($this->stream);
+    }
 }

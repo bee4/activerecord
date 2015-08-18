@@ -21,34 +21,36 @@ use BeeBot\Event\AbstractEvent;
  */
 class ConnectionEvent implements EventInterface
 {
-	const REQUEST = "connection.data.request";
-	const ERROR = "connection.data.error";
-	const RESULT = "connection.data.result";
+    const REQUEST = "connection.data.request";
+    const ERROR = "connection.data.error";
+    const RESULT = "connection.data.result";
 
-	const SAVE = "connection.save";
-	const DELETE = "connection.delete";
+    const SAVE = "connection.save";
+    const DELETE = "connection.delete";
 
-	/**
-	 * Event message
-	 * @var mixed
-	 */
-	protected $message;
+    /**
+     * Event message
+     * @var mixed
+     */
+    protected $message;
 
-	/**
-	 * Build an event and define the message
-	 * Message can be an object, a string or something else...
-	 * Then the listener must know what to do with it because it depends of Connection used
-	 * @param mixed $msg
-	 */
-	public function __construct($msg) {
-		$this->message = $msg;
-	}
+    /**
+     * Build an event and define the message
+     * Message can be an object, a string or something else...
+     * Then the listener must know what to do with it because it depends of Connection used
+     * @param mixed $msg
+     */
+    public function __construct($msg)
+    {
+        $this->message = $msg;
+    }
 
-	/**
-	 * Message accessor
-	 * @return mixed
-	 */
-	public function getMessage() {
-		return $this->message;
-	}
+    /**
+     * Message accessor
+     * @return mixed
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
 }

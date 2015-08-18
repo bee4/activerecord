@@ -11,6 +11,7 @@
  */
 
 namespace BeeBot\Entity\Transactions;
+
 use BeeBot\Entity\Entity;
 
 /**
@@ -19,9 +20,9 @@ use BeeBot\Entity\Entity;
  */
 interface TransactionInterface extends \Countable, \Iterator
 {
-	/**
-	 * Inject an Entity in the current transaction
-	 * @param Entity $entity
-	 */
-	public function persist(Entity $entity);
+    /**
+     * Inject an Entity in the current transaction
+     * @param Entity $entity
+     */
+    public function persist(Entity $entity);
 }
