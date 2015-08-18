@@ -93,7 +93,11 @@ class ElasticsearchConnection extends AbstractConnection
      */
     public function countBy($type, $term, $value)
     {
-        $response = $this->run($type, ["query" => self::buildQuery($term, $value)], '_count');
+        $response = $this->run(
+            $type,
+            ["query" => self::buildQuery($term, $value)],
+            '_count'
+        );
         return $response['count'];
     }
 
@@ -133,13 +137,17 @@ class ElasticsearchConnection extends AbstractConnection
         parent::save($entity);
 
         if (!$entity::isJsonSerializable()) {
-            throw new \InvalidArgumentException('Given entity must use JsonSerializable behaviour');
+            throw new \InvalidArgumentException(
+                'Given entity must use JsonSerializable behaviour'
+            );
         }
 
         $url = $entity::getType().'/'.$entity->getUID();
         if ($entity::isChild() && $entity->getParent() !== null) {
             if (!$entity->getParent()->isPersisted()) {
-                throw new \RuntimeException('Parent entity is not a persisted one!');
+                throw new \RuntimeException(
+                    'Parent entity is not a persisted one!'
+                );
             }
 
             $url.='?parent='.$entity->getParent()->getUID();
@@ -192,7 +200,9 @@ class ElasticsearchConnection extends AbstractConnection
     public function flush(TransactionInterface $transaction)
     {
         //Make bulk loading more powerful (by disabling auto refreshing)
-        $this->client->put('_settings')->setBody('{ index: { refresh_interval: "-1" }}')->send();
+        $this->client->put('_settings')->setBody(
+            '{ index: { refresh_interval: "-1" }}'
+        )->send();
 
         $request = $this->client
             ->post('_bulk')
@@ -208,7 +218,11 @@ class ElasticsearchConnection extends AbstractConnection
                 $type = "update";
             }
 
-            $string .= '{ "'.$type.'" : { "_type": "'.$entity::getType().'", "_id": "'.$entity->getUID().'"'.($entity::isChild()?', "_parent": "'.$entity->getParent()->getUID().'"':'').' } }';
+            $string .= '{ "'.$type.'" : '.
+                '{ "_type": "'.$entity::getType().'", '.
+                    '"_id": "'.$entity->getUID().'"'.($entity::isChild()?', '.
+                    '"_parent": "'.$entity->getParent()->getUID().'"':'').
+                ' } }';
             if ($type === 'create' || $type === 'index') {
                 $string .= PHP_EOL.json_encode($entity).PHP_EOL;
             } elseif ($type === 'update') {
@@ -219,7 +233,9 @@ class ElasticsearchConnection extends AbstractConnection
 
         //When done restore standard parameters and trigger a refresh
         $this->client->post('_refresh')->send();
-        $this->client->put('_settings')->setBody('{ index: { refresh_interval: "1s" }}')->send();
+        $this->client->put('_settings')->setBody(
+            '{ index: { refresh_interval: "1s" }}'
+        )->send();
         return true;
     }
 
@@ -237,7 +253,10 @@ class ElasticsearchConnection extends AbstractConnection
 
         //Always return Parent and timestamp property!!
         if (($json = json_encode($request)) === false) {
-            throw new \RuntimeException('An error occured during JSON encoding of the given parameters: '.$request);
+            throw new \RuntimeException(sprintf(
+                'An error occured during JSON encoding of the given parameters: %s',
+                $request
+            ));
         }
         $response = $post->setBody($json)->send()->json();
         $this->checkErrors($response);
@@ -254,11 +273,17 @@ class ElasticsearchConnection extends AbstractConnection
      */
     protected function checkErrors(array $response)
     {
-        if (isset($response['error']) || isset($response['status'])&&$response['status']!==200) {
-            throw new \RuntimeException('Current request give an invalid response: '.  print_r($response, true));
+        if (isset($response['error']) || (isset($response['status']) && $response['status']!==200)) {
+            throw new \RuntimeException(sprintf(
+                'Current request give an invalid response: %s',
+                print_r($response, true)
+            ));
         }
         if (isset($response['_shards']) && $response['_shards']['failed'] > 0) {
-            throw new \RuntimeException('Some shards failed to give result: '.  print_r($response, true));
+            throw new \RuntimeException(sprintf(
+                'Some shards failed to give result: %s',
+                print_r($response, true)
+            ));
         }
 
         return true;

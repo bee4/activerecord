@@ -82,7 +82,12 @@ abstract class ActiveRecord implements \IteratorAggregate
         $meta->properties = $meta->behaviours = [];
 
         //Extract properties except static ones
-        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC|ReflectionProperty::IS_PROTECTED|ReflectionProperty::IS_PRIVATE) as $property) {
+        $properties = $class->getProperties(
+            ReflectionProperty::IS_PUBLIC|
+            ReflectionProperty::IS_PROTECTED|
+            ReflectionProperty::IS_PRIVATE
+        );
+        foreach ($properties as $property) {
             //Static are not considered as entity props because of their global scope
             if ($property->isStatic()) {
                 continue;
@@ -110,7 +115,10 @@ abstract class ActiveRecord implements \IteratorAggregate
         }
 
         //Combine trait behaviours with interface ones
-        $behaviourInterfaces = array_intersect(self::$BEHAVIOUR_INTERFACE, $meta->interfaces);
+        $behaviourInterfaces = array_intersect(
+            self::$BEHAVIOUR_INTERFACE,
+            $meta->interfaces
+        );
         $meta->behaviours = array_merge(
             $meta->behaviours,
             array_fill_keys(array_keys($behaviourInterfaces), true)
@@ -144,8 +152,9 @@ abstract class ActiveRecord implements \IteratorAggregate
      * Define directly with an object the adapter to be used within ActiveRecord
      * @param \BeeBot\Entity\Connections\ConnectionInterface $conn
      */
-    final public static function setConnection(Connections\ConnectionInterface $conn)
-    {
+    final public static function setConnection(
+        Connections\ConnectionInterface $conn
+    ) {
         self::$CONNECTION = $conn;
     }
 
@@ -157,13 +166,17 @@ abstract class ActiveRecord implements \IteratorAggregate
     final public static function getConnection()
     {
         if (self::$CONNECTION === null) {
-            throw new \RuntimeException("There isn't any connection defined, use ActiveRecord::boot or ActiveRecord::setConnexion to define one!!");
+            throw new \RuntimeException(
+                "There isn't any connection defined, use ActiveRecord::boot ".
+                "or ActiveRecord::setConnexion to define one!!"
+            );
         }
         return self::$CONNECTION;
     }
 
     /**
-     * Retrieve current type. This is used as table/index name and must be overidden for specific behaviours
+     * Retrieve current type. This is used as table/index name and
+     * must be overidden for specific behaviours
      * @return string
      */
     public static function getType()
@@ -173,7 +186,8 @@ abstract class ActiveRecord implements \IteratorAggregate
     }
 
     /**
-     * Generic wrapper to emulate behaviour detection: isDated, isChild, isFactory, ...
+     * Generic wrapper to emulate behaviour detection:
+     *   isDated, isChild, isFactory, ...
      * @param string $name
      * @param array $arguments
      * @return boolean

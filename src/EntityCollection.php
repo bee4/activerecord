@@ -26,7 +26,9 @@ class EntityCollection extends \ArrayObject
     public function append($value)
     {
         if (!($value instanceof Entity)) {
-            throw new \InvalidArgumentException('It\'s an entity collection, you can not append anything else than an Entity object');
+            throw new \InvalidArgumentException(
+                'It\'s an entity collection, you can\'t append anything else than an Entity object'
+            );
         }
 
         parent::append($value);
@@ -41,7 +43,9 @@ class EntityCollection extends \ArrayObject
     public function offsetSet($offset, $value)
     {
         if (!($value instanceof Entity)) {
-            throw new \InvalidArgumentException('It\'s an entity collection, you can not append anything else than an Entity object');
+            throw new \InvalidArgumentException(
+                'It\'s an entity collection, you can\'t append anything else than an Entity object'
+            );
         }
 
         parent::offsetSet($offset, $value);

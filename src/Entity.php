@@ -118,7 +118,9 @@ abstract class Entity extends ActiveRecord
         $matches = null;
         if (preg_match('/^(fetchBy|fetchOneBy|countBy)(.+)$/', $name, $matches)) {
             if (!isset($arguments[0])) {
-                throw new \InvalidArgumentException("The function must be call with at least 1 parameter: The searched value!!");
+                throw new \InvalidArgumentException(
+                    "The function must be call with at least 1 parameter: The searched value!!"
+                );
             }
 
             array_unshift($arguments, strtolower($matches[2]));
@@ -128,7 +130,8 @@ abstract class Entity extends ActiveRecord
             );
         }
 
-        //Parent also defined some static magic methods, call it and if there is noting, the BadMethodCallException is triggered
+        //Parent also defined some static magic methods, call it and
+        //if there is noting, the BadMethodCallException is triggered
         return parent::__callStatic($name, $arguments);
     }
 
@@ -150,7 +153,11 @@ abstract class Entity extends ActiveRecord
         array $sort = null
     ) {
         //Retrieve results from connection
-        $results = self::getConnection()->fetchBy(self::getType(), $term, $value);
+        $results = self::getConnection()->fetchBy(
+            self::getType(),
+            $term,
+            $value
+        );
 
         //Then prepare Entity collection construction
         $name = get_called_class();
@@ -206,7 +213,12 @@ abstract class Entity extends ActiveRecord
         $class = get_called_class();
         $collection = $class::{'fetchBy'}($term, $value);
         if (count($collection) > 1) {
-            throw new \LengthException('More than one entities have been found by matching criteria: {term:"'.$term.'", value:"'.$value.'"}');
+            throw new \LengthException(sprintf(
+                'More than one entities have been found by matching criteria: '.
+                '{term:"%s", value:"%s"}',
+                $term,
+                $value
+            ));
         }
 
         return count($collection)==1?$collection[0]:null;
@@ -239,7 +251,8 @@ abstract class Entity extends ActiveRecord
      */
     private function executeOnConnection($name, $state)
     {
-        //@todo Check that current entity is not attached to a transaction because we can't update it if transaction is in progress
+        //@todo Check that current entity is not attached to a transaction
+        //because we can't update it if transaction is in progress
 
         $class = self::getConnection();
         if ($class->$name($this) === true) {

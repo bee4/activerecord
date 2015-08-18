@@ -43,7 +43,9 @@ trait SerializableEntity
             } elseif ($this->isDeleted()) {
                 $vars['_state'] = Entity::STATE_DELETED;
             } else {
-                throw new \UnexpectedValueException('Entity state must be a valid one: STATE_NEW, STATE_PERSISTED, STATE_DELETED');
+                throw new \UnexpectedValueException(
+                    'Entity state must be a valid one: STATE_NEW, STATE_PERSISTED, STATE_DELETED'
+                );
             }
         }
 

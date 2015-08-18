@@ -119,7 +119,10 @@ class DocBlockParser
         if (!preg_match('/\n\s*'.self::TAG_REGEX.'/As', $this->comment, $match, null, $this->cursor)) {
             // skip
             $this->cursor = strlen($this->comment);
-            throw new \LogicException(sprintf('Unable to parse block comment near "... %s ...".', substr($this->comment, max(0, $this->cursor - 15), 15)));
+            throw new \LogicException(sprintf(
+                'Unable to parse block comment near "... %s ...".',
+                substr($this->comment, max(0, $this->cursor - 15), 15)
+            ));
         }
 
         $this->move($match[0]);
