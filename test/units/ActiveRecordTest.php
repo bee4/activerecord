@@ -12,6 +12,8 @@
 
 namespace BeeBot\Entity\Tests;
 
+require_once __DIR__.'/../samples/SampleEntity.php';
+
 /**
  * Tests on ActiveRecord object
  * @package BeeBot\Entity\Tests
