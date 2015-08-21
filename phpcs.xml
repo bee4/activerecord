@@ -4,6 +4,9 @@
 
  <exclude-pattern>*/vendor/*</exclude-pattern>
 
+ <rule ref="PSR1"/>
+ <rule ref="PSR2"/>
+
  <rule ref="Generic.CodeAnalysis.EmptyStatement" />
  <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement" />
  <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier" />
@@ -13,6 +16,9 @@
 
  <rule ref="Generic.Files.OneClassPerFile" />
  <rule ref="Generic.Files.OneInterfacePerFile" />
+ <rule ref="Generic.Files.OneTraitPerFile" />
+ <rule ref="Generic.Files.EndFileNewline" />
+ <rule ref="Generic.Files.LineLength" />
 
  <rule ref="Generic.NamingConventions.ConstructorName" />
  <rule ref="Generic.NamingConventions.UpperCaseConstantName" />
@@ -26,5 +32,5 @@
 
  <rule ref="Generic.Strings.UnnecessaryStringConcat" />
 
- <rule ref="Generic.WhiteSpace.DisallowSpaceIndent" />
+ <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
 </ruleset>

@@ -22,24 +22,26 @@ use BeeBot\Entity\Connections\Events\ConnectionEvent;
  */
 abstract class AbstractConnection implements ConnectionInterface
 {
-	//Add Event dispatcher behaviour to allow events
-	use DispatcherAwareTrait;
+    //Add Event dispatcher behaviour to allow events
+    use DispatcherAwareTrait;
 
-	/**
-	 * @param Entity $entity
-	 * @return boolean
-	 */
-	public function save(Entity $entity) {
-		$this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
-		return true;
-	}
+    /**
+     * @param Entity $entity
+     * @return boolean
+     */
+    public function save(Entity $entity)
+    {
+        $this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
+        return true;
+    }
 
-	/**
-	 * @param Entity $entity
-	 * @return boolean
-	 */
-	public function delete(Entity $entity) {
-		$this->dispatch(ConnectionEvent::DELETE, new ConnectionEvent($entity));
-		return true;
-	}
+    /**
+     * @param Entity $entity
+     * @return boolean
+     */
+    public function delete(Entity $entity)
+    {
+        $this->dispatch(ConnectionEvent::DELETE, new ConnectionEvent($entity));
+        return true;
+    }
 }

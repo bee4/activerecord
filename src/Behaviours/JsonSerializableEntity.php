@@ -21,25 +21,25 @@ use BeeBot\Entity\Entity;
  */
 trait JsonSerializableEntity
 {
-	/**
-	 * Transform current object to JSON
-	 * @return \stdClass
-	 */
-	public function jsonSerialize()
-	{
-		$tmp = new \stdClass();
-		foreach( $this->getIterator() as $name => $value ) {
-			if( is_null($value) ) {
-				continue;
-			}
-			$tmp->{$name} = $value;
-		}
+    /**
+     * Transform current object to JSON
+     * @return \stdClass
+     */
+    public function jsonSerialize()
+    {
+        $tmp = new \stdClass();
+        foreach ($this->getIterator() as $name => $value) {
+            if (is_null($value)) {
+                continue;
+            }
+            $tmp->{$name} = $value;
+        }
 
-		//When we try to JSON an entity, add UID else its a nested one, so just get props
-		if( $this instanceof Entity ) {
-			$tmp->uid = $this->getUID();
-		}
+        //When we try to JSON an entity, add UID else its a nested one, so just get props
+        if ($this instanceof Entity) {
+            $tmp->uid = $this->getUID();
+        }
 
-		return $tmp;
-	}
+        return $tmp;
+    }
 }

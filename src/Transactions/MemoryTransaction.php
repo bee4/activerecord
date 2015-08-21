@@ -20,53 +20,61 @@ use BeeBot\Entity\Entity;
  */
 class MemoryTransaction implements TransactionInterface
 {
-	/**
-	 * Transactionable entities
-	 * @var array
-	 */
-	protected $entities;
+    /**
+     * Transactionable entities
+     * @var array
+     */
+    protected $entities;
 
-	/**
-	 * Current iterator index
-	 * @var integer
-	 */
-	protected $index;
+    /**
+     * Current iterator index
+     * @var integer
+     */
+    protected $index;
 
-	/**
-	 * Initialize entity collection
-	 */
-	public function __construct() {
-		$this->entities = [];
-	}
+    /**
+     * Initialize entity collection
+     */
+    public function __construct()
+    {
+        $this->entities = [];
+    }
 
-	public function count() {
-		return count($this->entities);
-	}
+    public function count()
+    {
+        return count($this->entities);
+    }
 
-	public function current() {
-		return $this->entities[$this->index];
-	}
+    public function current()
+    {
+        return $this->entities[$this->index];
+    }
 
-	public function key() {
-		return $this->index;
-	}
+    public function key()
+    {
+        return $this->index;
+    }
 
-	public function next() {
-		$this->index++;
-	}
+    public function next()
+    {
+        $this->index++;
+    }
 
-	public function rewind() {
-		$this->index = 0;
-	}
+    public function rewind()
+    {
+        $this->index = 0;
+    }
 
-	public function valid() {
-		return isset($this->entities[$this->index]);
-	}
+    public function valid()
+    {
+        return isset($this->entities[$this->index]);
+    }
 
-	/**
-	 * @param Entity $entity
-	 */
-	public function persist(Entity $entity) {
-		$this->entities[] = $entity;
-	}
+    /**
+     * @param Entity $entity
+     */
+    public function persist(Entity $entity)
+    {
+        $this->entities[] = $entity;
+    }
 }

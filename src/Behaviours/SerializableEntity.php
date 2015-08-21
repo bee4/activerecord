@@ -21,66 +21,70 @@ use BeeBot\Entity\Entity;
  */
 trait SerializableEntity
 {
-	/**
-	 * Serialize an entity by retrieving all accessible properties in the instance
-	 * @see \Serializable::serialize
-	 * @return string
-	 */
-	public function serialize() {
-		$vars = get_object_vars($this);
+    /**
+     * Serialize an entity by retrieving all accessible properties in the instance
+     * @see \Serializable::serialize
+     * @return string
+     */
+    public function serialize()
+    {
+        $vars = get_object_vars($this);
 
-		//Manage private properties
-		//Backup UID
-		if( $this instanceof Entity ) {
-			$vars['_uid'] = $this->getUID();
+        //Manage private properties
+        //Backup UID
+        if ($this instanceof Entity) {
+            $vars['_uid'] = $this->getUID();
 
-			//Retrieve valid state and backup value
-			if( $this->isNew() ) {
-				$vars['_state'] = Entity::STATE_NEW;
-			} elseif( $this->isPersisted() ) {
-				$vars['_state'] = Entity::STATE_PERSISTED;
-			} elseif( $this->isDeleted() ) {
-				$vars['_state'] = Entity::STATE_DELETED;
-			} else {
-				throw new \UnexpectedValueException('Entity state must be a valid one: STATE_NEW, STATE_PERSISTED, STATE_DELETED');
-			}
-		}
+            //Retrieve valid state and backup value
+            if ($this->isNew()) {
+                $vars['_state'] = Entity::STATE_NEW;
+            } elseif ($this->isPersisted()) {
+                $vars['_state'] = Entity::STATE_PERSISTED;
+            } elseif ($this->isDeleted()) {
+                $vars['_state'] = Entity::STATE_DELETED;
+            } else {
+                throw new \UnexpectedValueException(
+                    'Entity state must be a valid one: STATE_NEW, STATE_PERSISTED, STATE_DELETED'
+                );
+            }
+        }
 
-		if( $this::isChild() ) {
-			$vars['_parent'] = $this->getParent();
-		}
+        if ($this::isChild()) {
+            $vars['_parent'] = $this->getParent();
+        }
 
-		return serialize($vars);
-	}
+        return serialize($vars);
+    }
 
-	/**
-	 * Initialize entity instance from serialized data string
-	 * @see \Serializable::unserialize
-	 * @param string $serialized
-	 */
-	public function unserialize($serialized) {
-		//Call ActiveRecord methods directly to initiate cache and fill object global properties
-		self::preload();
+    /**
+     * Initialize entity instance from serialized data string
+     * @see \Serializable::unserialize
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        //Call ActiveRecord methods directly to initiate cache and fill object global properties
+        self::preload();
 
-		//Initialized the new instance with its default and load class meta
-		$data = unserialize($serialized);
-		if( $this instanceof Entity ) {
-			$this->init($data['_uid'], $data['_state']);
-			unset($data['_uid'], $data['_state']);
-		} else {
-			$this->init();
-		}
+        //Initialized the new instance with its default and load class meta
+        $data = unserialize($serialized);
+        if ($this instanceof Entity) {
+            $this->init($data['_uid'], $data['_state']);
+            unset($data['_uid'], $data['_state']);
+        } else {
+            $this->init();
+        }
 
-		if( $this::isChild() ) {
-			if( !is_null($data['_parent']) ) {
-				$this->setParent($data['_parent']);
-			}
-			unset($data['_parent']);
-		}
+        if ($this::isChild()) {
+            if (!is_null($data['_parent'])) {
+                $this->setParent($data['_parent']);
+            }
+            unset($data['_parent']);
+        }
 
-		//Populate all properties from their unserialized form
-		foreach( $data as $name => $value ) {
-			$this->{$name} = $value;
-		}
-	}
+        //Populate all properties from their unserialized form
+        foreach ($data as $name => $value) {
+            $this->{$name} = $value;
+        }
+    }
 }

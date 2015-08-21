@@ -19,136 +19,160 @@ use BeeBot\Entity\Transactions\TransactionInterface;
  * Description of PdoConnection
  * @package BeeBot\Entity\Connections
  */
-class PdoConnection extends AbstractConnection {
-	/**
-	 * PDO connection handler
-	 * @var \PDO
-	 */
-	protected $client;
+class PdoConnection extends AbstractConnection
+{
+    /**
+     * PDO connection handler
+     * @var \PDO
+     */
+    protected $client;
 
-	/**
-	 * Initiate a new PDO connection from given data source name
-	 * @param string $dsn
-	 */
-	public function __construct( $dsn ) {
-		$this->client = new \PDO($dsn);
-	}
+    /**
+     * Initiate a new PDO connection from given data source name
+     * @param string $dsn
+     */
+    public function __construct($dsn)
+    {
+        $this->client = new \PDO($dsn);
+    }
 
-	/**
-	 * Close PDO connection when finished
-	 */
-	public function __destruct() {
-		$this->client = null;
-	}
+    /**
+     * Close PDO connection when finished
+     */
+    public function __destruct()
+    {
+        $this->client = null;
+    }
 
-	/**
-	 * @param string $type
-	 * @param string $term
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function countBy($type, $term, $value) {
-		$st = $this->client->prepare("
+    /**
+     * @param string $type
+     * @param string $term
+     * @param mixed $value
+     * @return string
+     */
+    public function countBy($type, $term, $value)
+    {
+        $st = $this->prepare("
 			SELECT COUNT(*)
 			FROM $type
 			WHERE $term = :term");
-		$st->execute(['term' => $value]);
-		return $st->fetchColumn();
-	}
+        $st->execute(['term' => $value]);
+        return $st->fetchColumn();
+    }
 
-	/**
-	 * @param Entity $entity
-	 * @return bool
-	 */
-	public function delete(Entity $entity) {
-		parent::delete($entity);
+    /**
+     * @param Entity $entity
+     * @return bool
+     */
+    public function delete(Entity $entity)
+    {
+        parent::delete($entity);
 
-		$st = $this->client->prepare("
+        $st = $this->prepare("
 			DELETE FROM {$entity->getType()}
 			WHERE uid = :uid");
-		return $st->execute([
-			'uid' => $entity->getUID()
-		]);
-	}
+        return $st->execute([
+            'uid' => $entity->getUID()
+        ]);
+    }
 
-	/**
-	 * @param string $type
-	 * @param string $term
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function fetchBy($type, $term, $value) {
-		$st = $this->client->prepare("
+    /**
+     * @param string $type
+     * @param string $term
+     * @param mixed $value
+     * @return array
+     */
+    public function fetchBy($type, $term, $value)
+    {
+        $st = $this->prepare("
 			SELECT *
 			FROM $type
 			WHERE $term = :term");
-		$st->execute(['term' => $value]);
-		return $st->fetchAll(\PDO::FETCH_ASSOC);
-	}
+        $st->execute(['term' => $value]);
+        return $st->fetchAll(\PDO::FETCH_ASSOC);
+    }
 
-	/**
-	 * @param TransactionInterface $transaction
-	 * @return bool
-	 */
-	public function flush(TransactionInterface $transaction) {
-		$this->client->beginTransaction();
-		foreach( $transaction as $entity ) {
-			if( $entity->isDeleted() ) {
-				$status = $this->delete($entity);
-			} else {
-				$status = $this->save($entity);
-			}
+    /**
+     * @param TransactionInterface $transaction
+     * @return bool
+     */
+    public function flush(TransactionInterface $transaction)
+    {
+        $this->client->beginTransaction();
+        foreach ($transaction as $entity) {
+            if ($entity->isDeleted()) {
+                $status = $this->delete($entity);
+            } else {
+                $status = $this->save($entity);
+            }
 
-			if( !$status ) {
-				$this->client->rollBack();
-				return false;
-			}
-		}
+            if (!$status) {
+                $this->client->rollBack();
+                return false;
+            }
+        }
 
-		$this->client->commit();
-		return true;
-	}
+        $this->client->commit();
+        return true;
+    }
 
-	/**
-	 * @param string $type
-	 * @param string $query
-	 * @return array
-	 */
-	public function raw($type, $query) {
-		$st = $this->client->prepare("
+    /**
+     * @param string $type
+     * @param string $query
+     * @return array
+     */
+    public function raw($type, $query)
+    {
+        $st = $this->prepare("
 			SELECT *
 			FROM $type
 			WHERE ".$query);
-		$st->execute();
-		return $st->fetchAll(\PDO::FETCH_ASSOC);
-	}
+        $st->execute();
+        return $st->fetchAll(\PDO::FETCH_ASSOC);
+    }
 
-	/**
-	 * @param Entity $entity
-	 * @return bool
-	 */
-	public function save(Entity $entity) {
-		parent::save($entity);
+    /**
+     * @param Entity $entity
+     * @return bool
+     */
+    public function save(Entity $entity)
+    {
+        parent::save($entity);
 
-		$props = $entity->getIterator()->getArrayCopy();
-		$props['uid'] = $entity->getUID();
+        $props = $entity->getIterator()->getArrayCopy();
+        $props['uid'] = $entity->getUID();
 
-		if( $entity->isNew() ) {
-			$st = $this->client->prepare("
+        if ($entity->isNew()) {
+            $st = $this->prepare("
 				INSERT INTO {$entity->getType()} (".implode(', ', array_keys($props)).")
 				VALUES (:".implode(', :', array_keys($props)).")
 			");
-		} else {
-			$set = [];
-			array_walk($props, function($value, $key) use (&$set) {
-				$set[] = $key."=:".$key;
-			});
-			$st = $this->client->prepare("
+        } else {
+            $set = [];
+            array_walk($props, function ($value, $key) use (&$set) {
+                $set[] = $key."=:".$key;
+            });
+            $st = $this->prepare("
 				UPDATE {$entity->getType()}
 				SET ".implode(', ', $set)."
 				WHERE uid=:uid
 			");
-		}
-		return $st->execute($props);
-	}
+        }
+
+        return $st->execute($props);
+    }
+
+    private function prepare($query)
+    {
+        $st = $this->client->prepare($query);
+        if( $st === false ) {
+            $details = $this->client->errorInfo();
+            throw new \RuntimeException(sprintf(
+                'Error during statement creation: %s',
+                $details[2]
+            ));
+        }
+
+        return $st;
+    }
 }
