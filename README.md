@@ -1,4 +1,4 @@
-BeeBot - Active Record v1.0.2
+BeeBot - Active Record v1.0.3
 =============================
 
 [![build status](https://ci.gitlab.com/projects/3613/status.png?ref=develop)](https://ci.gitlab.com/projects/3613?ref=develop)
