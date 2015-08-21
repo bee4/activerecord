@@ -137,11 +137,11 @@ abstract class Entity extends ActiveRecord
 
     /**
      * Retrieve a Collection of Document object from a given term value
-     * @param string $term Term name the value will be searched in
-     * @param string $value The value of the term to be searched
+     * @param string  $term Term name the value will be searched in
+     * @param string  $value The value of the term to be searched
      * @param integer $count Number of results to get
      * @param integer $from Document position where we start to retrieve results
-     * @param array $sort Request sort parameter [name=>order]
+     * @param array   $sort Request sort parameter [name=>order]
      * @return EntityCollection
      * @throws \RuntimeException
      */
