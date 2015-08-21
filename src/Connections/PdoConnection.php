@@ -52,7 +52,7 @@ class PdoConnection extends AbstractConnection
      */
     public function countBy($type, $term, $value)
     {
-        $st = $this->client->prepare("
+        $st = $this->prepare("
 			SELECT COUNT(*)
 			FROM $type
 			WHERE $term = :term");
@@ -68,7 +68,7 @@ class PdoConnection extends AbstractConnection
     {
         parent::delete($entity);
 
-        $st = $this->client->prepare("
+        $st = $this->prepare("
 			DELETE FROM {$entity->getType()}
 			WHERE uid = :uid");
         return $st->execute([
@@ -84,7 +84,7 @@ class PdoConnection extends AbstractConnection
      */
     public function fetchBy($type, $term, $value)
     {
-        $st = $this->client->prepare("
+        $st = $this->prepare("
 			SELECT *
 			FROM $type
 			WHERE $term = :term");
@@ -123,7 +123,7 @@ class PdoConnection extends AbstractConnection
      */
     public function raw($type, $query)
     {
-        $st = $this->client->prepare("
+        $st = $this->prepare("
 			SELECT *
 			FROM $type
 			WHERE ".$query);
@@ -143,7 +143,7 @@ class PdoConnection extends AbstractConnection
         $props['uid'] = $entity->getUID();
 
         if ($entity->isNew()) {
-            $st = $this->client->prepare("
+            $st = $this->prepare("
 				INSERT INTO {$entity->getType()} (".implode(', ', array_keys($props)).")
 				VALUES (:".implode(', :', array_keys($props)).")
 			");
@@ -152,12 +152,27 @@ class PdoConnection extends AbstractConnection
             array_walk($props, function ($value, $key) use (&$set) {
                 $set[] = $key."=:".$key;
             });
-            $st = $this->client->prepare("
+            $st = $this->prepare("
 				UPDATE {$entity->getType()}
 				SET ".implode(', ', $set)."
 				WHERE uid=:uid
 			");
         }
+
         return $st->execute($props);
+    }
+
+    private function prepare($query)
+    {
+        $st = $this->client->prepare($query);
+        if( $st === false ) {
+            $details = $this->client->errorInfo();
+            throw new \RuntimeException(sprintf(
+                'Error during statement creation: %s',
+                $details[2]
+            ));
+        }
+
+        return $st;
     }
 }
