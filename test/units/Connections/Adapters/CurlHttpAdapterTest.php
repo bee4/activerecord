@@ -12,75 +12,17 @@
 
 namespace BeeBot\Entity\Tests\Connections\Adapters;
 
+require_once 'AbstractHttpAdapterTest.php';
+
 use BeeBot\Entity\Connections\Adapters\CurlHttpAdapter;
 
 /**
- * Check the child entity behaviour
+ * Check curl Http adapter
  * @package BeeBot\Entity\Tests\Behaviours
  */
-class CurlHttpAdapterTest extends \PHPUnit_Framework_TestCase
+class CurlHttpAdapterTest extends AbstractHttpAdapterTest
 {
-	/**
-	 * @var CurlHttpAdapter
-	 */
-	private $object;
-
 	public function setUp() {
 		$this->object = new CurlHttpAdapter;
-	}
-
-	private function check( $result, $url, $body ) {
-		$result = json_decode($result, true);
-
-		$this->assertArrayHasKey('url', $result);
-		$this->assertArrayHasKey('args', $result);
-		$this->assertArrayHasKey('headers', $result);
-
-		$this->assertEquals($url, $result['url']);
-
-		if( is_array($body) ) {
-			foreach( $body as $key => $val ) {
-				$this->assertArrayHasKey($key, $result['form']);
-				$this->assertEquals($val, $result['form'][$key]);
-			}
-		}
-	}
-
-	public function contextProvider() {
-		return [
-			['get', 'https://httpbin.org/get'],
-			['post', 'https://httpbin.org/post', ['PostBody'=>'Toto']],
-			['put', 'https://httpbin.org/put', ['PutBody'=>'Tata']],
-			['delete', 'https://httpbin.org/delete', ['DeleteBody'=>'Tutu']]
-		];
-	}
-
-	/**
-	 * @dataProvider contextProvider
-	 */
-	public function testMethod($method, $url, $body = null) {
-		$result = call_user_func(
-			[$this->object, $method],
-			$url, $body
-		);
-		$this->check($result, $url, $body);
-	}
-
-	public function testInlineHeaders() {
-		$result = json_decode($this->object->get(
-			'https://httpbin.org/headers',
-			['X-Test: Value']
-		), true);
-		$this->assertArrayHasKey('X-Test', $result['headers']);
-		$this->assertEquals('Value', $result['headers']['X-Test']);
-	}
-
-	public function testAssocHeaders() {
-		$result = json_decode($this->object->get(
-			'https://httpbin.org/headers',
-			['X-Test' => 'Value']
-		), true);
-		$this->assertArrayHasKey('X-Test', $result['headers']);
-		$this->assertEquals('Value', $result['headers']['X-Test']);
 	}
 }
