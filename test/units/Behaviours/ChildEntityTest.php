@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @copyright Bee4 2014
+ * @copyright Bee4 2015
  * @author Stephane HULARD <s.hulard@chstudio.fr>
  * @package BeeBot\Entity\Tests\Behaviours
  */
@@ -22,21 +22,23 @@ use \BeeBot\Entity\Tests\Samples;
  */
 class ChildEntityTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @var Samples\SampleChildEntity
-	 */
-	private $object;
+    /**
+     * @var Samples\SampleChildEntity
+     */
+    private $object;
 
-	public function setUp() {
-		$this->object = new Samples\SampleChildEntity;
-	}
+    public function setUp()
+    {
+        $this->object = new Samples\SampleChildEntity;
+    }
 
-	public function testBehaviour() {
-		$this->assertTrue(Samples\SampleChildEntity::isChild());
-		$this->assertNull($this->object->getParent());
+    public function testBehaviour()
+    {
+        $this->assertTrue(Samples\SampleChildEntity::isChild());
+        $this->assertNull($this->object->getParent());
 
-		$p = new Samples\SampleEntity();
-		$this->object->setParent($p);
-		$this->assertEquals($p, $this->object->getParent());
-	}
+        $p = new Samples\SampleEntity();
+        $this->object->setParent($p);
+        $this->assertEquals($p, $this->object->getParent());
+    }
 }

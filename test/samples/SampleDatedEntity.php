@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @copyright Bee4 2014
+ * @copyright Bee4 2015
  * @author Stephane HULARD <s.hulard@chstudio.fr>
  * @package BeeBot\Entity\Tests\Samples
  */
@@ -20,5 +20,5 @@ require_once __DIR__.'/SampleEntity.php';
  */
 class SampleDatedEntity extends SampleEntity
 {
-	use \BeeBot\Entity\Behaviours\DatedEntity;
+    use \BeeBot\Entity\Behaviours\DatedEntity;
 }

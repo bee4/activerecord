@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bee4/events",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bee4/events.git",
-                "reference": "88f29948224de43c6618fdd0fb1310b70a1625be"
+                "reference": "9aff7b2d670cf3e0517f05a9ae6c820b1949ee07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bee4/events/zipball/88f29948224de43c6618fdd0fb1310b70a1625be",
-                "reference": "88f29948224de43c6618fdd0fb1310b70a1625be",
+                "url": "https://api.github.com/repos/bee4/events/zipball/9aff7b2d670cf3e0517f05a9ae6c820b1949ee07",
+                "reference": "9aff7b2d670cf3e0517f05a9ae6c820b1949ee07",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,6 @@
             },
             "require-dev": {
                 "evenement/evenement": "~2.0.0",
-                "phpunit/phpunit": "~4.3",
                 "symfony/event-dispatcher": "~2.5"
             },
             "suggest": {
@@ -49,30 +48,26 @@
                 }
             ],
             "description": "Basic event dispatcher definition, to allow a project to allow to manage events",
-            "time": "2015-06-15 10:33:48"
+            "time": "2015-07-29 09:39:35"
         },
         {
             "name": "bee4/transport",
-            "version": "v1.1.1",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bee4/transport.git",
-                "reference": "8acbf565640c98e7eee66ab19aa632275b11ad18"
+                "reference": "06b248ba8300bae08143a39d5c8303de7e0f5181"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bee4/transport/zipball/8acbf565640c98e7eee66ab19aa632275b11ad18",
-                "reference": "8acbf565640c98e7eee66ab19aa632275b11ad18",
+                "url": "https://api.github.com/repos/bee4/transport/zipball/06b248ba8300bae08143a39d5c8303de7e0f5181",
+                "reference": "06b248ba8300bae08143a39d5c8303de7e0f5181",
                 "shasum": ""
             },
             "require": {
                 "bee4/events": "~1.0",
                 "ext-curl": "*",
                 "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "2.*"
             },
             "type": "library",
             "autoload": {
@@ -91,7 +86,7 @@
                 }
             ],
             "description": "A simple chainable HTTP client. Built for intensive HTTP calls!",
-            "time": "2015-06-15 10:42:48"
+            "time": "2015-07-22 08:13:02"
         }
     ],
     "packages-dev": [],

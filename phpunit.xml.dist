@@ -25,4 +25,7 @@
   <logging>
     <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
 	</logging>
+  <php>
+    <const name="ELASTICSEARCH_SERVER" value="http://127.0.0.1:9200"/>
+  </php>
 </phpunit>

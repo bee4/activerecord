@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @copyright Bee4 2014
+ * @copyright Bee4 2015
  * @author Stephane HULARD <s.hulard@chstudio.fr>
  * @package BeeBot\Entity\Tests\Behaviours
  */
@@ -22,21 +22,23 @@ use \BeeBot\Entity\Tests\Samples;
  */
 class DatedEntityTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @var Samples\SampleDatedEntity
-	 */
-	private $object;
+    /**
+     * @var Samples\SampleDatedEntity
+     */
+    private $object;
 
-	public function setUp() {
-		$this->object = new Samples\SampleDatedEntity;
-	}
+    public function setUp()
+    {
+        $this->object = new Samples\SampleDatedEntity;
+    }
 
-	public function testBehaviour() {
-		$this->assertTrue(Samples\SampleDatedEntity::isDated());
-		$this->assertNull($this->object->getDate());
+    public function testBehaviour()
+    {
+        $this->assertTrue(Samples\SampleDatedEntity::isDated());
+        $this->assertNull($this->object->getDate());
 
-		$date = new \DateTime;
-		$this->object->setDate($date);
-		$this->assertEquals($date, $this->object->getDate());
-	}
+        $date = new \DateTime;
+        $this->object->setDate($date);
+        $this->assertEquals($date, $this->object->getDate());
+    }
 }
