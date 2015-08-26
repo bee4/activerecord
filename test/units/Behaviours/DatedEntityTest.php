@@ -22,21 +22,23 @@ use \BeeBot\Entity\Tests\Samples;
  */
 class DatedEntityTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @var Samples\SampleDatedEntity
-	 */
-	private $object;
+    /**
+     * @var Samples\SampleDatedEntity
+     */
+    private $object;
 
-	public function setUp() {
-		$this->object = new Samples\SampleDatedEntity;
-	}
+    public function setUp()
+    {
+        $this->object = new Samples\SampleDatedEntity;
+    }
 
-	public function testBehaviour() {
-		$this->assertTrue(Samples\SampleDatedEntity::isDated());
-		$this->assertNull($this->object->getDate());
+    public function testBehaviour()
+    {
+        $this->assertTrue(Samples\SampleDatedEntity::isDated());
+        $this->assertNull($this->object->getDate());
 
-		$date = new \DateTime;
-		$this->object->setDate($date);
-		$this->assertEquals($date, $this->object->getDate());
-	}
+        $date = new \DateTime;
+        $this->object->setDate($date);
+        $this->assertEquals($date, $this->object->getDate());
+    }
 }

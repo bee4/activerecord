@@ -22,7 +22,8 @@ use BeeBot\Entity\Connections\Adapters\CurlHttpAdapter;
  */
 class CurlHttpAdapterTest extends AbstractHttpAdapterTest
 {
-	public function setUp() {
-		$this->object = new CurlHttpAdapter;
-	}
+    public function setUp()
+    {
+        $this->object = new CurlHttpAdapter;
+    }
 }

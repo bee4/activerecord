@@ -20,9 +20,9 @@ require_once __DIR__.'/SampleEntity.php';
  */
 class SampleMultipleBehavioursEntity extends SampleEntity implements \Serializable, \JsonSerializable
 {
-	use
-		\BeeBot\Entity\Behaviours\SerializableEntity,
-		\BeeBot\Entity\Behaviours\JsonSerializableEntity,
-		\BeeBot\Entity\Behaviours\DatedEntity,
-		\BeeBot\Entity\Behaviours\ChildEntity;
+    use
+        \BeeBot\Entity\Behaviours\SerializableEntity,
+        \BeeBot\Entity\Behaviours\JsonSerializableEntity,
+        \BeeBot\Entity\Behaviours\DatedEntity,
+        \BeeBot\Entity\Behaviours\ChildEntity;
 }

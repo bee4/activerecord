@@ -23,7 +23,8 @@ use Bee4\Transport\Client;
  */
 class Bee4TransportAdapterTest extends AbstractHttpAdapterTest
 {
-	public function setUp() {
-		$this->object = new Bee4TransportAdapter(new Client);
-	}
+    public function setUp()
+    {
+        $this->object = new Bee4TransportAdapter(new Client);
+    }
 }

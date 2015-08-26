@@ -20,5 +20,5 @@ require_once __DIR__.'/SampleEntity.php';
  */
 class SampleChildEntity extends SampleEntity
 {
-	use \BeeBot\Entity\Behaviours\ChildEntity;
+    use \BeeBot\Entity\Behaviours\ChildEntity;
 }

@@ -20,5 +20,5 @@ require_once __DIR__.'/SampleEntity.php';
  */
 class SampleJsonSerializableEntity extends SampleEntity implements \JsonSerializable
 {
-	use \BeeBot\Entity\Behaviours\JsonSerializableEntity;
+    use \BeeBot\Entity\Behaviours\JsonSerializableEntity;
 }
