@@ -84,10 +84,12 @@ class Property
             $this->readable = true;
             $this->writable = true;
         } else {
-            if ($class->hasMethod($this->getter) && $class->getMethod($this->getter)->isPublic()) {
+            if ($class->hasMethod($this->getter) &&
+                $class->getMethod($this->getter)->isPublic()) {
                 $this->readable = true;
             }
-            if ($class->hasMethod($this->setter) && $class->getMethod($this->setter)->isPublic()) {
+            if ($class->hasMethod($this->setter) &&
+                $class->getMethod($this->setter)->isPublic()) {
                 $this->writable = true;
             }
         }
@@ -152,14 +154,18 @@ class Property
     public function set($value, ActiveRecord $model)
     {
         if (!$this->writable) {
-            throw new \BadMethodCallException("You can't set this property because it is not writable: ".$this->name);
+            throw new \BadMethodCallException(sprintf(
+                "You can't set this property because it is not writable: %s",
+                $this->name
+            ));
         }
 
         //If the property is public, don't worry just set
         if ($this->reflection->isPublic()) {
             $model->{$this->name} = $value;
         } else {
-            //If we try to unset the value, use the setValue to avoid setter behaviours
+            //If we try to unset the value, use the setValue
+            //to avoid setter behaviours
             if ($value === null) {
                 $this->reflection->setValue($model, $value);
             //Else just use the setter to put value
