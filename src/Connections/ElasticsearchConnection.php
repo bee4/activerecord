@@ -105,12 +105,16 @@ class ElasticsearchConnection extends AbstractConnection
      * @param string $type
      * @param string $term
      * @param mixed $value
+     * @param integer $count
+     * @param integer $from
+     * @param array $sort
      * @return array
      */
-    public function fetchBy($type, $term, $value)
+    public function fetchBy($type, $term, $value, $count, $from, array $sort)
     {
         $response = $this->run($type, [
             "query" => self::buildQuery($term, $value),
+            "size" => $count,
             "fields" => ['_source','_parent','_timestamp']
         ]);
 
@@ -194,7 +198,7 @@ class ElasticsearchConnection extends AbstractConnection
     }
 
     /**
-     * @param TransactionInterface $transaction
+     * @param  TransactionInterface $transaction
      * @return bool
      */
     public function flush(TransactionInterface $transaction)
@@ -243,7 +247,7 @@ class ElasticsearchConnection extends AbstractConnection
      * Make a search request on requested documents
      * @param string $type Document type to be searched
      * @param array $request Request array to be used for search
-     * @param string $endpoint ElasticSearch endpoint used for the current request
+     * @param string $endpoint ElasticSearch endpoint
      * @return array|bool|float|int|string
      * @throws \RuntimeException
      */
@@ -254,7 +258,7 @@ class ElasticsearchConnection extends AbstractConnection
         //Always return Parent and timestamp property!!
         if (($json = json_encode($request)) === false) {
             throw new \RuntimeException(sprintf(
-                'An error occured during JSON encoding of the given parameters: %s',
+                'Error during parameters JSON encoding: %s',
                 $request
             ));
         }
@@ -273,7 +277,10 @@ class ElasticsearchConnection extends AbstractConnection
      */
     protected function checkErrors(array $response)
     {
-        if (isset($response['error']) || (isset($response['status']) && $response['status']!==200)) {
+        if (isset($response['error']) || (
+                isset($response['status']) &&
+                $response['status']!==200)
+            ) {
             throw new \RuntimeException(sprintf(
                 'Current request give an invalid response: %s',
                 print_r($response, true)
@@ -325,7 +332,7 @@ class ElasticsearchConnection extends AbstractConnection
             $parts = [];
             //Regexp or wildcard or prefix queries
             // => Warning about which Regexp are expensives
-            // => Wildcard used to retrieve items by wildcard * match multi characters and ? match single ones
+            // => Wildcard: * match multi characters and ? match single ones
             // => Prefix used to search terms that starts with $aParts[1]
             if (preg_match('/^(regexp|wildcard|prefix):(.*)$/', $value, $parts) === 1) {
                 return [ $parts[1] => [$term => $parts[2]] ];
