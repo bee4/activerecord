@@ -12,7 +12,7 @@
 
 namespace BeeBot\Entity\Tests\Connections\Adapters;
 
-require_once 'AbstractHttpAdapterTest.php';
+require_once __DIR__.'/AbstractHttpAdapterTest.php';
 
 use BeeBot\Entity\Connections\Adapters\Bee4TransportAdapter;
 use Bee4\Transport\Client;
