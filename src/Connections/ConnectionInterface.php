@@ -37,7 +37,8 @@ interface ConnectionInterface
         $value,
         $count,
         $from,
-        array $sort);
+        array $sort
+    );
 
     /**
      * Count entity number matching criteria

@@ -150,7 +150,7 @@ class ElasticsearchConnection extends AbstractConnection
         if ($entity::isChild() && $entity->getParent() !== null) {
             if (!$entity->getParent()->isPersisted()) {
                 throw new \RuntimeException(
-                    'Parent entity is not a persisted one!'
+                    'Parent entity is not persisted'
                 );
             }
 
@@ -190,7 +190,7 @@ class ElasticsearchConnection extends AbstractConnection
         $this->checkErrors($response);
         if ($response['found'] === false) {
             throw new \InvalidArgumentException(
-                'Given entity does not exists in ElasticSearch!!'
+                'Given entity does not exists in ElasticSearch'
             );
         }
         $this->client->post('_refresh')->send();
@@ -222,11 +222,14 @@ class ElasticsearchConnection extends AbstractConnection
                 $type = "update";
             }
 
-            $string .= '{ "'.$type.'" : '.
-                '{ "_type": "'.$entity::getType().'", '.
-                    '"_id": "'.$entity->getUID().'"'.($entity::isChild()?', '.
-                    '"_parent": "'.$entity->getParent()->getUID().'"':'').
-                ' } }';
+            $string .= '{"'.$type.'": {';
+            $string .= '"_type": "'.$entity::getType().'", ';
+            $string .= '"_id": "'.$entity->getUID().'"';
+            $string .= $entity::isChild()?
+                ', "_parent": "'.$entity->getParent()->getUID().'"':
+                '';
+            $string .= '}}';
+
             if ($type === 'create' || $type === 'index') {
                 $string .= PHP_EOL.json_encode($entity).PHP_EOL;
             } elseif ($type === 'update') {

@@ -168,7 +168,7 @@ class PdoConnection extends AbstractConnection
     private function prepare($query)
     {
         $st = $this->client->prepare($query);
-        if( $st === false ) {
+        if ($st === false) {
             $details = $this->client->errorInfo();
             throw new \RuntimeException(sprintf(
                 'Error during statement creation: %s',
