@@ -118,11 +118,14 @@ class ElasticsearchConnection extends AbstractConnection
         $from = null,
         array $sort = null
     ) {
-        $response = $this->run($type, [
+        $query = [
             "query" => self::buildQuery($term, $value),
             "size" => $count,
+            "from" => $from,
+            "sort" => $sort,
             "fields" => ['_source','_parent','_timestamp']
-        ]);
+        ];
+        $response = $this->run($type, array_filter($query));
 
         return $this->extractResults($response);
     }
