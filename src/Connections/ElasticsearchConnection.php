@@ -12,11 +12,6 @@
 
 namespace BeeBot\Entity\Connections;
 
-use Bee4\Transport\MagicHandler;
-use Bee4\Transport\Client;
-use Bee4\Transport\Events\ErrorEvent;
-use Bee4\Transport\Events\MessageEvent;
-use Bee4\Events\DispatcherInterface;
 use BeeBot\Entity\Entity;
 use BeeBot\Entity\Transactions\TransactionInterface;
 use BeeBot\Entity\Connections\Events\ConnectionEvent;
@@ -27,64 +22,8 @@ use BeeBot\Entity\Connections\Events\ConnectionEvent;
  * @package BeeBot\Entity\Connections
  * @see ConnectionInterface
  */
-class ElasticsearchConnection extends AbstractConnection
+class ElasticsearchConnection extends AdaptableHttpConnection
 {
-    /**
-     * Http client used to communicate with ES
-     * @var \Bee4\Transport\Client
-     */
-    protected $client;
-
-    /**
-     * Initialize ES adapter
-     * @param string $url ElasticSearch index URL
-     */
-    public function __construct($url)
-    {
-        if (strrpos($url, '/')!==strlen($url)-1) {
-            $url .= "/";
-        }
-        $this->client = new MagicHandler(new Client($url));
-    }
-
-    /**
-     * Initialize Bee4\Transport\Client dispatcher
-     * @param DispatcherInterface $dispatcher
-     */
-    public function setDispatcher(DispatcherInterface $dispatcher)
-    {
-        parent::setDispatcher($dispatcher);
-
-        $this->client->setDispatcher($this->getDispatcher());
-        $this->getDispatcher()->add(
-            MessageEvent::REQUEST,
-            function (MessageEvent $event) {
-                $this->dispatch(
-                    ConnectionEvent::REQUEST,
-                    new ConnectionEvent($event->getMessage())
-                );
-            }
-        );
-        $this->getDispatcher()->add(
-            MessageEvent::RESPONSE,
-            function (MessageEvent $event) {
-                $this->dispatch(
-                    ConnectionEvent::RESULT,
-                    new ConnectionEvent($event->getMessage())
-                );
-            }
-        );
-        $this->getDispatcher()->add(
-            ErrorEvent::ERROR,
-            function (ErrorEvent $event) {
-                $this->dispatch(
-                    ConnectionEvent::ERROR,
-                    new ConnectionEvent($event->getError())
-                );
-            }
-        );
-    }
-
     /**
      * @param string $type
      * @param string $term
@@ -125,7 +64,9 @@ class ElasticsearchConnection extends AbstractConnection
             "sort" => $sort,
             "fields" => ['_source','_parent','_timestamp']
         ];
-        $response = $this->run($type, array_filter($query));
+        $response = $this->handleResponse(
+            $this->run($type, array_filter($query))
+        );
 
         return $this->extractResults($response);
     }
@@ -137,7 +78,9 @@ class ElasticsearchConnection extends AbstractConnection
      */
     public function raw($type, $query)
     {
-        $response = $this->run($type, $query);
+        $response = $this->handleResponse(
+            $this->run($type, $query)
+        );
         return $this->extractResults($response);
     }
 
@@ -166,16 +109,16 @@ class ElasticsearchConnection extends AbstractConnection
             $url.='?parent='.$entity->getParent()->getUID();
         }
 
-        $response = $this->client
-            ->put($url)
-            ->setBody(json_encode($entity))
-            ->send()
-            ->json();
+        $response = $this->getAdapter()->put(
+            $url,
+            json_encode($entity)
+        );
 
-        if ($this->checkErrors($response)) {
-            $this->client->post('_refresh')->send();
+        if ($this->handleResponse($response)) {
+            $this->getAdapter()->post('_refresh')->send();
             return true;
         }
+        return false;
     }
 
     /**
@@ -192,17 +135,18 @@ class ElasticsearchConnection extends AbstractConnection
             );
         }
 
-        $response = $this->client
-            ->delete($entity::getType().'/'.$entity->getUID())
-            ->send()->json();
+        $response = $this->getAdapter()
+            ->delete(
+                $entity::getType().'/'.$entity->getUID()
+            );
 
-        $this->checkErrors($response);
+        $response = $this->handleResponse($response);
         if ($response['found'] === false) {
             throw new \InvalidArgumentException(
                 'Given entity does not exists in ElasticSearch'
             );
         }
-        $this->client->post('_refresh')->send();
+        $this->getAdapter()->post('_refresh');
         return $response['found'];
     }
 
@@ -213,13 +157,11 @@ class ElasticsearchConnection extends AbstractConnection
     public function flush(TransactionInterface $transaction)
     {
         //Make bulk loading more powerful (by disabling auto refreshing)
-        $this->client->put('_settings')->setBody(
-            '{ index: { refresh_interval: "-1" }}'
-        )->send();
-
-        $request = $this->client
-            ->post('_bulk')
-            ->addOption(CURLOPT_TIMEOUT, 120);
+        $this->getAdapter()
+            ->put(
+                '_settings',
+                '{ index: { refresh_interval: "-1" }}'
+            );
 
         //Then start the import
         $string = "";
@@ -250,13 +192,13 @@ JSON;
                 $string .= PHP_EOL.'{"doc": '.json_encode($entity).' }'.PHP_EOL;
             }
         }
-        $request->setBody($string)->send();
+        $this->getAdapter()->post('_bulk', $string);
 
         //When done restore standard parameters and trigger a refresh
-        $this->client->post('_refresh')->send();
-        $this->client->put('_settings')->setBody(
-            '{ index: { refresh_interval: "1s" }}'
-        )->send();
+        $this->getAdapter()
+            ->post('_refresh');
+        $this->getAdapter()
+            ->put('_settings', '{ index: { refresh_interval: "1s" }}');
         return true;
     }
 
@@ -270,8 +212,6 @@ JSON;
      */
     protected function run($type, array $request, $endpoint = "_search")
     {
-        $post = $this->client->post($type.'/'.$endpoint.'?pretty');
-
         //Always return Parent and timestamp property!!
         if (($json = json_encode($request)) === false) {
             throw new \RuntimeException(sprintf(
@@ -279,11 +219,10 @@ JSON;
                 $request
             ));
         }
-        $response = $post->setBody($json)->send()->json();
-        $this->checkErrors($response);
+        $response = $this->getAdapter()->post($type.'/'.$endpoint, $json);
 
         //It's a search answer, we extract only the needed document
-        return $response;
+        return $this->handleResponse($response);
     }
 
     /**
@@ -292,12 +231,20 @@ JSON;
      * @return boolean
      * @throws \RuntimeException
      */
-    protected function checkErrors(array $response)
+    protected function handleResponse($response)
     {
+        if( is_string($response) ) {
+            if( null === $response = json_decode($response) ) {
+                throw new \RuntimeException(
+                    'Response is not a valid JSON string'
+                );
+            }
+        }
+
         if (isset($response['error']) || (
                 isset($response['status']) &&
                 $response['status']!==200)
-            ) {
+        ) {
             throw new \RuntimeException(sprintf(
                 'Current request give an invalid response: %s',
                 print_r($response, true)
@@ -310,7 +257,7 @@ JSON;
             ));
         }
 
-        return true;
+        return $response;
     }
 
     /**
