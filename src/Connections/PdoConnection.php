@@ -99,10 +99,10 @@ class PdoConnection extends AbstractConnection
             FROM $type
             WHERE $term = :term
 SQL;
-        if( isset($count) ) {
+        if (isset($count)) {
             $query .= "\nLIMIT :count";
         }
-        if( isset($from) ) {
+        if (isset($from)) {
             $query .= "\nOFFSET :from";
         }
 
