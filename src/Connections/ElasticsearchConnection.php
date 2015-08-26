@@ -114,11 +114,10 @@ class ElasticsearchConnection extends AbstractConnection
         $type,
         $term,
         $value,
-        $count      = null,
-        $from       = null,
+        $count = null,
+        $from = null,
         array $sort = null
-    )
-    {
+    ) {
         $response = $this->run($type, [
             "query" => self::buildQuery($term, $value),
             "size" => $count,
@@ -239,7 +238,8 @@ JSON;
                 $entity->getUID(),
                 $entity::isChild()?
                 ', "_parent": "'.$entity->getParent()->getUID().'"':
-                '');
+                ''
+            );
 
             if ($type === 'create' || $type === 'index') {
                 $string .= PHP_EOL.json_encode($entity).PHP_EOL;
