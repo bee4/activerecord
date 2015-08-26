@@ -80,15 +80,38 @@ class PdoConnection extends AbstractConnection
      * @param string $type
      * @param string $term
      * @param mixed $value
+     * @param integer $count
+     * @param integer $from
+     * @param array $sort
      * @return array
+     * TODO: Handle sort
      */
-    public function fetchBy($type, $term, $value)
-    {
-        $st = $this->prepare("
-			SELECT *
-			FROM $type
-			WHERE $term = :term");
-        $st->execute(['term' => $value]);
+    public function fetchBy(
+        $type,
+        $term,
+        $value,
+        $count = null,
+        $from = null,
+        array $sort = null
+    ) {
+        $query = <<<SQL
+            SELECT *
+            FROM $type
+            WHERE $term = :term
+SQL;
+        if (isset($count)) {
+            $query .= "\nLIMIT :count";
+        }
+        if (isset($from)) {
+            $query .= "\nOFFSET :from";
+        }
+
+        $st = $this->prepare($query);
+        $st->execute([
+            'term' => $value,
+            'count' => $count,
+            'from' => $from
+        ]);
         return $st->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -165,7 +188,7 @@ class PdoConnection extends AbstractConnection
     private function prepare($query)
     {
         $st = $this->client->prepare($query);
-        if( $st === false ) {
+        if ($st === false) {
             $details = $this->client->errorInfo();
             throw new \RuntimeException(sprintf(
                 'Error during statement creation: %s',

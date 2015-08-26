@@ -167,8 +167,7 @@ abstract class ActiveRecord implements \IteratorAggregate
     {
         if (self::$CONNECTION === null) {
             throw new \RuntimeException(
-                "There isn't any connection defined, use ActiveRecord::boot ".
-                "or ActiveRecord::setConnexion to define one!!"
+                "There is no active Connection"
             );
         }
         return self::$CONNECTION;

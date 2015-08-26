@@ -156,7 +156,10 @@ abstract class Entity extends ActiveRecord
         $results = self::getConnection()->fetchBy(
             self::getType(),
             $term,
-            $value
+            $value,
+            $count,
+            $from,
+            $sort
         );
 
         //Then prepare Entity collection construction
@@ -205,17 +208,17 @@ abstract class Entity extends ActiveRecord
      * Value must match a unique document
      * @param string $term Term name the value will be searched in
      * @param string $value The value of the term to be searched
+     * @param array  $sort Sort order definition
      * @return Entity|null
      * @throws \LengthException
      */
-    final public static function fetchOneBy($term, $value)
+    final public static function fetchOneBy($term, $value, array $sort = null)
     {
         $class = get_called_class();
-        $collection = $class::{'fetchBy'}($term, $value);
+        $collection = $class::{'fetchBy'}($term, $value, 1, null, $sort);
         if (count($collection) > 1) {
             throw new \LengthException(sprintf(
-                'More than one entities have been found by matching criteria: '.
-                '{term:"%s", value:"%s"}',
+                'Found multiple entities with: {term:"%s", value:"%s"}',
                 $term,
                 $value
             ));
