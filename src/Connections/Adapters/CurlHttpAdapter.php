@@ -52,18 +52,18 @@ class CurlHttpAdapter extends AbstractHttpAdapter
     private function exec($method, $url, array $headers = null, $body = null) {
         curl_reset($this->handle);
 
-        if( null !== $headers &&
-            array_keys($headers) !== range(0, count($headers) - 1)
-        ) {
-            $headers = array_values(array_walk(function(&$item, $key) {
+        $headers = (null !== $headers)?$headers:[];
+        if( array_keys($headers) !== range(0, count($headers) - 1)) {
+            array_walk($headers, function(&$item, $key) {
                 $item = $key.': '.$item;
-            }, $headers));
+            });
+            $headers = array_values($headers);
         }
 
         curl_setopt_array($this->handle, [
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_URL => $url,
-            CURLOPT_POSTFIELDS => $body,
+            CURLOPT_POSTFIELDS => is_array($body)?http_build_query($body):$body,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true
         ]);
@@ -84,13 +84,6 @@ class CurlHttpAdapter extends AbstractHttpAdapter
 
         return curl_exec($this->handle);
     }
-
-    /**
-     * Do nothing because no events here...
-     * @param  DispatcherInterface $dispatcher
-     */
-    protected function mapEvents(DispatcherInterface $dispatcher)
-    {}
 
     public function get($url, array $headers = null)
     {

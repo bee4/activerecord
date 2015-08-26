@@ -72,5 +72,5 @@ abstract class AbstractHttpAdapter implements
      *  - Connection::ERROR
      * @param  DispatcherInterface $dispatcher
      */
-    abstract protected function mapEvents(DispatcherInterface $dispatcher);
+    protected function mapEvents(DispatcherInterface $dispatcher) {}
 }

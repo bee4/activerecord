@@ -16,7 +16,7 @@ namespace BeeBot\Entity\Connections\Adapters;
  * Define a global canvas for connection adapters.
  * @package BeeBot\Entity\Connections\Adapters
  */
-interface HttpAdapterInterface extends AdapterInterace
+interface HttpAdapterInterface extends AdapterInterface
 {
     /**
      * Set URL root used for requests
