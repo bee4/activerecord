@@ -35,9 +35,9 @@ interface ConnectionInterface
         $type,
         $term,
         $value,
-        $count,
-        $from,
-        array $sort
+        $count      = null,
+        $from       = null,
+        array $sort = null
     );
 
     /**

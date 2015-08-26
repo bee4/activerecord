@@ -85,7 +85,14 @@ class PdoConnection extends AbstractConnection
      * @param array $sort
      * @return array
      */
-    public function fetchBy($type, $term, $value, $count, $from, array $sort)
+    public function fetchBy(
+        $type,
+        $term,
+        $value,
+        $count      = null,
+        $from       = null,
+        array $sort = null
+    )
     {
         $st = $this->prepare("
 			SELECT *
