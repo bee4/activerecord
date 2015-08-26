@@ -20,15 +20,16 @@ require_once __DIR__.'/SampleEntity.php';
  */
 class SampleFactoryEntity extends SampleEntity
 {
-	use \BeeBot\Entity\Behaviours\FactoryEntity;
+    use \BeeBot\Entity\Behaviours\FactoryEntity;
 
-	/**
-	 * Hydrate the entity from given data
-	 * @param Traversable $data
-	 */
-	protected function hydrate($data) {
-		foreach( $data as $key => $value ) {
-			$this->{$key} = $value;
-		}
-	}
+    /**
+     * Hydrate the entity from given data
+     * @param Traversable $data
+     */
+    protected function hydrate($data)
+    {
+        foreach ($data as $key => $value) {
+            $this->{$key} = $value;
+        }
+    }
 }

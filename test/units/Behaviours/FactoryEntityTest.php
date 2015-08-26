@@ -22,28 +22,31 @@ use \BeeBot\Entity\Tests\Samples;
  */
 class FactoryEntityTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @var Samples\SampleFactoryEntity
-	 */
-	private $object;
+    /**
+     * @var Samples\SampleFactoryEntity
+     */
+    private $object;
 
-	public function setUp() {
-		$this->object = new Samples\SampleFactoryEntity;
-	}
+    public function setUp()
+    {
+        $this->object = new Samples\SampleFactoryEntity;
+    }
 
-	public function testBehaviour() {
-		$this->assertTrue(Samples\SampleFactoryEntity::isFactory());
-	}
+    public function testBehaviour()
+    {
+        $this->assertTrue(Samples\SampleFactoryEntity::isFactory());
+    }
 
-	public function testHydrate() {
-		$o = Samples\SampleFactoryEntity::factory([
-			'readable' => "saumon",
-			'writable' => "truite",
-			'editable' => "trout",
-			'hidden' => "salmon"
-		]);
+    public function testHydrate()
+    {
+        $o = Samples\SampleFactoryEntity::factory([
+            'readable' => "saumon",
+            'writable' => "truite",
+            'editable' => "trout",
+            'hidden' => "salmon"
+        ]);
 
-		$this->assertEquals("trout", $o->getEditable());
-		$this->assertEquals("saumon", $o->getReadable());
-	}
+        $this->assertEquals("trout", $o->getEditable());
+        $this->assertEquals("saumon", $o->getReadable());
+    }
 }

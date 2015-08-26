@@ -18,64 +18,68 @@ namespace BeeBot\Entity\Tests\Samples;
  */
 class SampleEntity extends \BeeBot\Entity\Entity
 {
-	/**
-	 * Public property
-	 * @var string
-	 */
-	public $truite;
+    /**
+     * Public property
+     * @var string
+     */
+    public $truite;
 
-	/**
-	 * Fully editable property (getter+setter)
-	 * @var string
-	 */
-	protected $editable;
+    /**
+     * Fully editable property (getter+setter)
+     * @var string
+     */
+    protected $editable;
 
-	/**
-	 * Only readable property (getter)
-	 * @var string
-	 */
-	protected $readable = "readable";
+    /**
+     * Only readable property (getter)
+     * @var string
+     */
+    protected $readable = "readable";
 
-	/**
-	 * Only writable property (setter)
-	 * @var string
-	 */
-	protected $writable;
+    /**
+     * Only writable property (setter)
+     * @var string
+     */
+    protected $writable;
 
-	/**
-	 * Totally hidden property (without getter & setter)
-	 * @var string
-	 */
-	protected $hidden;
+    /**
+     * Totally hidden property (without getter & setter)
+     * @var string
+     */
+    protected $hidden;
 
-	/**
-	 * Retrieve editable
-	 * @return string
-	 */
-	public function getEditable() {
-		return $this->editable;
-	}
+    /**
+     * Retrieve editable
+     * @return string
+     */
+    public function getEditable()
+    {
+        return $this->editable;
+    }
 
-	/**
-	 * set editable
-	 */
-	public function setEditable($value) {
-		$this->editable = $value;
-	}
+    /**
+     * set editable
+     */
+    public function setEditable($value)
+    {
+        $this->editable = $value;
+    }
 
-	/**
-	 * Retrieve readable
-	 * @return string
-	 */
-	public function getReadable() {
-		return $this->readable;
-	}
+    /**
+     * Retrieve readable
+     * @return string
+     */
+    public function getReadable()
+    {
+        return $this->readable;
+    }
 
-	/**
-	 * Set writable
-	 * @param string $value
-	 */
-	public function setWritable($value) {
-		$this->writable = $value;
-	}
+    /**
+     * Set writable
+     * @param string $value
+     */
+    public function setWritable($value)
+    {
+        $this->writable = $value;
+    }
 }

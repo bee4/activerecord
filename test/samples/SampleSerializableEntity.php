@@ -20,5 +20,5 @@ require_once __DIR__.'/SampleEntity.php';
  */
 class SampleSerializableEntity extends SampleEntity implements \Serializable
 {
-	use \BeeBot\Entity\Behaviours\SerializableEntity;
+    use \BeeBot\Entity\Behaviours\SerializableEntity;
 }

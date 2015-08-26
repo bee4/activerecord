@@ -23,65 +23,69 @@ use \BeeBot\Entity\Tests\Samples;
  */
 class SerializableEntityTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @var Samples\SampleSerializableEntity
-	 */
-	private $object;
+    /**
+     * @var Samples\SampleSerializableEntity
+     */
+    private $object;
 
-	public function setUp() {
-		$this->object = new Samples\SampleSerializableEntity;
-	}
+    public function setUp()
+    {
+        $this->object = new Samples\SampleSerializableEntity;
+    }
 
-	public function testBehaviour() {
-		$this->assertTrue(Samples\SampleSerializableEntity::isSerializable());
-		$this->object->truite = "truite";
-		$this->object->editable = ";)";
+    public function testBehaviour()
+    {
+        $this->assertTrue(Samples\SampleSerializableEntity::isSerializable());
+        $this->object->truite = "truite";
+        $this->object->editable = ";)";
 
-		$new = unserialize(serialize($this->object));
+        $new = unserialize(serialize($this->object));
 
-		$this->assertEquals($this->object, $new);
-		$this->assertEquals("truite", $new->truite);
-		$this->assertEquals(";)", $new->editable);
-		$this->assertEquals($this->object->isNew(), $new->isNew());
+        $this->assertEquals($this->object, $new);
+        $this->assertEquals("truite", $new->truite);
+        $this->assertEquals(";)", $new->editable);
+        $this->assertEquals($this->object->isNew(), $new->isNew());
 
-		$connexion = $this->getMock("\BeeBot\Entity\Connections\AbstractConnection");
-		$connexion->method("save")->willReturn(true);
-		$connexion->method("delete")->willReturn(true);
-		\BeeBot\Entity\ActiveRecord::setConnection($connexion);
+        $connexion = $this->getMock("\BeeBot\Entity\Connections\AbstractConnection");
+        $connexion->method("save")->willReturn(true);
+        $connexion->method("delete")->willReturn(true);
+        \BeeBot\Entity\ActiveRecord::setConnection($connexion);
 
-		$this->object->save();
-		$saved = unserialize(serialize($this->object));
-		$this->assertEquals($this->object->isPersisted(), $saved->isPersisted());
+        $this->object->save();
+        $saved = unserialize(serialize($this->object));
+        $this->assertEquals($this->object->isPersisted(), $saved->isPersisted());
 
-		$this->object->delete();
-		$deleted = unserialize(serialize($this->object));
-		$this->assertEquals($this->object->isDeleted(),$deleted->isDeleted());
-	}
+        $this->object->delete();
+        $deleted = unserialize(serialize($this->object));
+        $this->assertEquals($this->object->isDeleted(), $deleted->isDeleted());
+    }
 
-	/**
-	 * @expectedException \UnexpectedValueException
-	 */
-	public function testInvalidStateSerialize() {
-		$stateProperty = (new \ReflectionClass("\BeeBot\Entity\Entity"))->getProperty('state');
-		$stateProperty->setAccessible('true');
-		$stateProperty->setValue($this->object, -1);
+    /**
+     * @expectedException \UnexpectedValueException
+     */
+    public function testInvalidStateSerialize()
+    {
+        $stateProperty = (new \ReflectionClass("\BeeBot\Entity\Entity"))->getProperty('state');
+        $stateProperty->setAccessible('true');
+        $stateProperty->setValue($this->object, -1);
 
-		serialize($this->object);
-	}
+        serialize($this->object);
+    }
 
-	public function testParentSerialize() {
-		$child = new Samples\SampleMultipleBehavioursEntity();
-		$parent = new Samples\SampleSerializableEntity();
-		$child->setParent($parent);
+    public function testParentSerialize()
+    {
+        $child = new Samples\SampleMultipleBehavioursEntity();
+        $parent = new Samples\SampleSerializableEntity();
+        $child->setParent($parent);
 
-		$parent->editable = "I'm the parent";
-		$child->editable = "I'm the child";
+        $parent->editable = "I'm the parent";
+        $child->editable = "I'm the child";
 
-		$undead = unserialize(serialize($child));
+        $undead = unserialize(serialize($child));
 
-		$this->assertEquals($parent->getUID(), $undead->getParent()->getUID());
-		$this->assertEquals($child->getUID(), $undead->getUID());
-		$this->assertEquals($parent->editable, $undead->getParent()->editable);
-		$this->assertEquals($child->editable, $undead->editable);
-	}
+        $this->assertEquals($parent->getUID(), $undead->getParent()->getUID());
+        $this->assertEquals($child->getUID(), $undead->getUID());
+        $this->assertEquals($parent->editable, $undead->getParent()->editable);
+        $this->assertEquals($child->editable, $undead->editable);
+    }
 }
