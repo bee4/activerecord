@@ -84,6 +84,7 @@ class PdoConnection extends AbstractConnection
      * @param integer $from
      * @param array $sort
      * @return array
+     * TODO: Handle sort
      */
     public function fetchBy(
         $type,
@@ -93,11 +94,24 @@ class PdoConnection extends AbstractConnection
         $from = null,
         array $sort = null
     ) {
-        $st = $this->prepare("
-			SELECT *
-			FROM $type
-			WHERE $term = :term");
-        $st->execute(['term' => $value]);
+        $query = <<<SQL
+            SELECT *
+            FROM $type
+            WHERE $term = :term
+SQL;
+        if( isset($count) ) {
+            $query .= "\nLIMIT :count";
+        }
+        if( isset($from) ) {
+            $query .= "\nOFFSET :from";
+        }
+
+        $st = $this->prepare($query);
+        $st->execute([
+            'term' => $value,
+            'count' => $count,
+            'from' => $from
+        ]);
         return $st->fetchAll(\PDO::FETCH_ASSOC);
     }
 
