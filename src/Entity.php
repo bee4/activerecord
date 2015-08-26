@@ -212,14 +212,13 @@ abstract class Entity extends ActiveRecord
      * @return Entity|null
      * @throws \LengthException
      */
-    final public static function fetchOneBy($term, $value, array $sort)
+    final public static function fetchOneBy($term, $value, array $sort = null)
     {
         $class = get_called_class();
         $collection = $class::{'fetchBy'}($term, $value, 1, null, $sort);
         if (count($collection) > 1) {
             throw new \LengthException(sprintf(
-                'More than one entities have been found by matching criteria: '.
-                '{term:"%s", value:"%s"}',
+                'Found multiple entities with: {term:"%s", value:"%s"}',
                 $term,
                 $value
             ));

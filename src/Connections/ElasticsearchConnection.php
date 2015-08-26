@@ -110,13 +110,22 @@ class ElasticsearchConnection extends AbstractConnection
      * @param array $sort
      * @return array
      */
-    public function fetchBy($type, $term, $value, $count, $from, array $sort)
-    {
-        $response = $this->run($type, [
+    public function fetchBy(
+        $type,
+        $term,
+        $value,
+        $count = null,
+        $from = null,
+        array $sort = null
+    ) {
+        $query = [
             "query" => self::buildQuery($term, $value),
             "size" => $count,
+            "from" => $from,
+            "sort" => $sort,
             "fields" => ['_source','_parent','_timestamp']
-        ]);
+        ];
+        $response = $this->run($type, array_filter($query));
 
         return $this->extractResults($response);
     }
@@ -150,7 +159,7 @@ class ElasticsearchConnection extends AbstractConnection
         if ($entity::isChild() && $entity->getParent() !== null) {
             if (!$entity->getParent()->isPersisted()) {
                 throw new \RuntimeException(
-                    'Parent entity is not a persisted one!'
+                    'Parent entity is not persisted'
                 );
             }
 
@@ -190,7 +199,7 @@ class ElasticsearchConnection extends AbstractConnection
         $this->checkErrors($response);
         if ($response['found'] === false) {
             throw new \InvalidArgumentException(
-                'Given entity does not exists in ElasticSearch!!'
+                'Given entity does not exists in ElasticSearch'
             );
         }
         $this->client->post('_refresh')->send();
@@ -222,11 +231,19 @@ class ElasticsearchConnection extends AbstractConnection
                 $type = "update";
             }
 
-            $string .= '{ "'.$type.'" : '.
-                '{ "_type": "'.$entity::getType().'", '.
-                    '"_id": "'.$entity->getUID().'"'.($entity::isChild()?', '.
-                    '"_parent": "'.$entity->getParent()->getUID().'"':'').
-                ' } }';
+            $template = <<<JSON
+{ "%s": { _type:"%s", _id:"%s"%s} }
+JSON;
+            $string .= sprintf(
+                $template,
+                $type,
+                $entity::getType(),
+                $entity->getUID(),
+                $entity::isChild()?
+                ', "_parent": "'.$entity->getParent()->getUID().'"':
+                ''
+            );
+
             if ($type === 'create' || $type === 'index') {
                 $string .= PHP_EOL.json_encode($entity).PHP_EOL;
             } elseif ($type === 'update') {

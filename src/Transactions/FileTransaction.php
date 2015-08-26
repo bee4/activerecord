@@ -124,8 +124,7 @@ class FileTransaction implements TransactionInterface
     {
         if (!$entity::isSerializable()) {
             throw new \InvalidArgumentException(
-                'Entity given must be serializable when using FileTransaction '.
-                '(use SerializableEntity trait or Serializable interface...)'
+                'Entity must be Serializable when using FileTransaction'
             );
         }
 
