@@ -222,13 +222,17 @@ class ElasticsearchConnection extends AbstractConnection
                 $type = "update";
             }
 
-            $string .= '{"'.$type.'": {';
-            $string .= '"_type": "'.$entity::getType().'", ';
-            $string .= '"_id": "'.$entity->getUID().'"';
-            $string .= $entity::isChild()?
+            $template = <<<JSON
+{ "%s": { _type:"%s", _id:"%s"%s} }
+JSON;
+            $string .= sprintf(
+                $template,
+                $type,
+                $entity::getType(),
+                $entity->getUID(),
+                $entity::isChild()?
                 ', "_parent": "'.$entity->getParent()->getUID().'"':
-                '';
-            $string .= '}}';
+                '');
 
             if ($type === 'create' || $type === 'index') {
                 $string .= PHP_EOL.json_encode($entity).PHP_EOL;
