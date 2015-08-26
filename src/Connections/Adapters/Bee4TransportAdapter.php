@@ -17,6 +17,7 @@ use Bee4\Transport\Client;
 use Bee4\Transport\Events\ErrorEvent;
 use Bee4\Transport\Events\MessageEvent;
 use Bee4\Transport\Message\Request\AbstractRequest;
+use Bee4\Events\DispatcherInterface;
 
 /**
  * Default implementation for Http adapters
