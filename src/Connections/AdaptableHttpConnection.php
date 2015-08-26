@@ -13,6 +13,7 @@
 namespace BeeBot\Entity\Connections;
 
 use Bee4\Events\DispatcherInterface;
+use BeeBot\Entity\Connections\Adapters\CurlHttpAdapter;
 
 /**
  * A more specific canvas for connections which relied on HTTP requests
@@ -51,6 +52,10 @@ abstract class AdaptableHttpConnection
      */
     public function getAdapter()
     {
+        if( null === $this->adapter ) {
+            $this->adapter = new CurlHttpAdapter;
+        }
+
         return $this->adapter;
     }
 
@@ -61,10 +66,14 @@ abstract class AdaptableHttpConnection
      */
     public function setAdapter(HttpAdapterInterface $adapter)
     {
-        $this->adapter = $adapter;
+        if( null !== $this->adapter ) {
+            $adapter->setRoot($this->adapter->getRoot());
+        }
         if( $this->hasDispatcher() ) {
             $this->adapter->setDispatcher($adapter);
         }
+
+        $this->adapter = $adapter;
 
         return $this;
     }
