@@ -1,3 +1,48 @@
+### v1.0.4
+
+* 2015-08-26: Fix CS
+* 2015-08-26: Handle count & sort & from in PdoConnection
+* 2015-08-26: Handle sort & from in ElasticsearchConnection
+* 2015-08-26: Handle valid parameter default for fetchBy
+* 2015-08-26: Fix default parameter value
+* 2015-08-26: Send all parameters to fetchBy
+* 2015-08-26: Update connections according to contract
+* 2015-08-26: Update connection contract
+
+### v1.0.3
+
+* 2015-08-22: bump version
+* 2015-08-22: Require the files which are not autoloaded
+* 2015-08-22: doc
+* 2015-08-22: Handle statement errors in PDO in a better way
+* 2015-08-22: doc
+* 2015-08-18: PSR-2 compliance
+* 2015-08-18: PHPCS fix
+* 2015-08-18: Move to PSR1 + PSR2
+* 2015-08-18: Cleanup
+* 2015-07-31: Cleanup
+* 2015-07-31: Give the ability to search on multiple values using terms query
+* 2015-07-31: Cleanup
+* 2015-07-27: Update PHPCS rules + PHPCBF pass
+* 2015-07-27: Fix the uniqid 1ms usleep by using entropy parameter
+* 2015-07-21: Add SensioLabsInsight badge
+* 2015-07-21: Remove user specific from gitignore
+* 2015-06-25: Compat PHP5.6
+* 2015-06-22: Gitlab CI configuration !!!
+
+### v1.0.2
+
+* 2015-06-15: Namespace error on ConnectionEvent use
+* 2015-06-15: Renames methods since bee4/events 1.0
+* 2015-06-15: Update event handling for ElasticsearchConnection
+* 2015-06-15: Update dependencies
+* 2015-06-15: Remove deprecated PHPUnit configuration
+* 2015-06-15: Sync lock file
+* 2015-06-15: Update status badge
+* 2015-06-15: Add mkdir to initialize ./bin if necessary
+* 2015-06-15: Add some installable tools to composer scripts
+* 2015-06-15: Add CHANGELOG
+
 ### v1.0.1
 
 * 2015-06-11: Move ConnectionEvent in a new namespace
