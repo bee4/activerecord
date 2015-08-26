@@ -98,7 +98,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
             );
         }
 
-        $url = $entity::getType().'/'.$entity->getUID();
+        $url = '/'.$entity::getType().'/'.$entity->getUID();
         if ($entity::isChild() && $entity->getParent() !== null) {
             if (!$entity->getParent()->isPersisted()) {
                 throw new \RuntimeException(
@@ -115,7 +115,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
         );
 
         if ($this->handleResponse($response)) {
-            $this->getAdapter()->post('_refresh')->send();
+            $this->getAdapter()->post('/_refresh');
             return true;
         }
         return false;
@@ -137,7 +137,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
 
         $response = $this->getAdapter()
             ->delete(
-                $entity::getType().'/'.$entity->getUID()
+                '/'.$entity::getType().'/'.$entity->getUID()
             );
 
         $response = $this->handleResponse($response);
@@ -146,7 +146,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
                 'Given entity does not exists in ElasticSearch'
             );
         }
-        $this->getAdapter()->post('_refresh');
+        $this->getAdapter()->post('/_refresh');
         return $response['found'];
     }
 
@@ -159,7 +159,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
         //Make bulk loading more powerful (by disabling auto refreshing)
         $this->getAdapter()
             ->put(
-                '_settings',
+                '/_settings',
                 '{ index: { refresh_interval: "-1" }}'
             );
 
@@ -192,13 +192,13 @@ JSON;
                 $string .= PHP_EOL.'{"doc": '.json_encode($entity).' }'.PHP_EOL;
             }
         }
-        $this->getAdapter()->post('_bulk', $string);
+        $this->getAdapter()->post('/_bulk', $string);
 
         //When done restore standard parameters and trigger a refresh
         $this->getAdapter()
-            ->post('_refresh');
+            ->post('/_refresh');
         $this->getAdapter()
-            ->put('_settings', '{ index: { refresh_interval: "1s" }}');
+            ->put('/_settings', '{ index: { refresh_interval: "1s" }}');
         return true;
     }
 
@@ -219,7 +219,10 @@ JSON;
                 $request
             ));
         }
-        $response = $this->getAdapter()->post($type.'/'.$endpoint, $json);
+        $response = $this->getAdapter()->post(
+            '/'.$type.'/'.$endpoint,
+            $json
+        );
 
         //It's a search answer, we extract only the needed document
         return $this->handleResponse($response);
@@ -234,7 +237,7 @@ JSON;
     protected function handleResponse($response)
     {
         if( is_string($response) ) {
-            if( null === $response = json_decode($response) ) {
+            if( null === $response = json_decode($response, true) ) {
                 throw new \RuntimeException(
                     'Response is not a valid JSON string'
                 );
