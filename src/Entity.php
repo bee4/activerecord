@@ -218,8 +218,7 @@ abstract class Entity extends ActiveRecord
         $collection = $class::{'fetchBy'}($term, $value, 1, null, $sort);
         if (count($collection) > 1) {
             throw new \LengthException(sprintf(
-                'More than one entities have been found by matching criteria: '.
-                '{term:"%s", value:"%s"}',
+                'Found multiple entities with: {term:"%s", value:"%s"}',
                 $term,
                 $value
             ));
