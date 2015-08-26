@@ -20,4 +20,6 @@ use BeeBot\Entity\Transactions\TransactionInterface;
  * @package BeeBot\Entity\Connections
  */
 interface HttpConnectionInterface extends ConnectionInterface
-{}
+{
+
+}

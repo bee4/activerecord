@@ -37,7 +37,8 @@ class CurlHttpAdapter extends AbstractHttpAdapter
     /**
      * Release curl resource
      */
-    public function __destruct() {
+    public function __destruct()
+    {
         curl_close($this->handle);
     }
 
@@ -49,12 +50,13 @@ class CurlHttpAdapter extends AbstractHttpAdapter
      * @param  string     $body    Body to be sent
      * @return string
      */
-    private function exec($method, $url, array $headers = null, $body = null) {
+    private function exec($method, $url, array $headers = null, $body = null)
+    {
         curl_reset($this->handle);
 
         $headers = (null !== $headers)?$headers:[];
-        if( array_keys($headers) !== range(0, count($headers) - 1)) {
-            array_walk($headers, function(&$item, $key) {
+        if (array_keys($headers) !== range(0, count($headers) - 1)) {
+            array_walk($headers, function (&$item, $key) {
                 $item = $key.': '.$item;
             });
             $headers = array_values($headers);
@@ -77,6 +79,7 @@ class CurlHttpAdapter extends AbstractHttpAdapter
                 break;
             case 'POST':
                 curl_setopt($this->handle, CURLOPT_POST, true);
+                break;
             default:
                 curl_setopt($this->handle, CURLOPT_CUSTOMREQUEST, $method);
                 break;

@@ -151,7 +151,8 @@ abstract class ActiveRecord implements \IteratorAggregate
     /**
      * Shut down all the connections
      */
-    final public static function shutdown() {
+    final public static function shutdown()
+    {
         self::$CONNECTION = null;
     }
 

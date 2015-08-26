@@ -17,4 +17,6 @@ namespace BeeBot\Entity\Connections\Adapters;
  * @package BeeBot\Entity\Connections\Adapters
  */
 interface AdapterInterface
-{}
+{
+
+}

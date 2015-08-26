@@ -236,8 +236,8 @@ JSON;
      */
     protected function handleResponse($response)
     {
-        if( is_string($response) ) {
-            if( null === $response = json_decode($response, true) ) {
+        if (is_string($response)) {
+            if (null === $response = json_decode($response, true)) {
                 throw new \RuntimeException(
                     'Response is not a valid JSON string'
                 );

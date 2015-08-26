@@ -19,9 +19,7 @@ use BeeBot\Entity\Connections\Adapters\CurlHttpAdapter;
  * A more specific canvas for connections which relied on HTTP requests
  * @package BeeBot\Entity\Connections
  */
-abstract class AdaptableHttpConnection
-    extends AbstractConnection
-    implements HttpConnectionInterface
+abstract class AdaptableHttpConnection extends AbstractConnection implements HttpConnectionInterface
 {
     /**
      * HTTP client adapter
@@ -52,7 +50,7 @@ abstract class AdaptableHttpConnection
      */
     public function getAdapter()
     {
-        if( null === $this->adapter ) {
+        if (null === $this->adapter) {
             $this->adapter = new CurlHttpAdapter;
         }
 
@@ -66,10 +64,10 @@ abstract class AdaptableHttpConnection
      */
     public function setAdapter(HttpAdapterInterface $adapter)
     {
-        if( null !== $this->adapter ) {
+        if (null !== $this->adapter) {
             $adapter->setRoot($this->adapter->getRoot());
         }
-        if( $this->hasDispatcher() ) {
+        if ($this->hasDispatcher()) {
             $this->adapter->setDispatcher($adapter);
         }
 

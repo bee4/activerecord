@@ -37,7 +37,7 @@ class Bee4TransportAdapter extends AbstractHttpAdapter
      */
     public function __construct(Client $adaptee)
     {
-        if( !($adaptee instanceof MagicHandler) ) {
+        if (!($adaptee instanceof MagicHandler)) {
             $adaptee = new MagicHandler($adaptee);
         }
 
@@ -99,12 +99,12 @@ class Bee4TransportAdapter extends AbstractHttpAdapter
     private function handleRequest(
         AbstractRequest $request,
         $body = null,
-        array $headers = null)
-    {
-        if( isset($body) ) {
+        array $headers = null
+    ) {
+        if (isset($body)) {
             $request->setBody($body);
         }
-        if( isset($headers) ) {
+        if (isset($headers)) {
             $request->addHeaders($headers);
         }
 
