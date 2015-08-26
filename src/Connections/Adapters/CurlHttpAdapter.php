@@ -94,7 +94,7 @@ class CurlHttpAdapter extends AbstractHttpAdapter
         );
     }
 
-    public function post($url, $body, array $headers = null)
+    public function post($url, $body = null, array $headers = null)
     {
         return $this->exec(
             'POST',
@@ -113,7 +113,7 @@ class CurlHttpAdapter extends AbstractHttpAdapter
         );
     }
 
-    public function put($url, $body, array $headers = null)
+    public function put($url, $body = null, array $headers = null)
     {
         return $this->exec(
             'PUT',
@@ -123,7 +123,7 @@ class CurlHttpAdapter extends AbstractHttpAdapter
         );
     }
 
-    public function delete($url, $body, array $headers = null)
+    public function delete($url, $body = null, array $headers = null)
     {
         return $this->exec(
             'DELETE',

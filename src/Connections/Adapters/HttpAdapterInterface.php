@@ -39,7 +39,7 @@ interface HttpAdapterInterface extends AdapterInterface
      * @param  array|null $headers Specific headers array
      * @return string              Response content
      */
-    public function post($url, $body, array $headers = null);
+    public function post($url, $body = null, array $headers = null);
 
     /**
      * HTTP HEAD implementation
@@ -56,7 +56,7 @@ interface HttpAdapterInterface extends AdapterInterface
      * @param  array|null $headers Specific headers array
      * @return string              Response content
      */
-    public function put($url, $body, array $headers = null);
+    public function put($url, $body = null, array $headers = null);
 
     /**
      * HTTP DELETE implementation
@@ -65,5 +65,5 @@ interface HttpAdapterInterface extends AdapterInterface
      * @param  array|null $headers Specific headers array
      * @return string              Response content
      */
-    public function delete($url, $body, array $headers = null);
+    public function delete($url, $body = null, array $headers = null);
 }
