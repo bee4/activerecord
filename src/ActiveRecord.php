@@ -149,6 +149,13 @@ abstract class ActiveRecord implements \IteratorAggregate
     }
 
     /**
+     * Shut down all the connections
+     */
+    final public static function shutdown() {
+        self::$CONNECTION = null;
+    }
+
+    /**
      * Define directly with an object the adapter to be used within ActiveRecord
      * @param \BeeBot\Entity\Connections\ConnectionInterface $conn
      */
