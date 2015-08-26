@@ -35,7 +35,7 @@ abstract class AdaptableHttpConnection
      */
     public function setRoot($url)
     {
-        $this->adapter->setRoot($url);
+        $this->getAdapter()->setRoot($url);
 
         return $this;
     }
