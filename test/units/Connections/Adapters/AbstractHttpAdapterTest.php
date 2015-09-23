@@ -46,8 +46,8 @@ abstract class AbstractHttpAdapterTest extends \PHPUnit_Framework_TestCase
         return [
             ['get', 'https://httpbin.org/get'],
             ['post', 'https://httpbin.org/post', ['PostBody'=>'Toto']],
-            ['put', 'https://httpbin.org/put', ['PutBody'=>'Tata']],
-            ['delete', 'https://httpbin.org/delete', ['DeleteBody'=>'Tutu']]
+            ['put', 'https://httpbin.org/put', '{"PutBody":"Tata"}'],
+            ['delete', 'https://httpbin.org/delete', '{"DeleteBody":"Tutu"}']
         ];
     }
 
