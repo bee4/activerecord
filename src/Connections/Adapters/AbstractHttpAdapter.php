@@ -47,7 +47,7 @@ abstract class AbstractHttpAdapter implements
      * Retrieve url root
      * @return string
      */
-    protected function getRoot()
+    public function getRoot()
     {
         return $this->root;
     }
