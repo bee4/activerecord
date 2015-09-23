@@ -62,29 +62,38 @@ class CurlHttpAdapter extends AbstractHttpAdapter
             $headers = array_values($headers);
         }
 
-        curl_setopt_array($this->handle, [
+        $options = [
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_URL => $url,
             CURLOPT_POSTFIELDS => is_array($body)?http_build_query($body):$body,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true
-        ]);
+        ];
 
         switch ($method) {
             case 'GET':
-                curl_setopt($this->handle, CURLOPT_HTTPGET, true);
+                $options[CURLOPT_HTTPGET] = true;
                 break;
             case 'HEAD':
-                curl_setopt($this->handle, CURLOPT_NOBODY, true);
+                $options[CURLOPT_NOBODY] = true;
                 break;
             case 'POST':
-                curl_setopt($this->handle, CURLOPT_POST, true);
+                $options[CURLOPT_POST] = true;
                 break;
+            case 'PUT':
+                if( is_resource($body) ) {
+                    unset($options[CURLOPT_POSTFIELDS]);
+                    $options[CURLOPT_PUT] = true;
+                    rewind($body);
+                    $options[CURLOPT_INFILE] = $body;
+                    break;
+                }
+                //Else PUT is considered with a string body
             default:
-                curl_setopt($this->handle, CURLOPT_CUSTOMREQUEST, $method);
+                $options[CURLOPT_CUSTOMREQUEST] = $method;
                 break;
         }
-
+        curl_setopt_array($this->handle, $options);
         return curl_exec($this->handle);
     }
 
