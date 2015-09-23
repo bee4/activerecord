@@ -14,6 +14,7 @@ namespace BeeBot\Entity\Tests\Connections;
 
 require_once __DIR__.'/../../samples/SampleJsonSerializableEntity.php';
 
+use BeeBot\Entity\Connections\Adapters\Bee4TransportAdapter;
 use BeeBot\Entity\Connections\ElasticsearchConnection;
 use BeeBot\Entity\ActiveRecord;
 use BeeBot\Entity\Transactions\MemoryTransaction;
@@ -69,6 +70,7 @@ class ElasticsearchConnectionTest extends \PHPUnit_Framework_TestCase
 
         self::$connection = new ElasticsearchConnection();
         self::$connection->setRoot(ELASTICSEARCH_SERVER);
+        self::$connection->setAdapter(new Bee4TransportAdapter(new Client));
         if (false === self::$connection->getAdapter()->head('/')) {
             self::markTestSkipped(
                 'ElasticSearch server is not available'
