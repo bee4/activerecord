@@ -13,6 +13,7 @@
 namespace BeeBot\Entity\Connections;
 
 use Bee4\Events\DispatcherInterface;
+use BeeBot\Entity\Connections\Adapters\HttpAdapterInterface;
 use BeeBot\Entity\Connections\Adapters\CurlHttpAdapter;
 
 /**
