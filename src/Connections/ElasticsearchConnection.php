@@ -164,7 +164,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
             );
 
         //Then start the import
-        $string = "";
+        $stream = tmpfile();
         foreach ($transaction as $entity) {
             $type = "index";
             if ($entity->isDeleted()) {
@@ -176,7 +176,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
             $template = <<<JSON
 { "%s": { _type:"%s", _id:"%s"%s} }
 JSON;
-            $string .= sprintf(
+            $string = sprintf(
                 $template,
                 $type,
                 $entity::getType(),
@@ -191,14 +191,17 @@ JSON;
             } elseif ($type === 'update') {
                 $string .= PHP_EOL.'{"doc": '.json_encode($entity).' }'.PHP_EOL;
             }
+
+            fwrite($stream, $string);
         }
-        $this->getAdapter()->post('/_bulk', $string);
+
+        $this->getAdapter()->put('/_bulk', $stream);
 
         //When done restore standard parameters and trigger a refresh
         $this->getAdapter()
             ->post('/_refresh');
         $this->getAdapter()
-            ->put('/_settings', '{ index: { refresh_interval: "1s" }}');
+            ->put('/_settings');
         return true;
     }
 
