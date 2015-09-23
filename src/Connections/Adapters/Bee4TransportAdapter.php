@@ -50,7 +50,7 @@ class Bee4TransportAdapter extends AbstractHttpAdapter
             $this->adaptee->get($this->getRoot().$url),
             null,
             $headers
-        );
+        )->getBody();
     }
 
     public function post($url, $body = null, array $headers = null)
@@ -59,7 +59,7 @@ class Bee4TransportAdapter extends AbstractHttpAdapter
             $this->adaptee->post($this->getRoot().$url),
             $body,
             $headers
-        );
+        )->getBody();
     }
 
     public function head($url, array $headers = null)
@@ -68,7 +68,7 @@ class Bee4TransportAdapter extends AbstractHttpAdapter
             $this->adaptee->head($this->getRoot().$url),
             null,
             $headers
-        );
+        )->getStatus() === 200;
     }
 
     public function put($url, $body = null, array $headers = null)
@@ -77,7 +77,7 @@ class Bee4TransportAdapter extends AbstractHttpAdapter
             $this->adaptee->put($this->getRoot().$url),
             $body,
             $headers
-        );
+        )->getBody();
     }
 
     public function delete($url, $body = null, array $headers = null)
@@ -86,7 +86,7 @@ class Bee4TransportAdapter extends AbstractHttpAdapter
             $this->adaptee->delete($this->getRoot().$url),
             $body,
             $headers
-        );
+        )->getBody();
     }
 
     /**
@@ -108,7 +108,7 @@ class Bee4TransportAdapter extends AbstractHttpAdapter
             $request->addHeaders($headers);
         }
 
-        return $request->send()->getBody();
+        return $request->send();
     }
 
     /**
