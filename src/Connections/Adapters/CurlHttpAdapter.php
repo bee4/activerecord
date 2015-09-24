@@ -81,7 +81,7 @@ class CurlHttpAdapter extends AbstractHttpAdapter
                 $options[CURLOPT_POST] = true;
                 break;
             case 'PUT':
-                if( is_resource($body) ) {
+                if (is_resource($body)) {
                     unset($options[CURLOPT_POSTFIELDS]);
                     $options[CURLOPT_PUT] = true;
                     rewind($body);
