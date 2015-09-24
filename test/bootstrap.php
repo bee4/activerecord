@@ -1,7 +1,7 @@
 <?php
 /**
  * PHPUnit tests bootstrap, must contain initialization...
- * @copyright Bee4 2013
+ * @copyright Bee4 2015
  * @author Stéphane HULARD <s.hulard@chstudio.fr>
  */
 
