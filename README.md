@@ -2,7 +2,6 @@ BeeBot - Active Record v2.0.0
 =============================
 
 [![build status](https://ci.gitlab.com/projects/3613/status.png?ref=develop)](https://ci.gitlab.com/projects/3613?ref=develop)
-[![SensiolabInsight](https://img.shields.io/sensiolabs/i/3f165beb-2425-4669-a3da-c1794c6f7337.svg?style=flat-square)](https://insight.sensiolabs.com/projects/3f165beb-2425-4669-a3da-c1794c6f7337)
 
 This package define an [ActiveRecord](http://en.wikipedia.org/wiki/Active_record_pattern) implementation which allow :
 
