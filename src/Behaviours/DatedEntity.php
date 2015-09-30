@@ -24,21 +24,21 @@ trait DatedEntity
      */
     protected $date;
 
-        /**
-         * Set creation date
-         * @param \DateTime $date
-         */
-        public function setDate(\DateTime $date)
-        {
+    /**
+     * Set creation date
+     * @param \DateTime $date
+     */
+    public function setDate(\DateTime $date)
+    {
         $this->date = $date;
-        }
+    }
 
     /**
      * Get creation date
      * @return \DateTime
      */
-        public function getDate()
-        {
-            return $this->date;
-        }
+    public function getDate()
+    {
+        return $this->date;
+    }
 }
