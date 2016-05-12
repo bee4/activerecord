@@ -77,4 +77,12 @@ class MemoryTransaction implements TransactionInterface
     {
         $this->entities[] = $entity;
     }
+
+    public function remove(Entity $entity)
+    {
+        if( false === $pos = array_search($entity, $this->entities) ) {
+            throw new \RuntimeException('Entity is not part of the current transaction.');
+        }
+        unset($this->entities[$pos]);
+    }
 }
