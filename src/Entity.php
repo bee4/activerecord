@@ -11,6 +11,8 @@
 
 namespace BeeBot\Entity;
 
+use BeeBot\Entity\Transactions\TransactionInterface;
+
 /**
  * Entity abstract definition
  * Used to define global canvas with state and connection management around entities
@@ -38,6 +40,12 @@ abstract class Entity extends ActiveRecord
      * @var string
      */
     private $uid;
+
+    /**
+     * Transaction which handle the current entity
+     * @var TransactionInterface
+     */
+    private $transaction;
 
     /**
      * Initialize Entity
@@ -103,6 +111,37 @@ abstract class Entity extends ActiveRecord
     private function setState($state)
     {
         $this->state = $state;
+    }
+
+    /**
+     * Lock the current entity in the given transaction
+     * @param  TransactionInterface $transaction
+     * @return Entity
+     */
+    public function lock(TransactionInterface $transaction)
+    {
+        $this->transaction = $transaction;
+        return $this;
+    }
+
+    /**
+     * Unlock the current entity from its attached transaction
+     * @return Entity
+     */
+    public function unlock()
+    {
+        $this->transaction->remove($this);
+        $this->transaction = null;
+        return $this;
+    }
+
+    /**
+     * Check if current entity is locked
+     * @return boolean
+     */
+    public function isLocked()
+    {
+        return $this->transaction !== null;
     }
 
     /**
