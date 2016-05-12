@@ -12,7 +12,7 @@
 
 namespace BeeBot\Entity;
 
-use \ReflectionProperty;
+use ReflectionProperty;
 
 /**
  * Define an entity property with its specific rules
@@ -22,7 +22,7 @@ class Property
 {
     /**
      * PHP Reflection instance for the current property
-     * @var \ReflectionProperty
+     * @var ReflectionProperty
      */
     private $reflection;
 

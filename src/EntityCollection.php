@@ -11,12 +11,14 @@
 
 namespace BeeBot\Entity;
 
+use ArrayObject;
+
 /**
  * EntityCollection implementation
  * Allow to store multiple entites as a Traversable object
  * @package BeeBot\Entity
  */
-class EntityCollection extends \ArrayObject
+class EntityCollection extends ArrayObject
 {
     /**
      * Append a new Entity in the collection

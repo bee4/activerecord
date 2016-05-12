@@ -94,7 +94,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
 
         if (!$entity::isJsonSerializable()) {
             throw new \InvalidArgumentException(
-                'Given entity must use JsonSerializable behaviour'
+                'Given entity must use JsonSerializable behaviour to be persisted in Elasticsearch'
             );
         }
 
@@ -129,12 +129,6 @@ class ElasticsearchConnection extends AdaptableHttpConnection
     {
         parent::delete($entity);
 
-        if (!$entity::isJsonSerializable()) {
-            throw new \InvalidArgumentException(
-                'Given entity must use JsonSerializable behaviour'
-            );
-        }
-
         $response = $this->getAdapter()
             ->delete(
                 '/'.$entity::getType().'/'.$entity->getUID()
@@ -151,6 +145,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
     }
 
     /**
+     * Flush a transaction in the current connection
      * @param  TransactionInterface $transaction
      * @return bool
      */
