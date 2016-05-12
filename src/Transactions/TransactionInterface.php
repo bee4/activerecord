@@ -25,4 +25,10 @@ interface TransactionInterface extends \Countable, \Iterator
      * @param Entity $entity
      */
     public function persist(Entity $entity);
+
+    /**
+     * Remove an Entity from the current transaction
+     * @param Entity $entity
+     */
+    public function remove(Entity $entity);
 }
