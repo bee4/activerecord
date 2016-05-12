@@ -43,7 +43,7 @@ final class LazyLoaderDecorator
 	private $value;
 
 	public function __construct($type, $property, $value) {
-		if( !is_subclass_of($type, "\BeeBot\Entity\Entity") ) {
+		if( !is_subclass_of($type, Entity::class) ) {
 			throw new \RuntimeException("You can't lazy load an object which is not an \BeeBot\Entity\Entity");
 		}
 

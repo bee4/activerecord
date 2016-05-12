@@ -12,6 +12,10 @@
 
 namespace BeeBot\Entity\Tests;
 
+use BeeBot\Entity\ActiveRecord;
+use BeeBot\Entity\Connections\AbstractConnection;
+use BeeBot\Entity\LazyLoaderDecorator;
+
 require_once __DIR__.'/../samples/SampleMultipleBehavioursEntity.php';
 
 /**
@@ -28,14 +32,14 @@ class LazyLoaderDecoratorTest extends \PHPUnit_Framework_TestCase
 
 	protected function setUp() {
 		//Build a valid mocked connection
-		$this->connexion = $this->getMock("\BeeBot\Entity\Connections\AbstractConnection");
+		$this->connexion = $this->getMock(AbstractConnection::class);
 
 		//Initiate the ActiveRecord connection instance
-		\BeeBot\Entity\ActiveRecord::setConnection($this->connexion);
+		ActiveRecord::setConnection($this->connexion);
 	}
 
 	public function testLoad() {
-		$entityProperty = (new \ReflectionClass('\BeeBot\Entity\LazyLoaderDecorator'))->getProperty('entity');
+		$entityProperty = (new \ReflectionClass(LazyLoaderDecorator::class))->getProperty('entity');
 		$entityProperty->setAccessible(true);
 
 		$lazy = new \BeeBot\Entity\LazyLoaderDecorator(
@@ -43,7 +47,6 @@ class LazyLoaderDecoratorTest extends \PHPUnit_Framework_TestCase
 			"uid",
 			"abcd"
 		);
-
 		$this->connexion
 			->expects($this->any())
 			->method("fetchBy")
