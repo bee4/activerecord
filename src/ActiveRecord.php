@@ -158,7 +158,7 @@ abstract class ActiveRecord implements \IteratorAggregate
 
     /**
      * Define directly with an object the adapter to be used within ActiveRecord
-     * @param \BeeBot\Entity\Connections\ConnectionInterface $conn
+     * @param Connections\ConnectionInterface $conn
      */
     final public static function setConnection(
         Connections\ConnectionInterface $conn

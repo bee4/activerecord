@@ -4,7 +4,6 @@ before_script:
 
 unit-tests:
   script:
-    - composer install:phpunit
     - bin/phpunit
   tags:
     - phpunit
@@ -13,7 +12,6 @@ unit-tests:
 
 code-sniffer:
   script:
-    - composer install:phpcodesniffer
     - bin/phpcs --standard=phpcs.xml src
   tags:
     - phpcs
