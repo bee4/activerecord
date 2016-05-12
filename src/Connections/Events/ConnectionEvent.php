@@ -25,9 +25,6 @@ class ConnectionEvent implements EventInterface
     const ERROR = "connection.data.error";
     const RESULT = "connection.data.result";
 
-    const SAVE = "connection.save";
-    const DELETE = "connection.delete";
-
     /**
      * Event message
      * @var mixed

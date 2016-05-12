@@ -31,7 +31,7 @@ abstract class AbstractConnection implements ConnectionInterface
      */
     public function save(Entity $entity)
     {
-        $this->dispatch(ConnectionEvent::SAVE, new ConnectionEvent($entity));
+        $this->dispatch(EntityEvent::SAVE, new EntityEvent($entity, $this));
         return true;
     }
 
@@ -41,7 +41,7 @@ abstract class AbstractConnection implements ConnectionInterface
      */
     public function delete(Entity $entity)
     {
-        $this->dispatch(ConnectionEvent::DELETE, new ConnectionEvent($entity));
+        $this->dispatch(EntityEvent::DELETE, new EntityEvent($entity, $this));
         return true;
     }
 }
