@@ -18,7 +18,7 @@ use BeeBot\Entity\Entity;
  * Description of BaseTransaction
  * @package BeeBot\Entity\Transactions
  */
-class FileTransaction implements TransactionInterface
+class FileTransaction implements TransactionInterface, CollectionableTransactionInterface
 {
     /**
      * Transactionable entities
@@ -50,8 +50,7 @@ class FileTransaction implements TransactionInterface
     public function __construct()
     {
         $this->nb = $this->pos = 0;
-        $this->stream = tmpfile();
-        if ($this->stream === false) {
+        if (false === $this->stream = tmpfile()) {
             throw new \RuntimeException("Can't create tmp stream !!");
         }
     }
@@ -65,7 +64,7 @@ class FileTransaction implements TransactionInterface
     }
 
     /**
-     * Retrieve number of persisted items (implementaiton of \Countable)
+     * Retrieve number of persisted items
      * @return int
      */
     public function count()
