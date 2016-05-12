@@ -28,11 +28,11 @@ trait ChildEntity
 
     /**
      * Parent property setter
-     * @param Entity $oParent Parent entity to be used
+     * @param Entity $parent Parent entity to be used
      */
-    public function setParent(Entity $oParent)
+    public function setParent(Entity $parent)
     {
-        $this->parent = $oParent;
+        $this->parent = $parent;
     }
 
     /**

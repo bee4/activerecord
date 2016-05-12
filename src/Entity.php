@@ -125,7 +125,7 @@ abstract class Entity extends ActiveRecord
 
             array_unshift($arguments, strtolower($matches[2]));
             return call_user_func_array(
-                [   get_called_class(), $matches[1] ],
+                [ get_called_class(), $matches[1] ],
                 $arguments
             );
         }
