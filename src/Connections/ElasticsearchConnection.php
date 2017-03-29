@@ -169,7 +169,7 @@ class ElasticsearchConnection extends AdaptableHttpConnection
             }
 
             $template = <<<JSON
-{ "%s": { _type:"%s", _id:"%s"%s} }
+{ "%s": { "_type":"%s", "_id":"%s"%s} }
 JSON;
             $string = sprintf(
                 $template,
