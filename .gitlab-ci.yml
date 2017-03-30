@@ -1,19 +1,12 @@
+image: chstudio/php-ci:7.1
+
 before_script:
-  - git submodule update --init
-  - composer install
+  - composer install --no-interaction --prefer-dist
 
 unit-tests:
   script:
     - bin/phpunit
-  tags:
-    - phpunit
-  except:
-    - tags
 
 code-sniffer:
   script:
     - bin/phpcs --standard=phpcs.xml src
-  tags:
-    - phpcs
-  except:
-    - tags
