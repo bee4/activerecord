@@ -46,7 +46,7 @@ class SerializableEntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(";)", $new->editable);
         $this->assertEquals($this->object->isNew(), $new->isNew());
 
-        $connexion = $this->getMock("\BeeBot\Entity\Connections\AbstractConnection");
+        $connexion = $this->createMock("\BeeBot\Entity\Connections\AbstractConnection");
         $connexion->method("save")->willReturn(true);
         $connexion->method("delete")->willReturn(true);
         \BeeBot\Entity\ActiveRecord::setConnection($connexion);

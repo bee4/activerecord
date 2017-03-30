@@ -35,7 +35,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         //Build a valid mocked connection
-        $this->connexion = $this->getMock("\\BeeBot\\Entity\\Connections\\AbstractConnection");
+        $this->connexion = $this->createMock("\\BeeBot\\Entity\\Connections\\AbstractConnection");
 
         //Initiate the ActiveRecord connection instance
         ActiveRecord::setConnection($this->connexion);
