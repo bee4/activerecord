@@ -6,6 +6,8 @@ stages:
   - build
 
 before_script:
+  - cp phpunit.xml.dist phpunit.xml
+  - sed -i -e "s/http:\/\/127.0.0.1:9200/http:\/\/elasticsearch:9200/" phpunit.xml
   - composer install --no-interaction --prefer-dist
 
 unit-tests:es17:
@@ -13,8 +15,13 @@ unit-tests:es17:
   services:
     - elasticsearch:1.7-alpine
   script:
-    - cp phpunit.xml.dist phpunit.xml
-    - sed -i -e "s/http:\/\/127.0.0.1:9200/http:\/\/elasticsearch:9200/" phpunit.xml
+    - bin/phpunit --coverage-text --colors=never
+
+unit-tests:es2:
+  stage: test
+  services:
+    - elasticsearch:2-alpine
+  script:
     - bin/phpunit
 
 unit-tests:es5:
@@ -22,19 +29,8 @@ unit-tests:es5:
   services:
     - elasticsearch:5-alpine
   script:
-    - cp phpunit.xml.dist phpunit.xml
-    - sed -i -e "s/http:\/\/127.0.0.1:9200/http:\/\/elasticsearch:9200/" phpunit.xml
     - bin/phpunit
   allow_failure: true
-
-unit-tests:es2:
-  stage: test
-  services:
-    - elasticsearch:2-alpine
-  script:
-    - cp phpunit.xml.dist phpunit.xml
-    - sed -i -e "s/http:\/\/127.0.0.1:9200/http:\/\/elasticsearch:9200/" phpunit.xml
-    - bin/phpunit
 
 code-sniffer:
   stage: check
