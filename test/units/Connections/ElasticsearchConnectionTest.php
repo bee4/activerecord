@@ -25,6 +25,7 @@ use Bee4\Transport\Client;
  * Check the child entity behaviour
  * @package BeeBot\Entity\Tests\Behaviours
  * @group connection
+ * @group elasticsearch
  */
 class ElasticsearchConnectionTest extends \PHPUnit_Framework_TestCase
 {
