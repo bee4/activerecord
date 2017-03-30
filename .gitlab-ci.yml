@@ -10,21 +10,21 @@ before_script:
   - sed -i -e "s/http:\/\/127.0.0.1:9200/http:\/\/elasticsearch:9200/" phpunit.xml
   - composer install --no-interaction --prefer-dist
 
-unit-tests:es17:
+unit-tests:elasticsearch-1.7:
   stage: test
   services:
     - elasticsearch:1.7-alpine
   script:
     - bin/phpunit --coverage-text --colors=never
 
-unit-tests:es2:
+unit-tests:elasticsearch-2.x:
   stage: test
   services:
     - elasticsearch:2-alpine
   script:
     - bin/phpunit
 
-unit-tests:es5:
+unit-tests:elasticsearch-5.x:
   stage: test
   services:
     - elasticsearch:5-alpine
