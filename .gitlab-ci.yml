@@ -3,10 +3,28 @@ image: chstudio/php-ci:7.1
 before_script:
   - composer install --no-interaction --prefer-dist
 
-unit-tests:
+unit-tests:es17:
   stage: test
   services:
     - elasticsearch:1.7-alpine
+  script:
+    - cp phpunit.xml.dist phpunit.xml
+    - sed -i -e "s/http:\/\/127.0.0.1:9200/http:\/\/elasticsearch:9200/" phpunit.xml
+    - bin/phpunit
+
+unit-tests:es5:
+  stage: test
+  services:
+    - elasticsearch:5-alpine
+  script:
+    - cp phpunit.xml.dist phpunit.xml
+    - sed -i -e "s/http:\/\/127.0.0.1:9200/http:\/\/elasticsearch:9200/" phpunit.xml
+    - bin/phpunit
+
+unit-tests:es2:
+  stage: test
+  services:
+    - elasticsearch:2-alpine
   script:
     - cp phpunit.xml.dist phpunit.xml
     - sed -i -e "s/http:\/\/127.0.0.1:9200/http:\/\/elasticsearch:9200/" phpunit.xml
