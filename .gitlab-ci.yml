@@ -23,21 +23,21 @@ unit-tests:elasticsearch-1.7:
   services:
     - elasticsearch:1.7-alpine
   script:
-    - bin/phpunit --coverage-text --colors=never
+    - bin/phpunit --group elasticsearch
 
 unit-tests:elasticsearch-2.x:
   stage: test
   services:
     - elasticsearch:2-alpine
   script:
-    - bin/phpunit
+    - bin/phpunit --group elasticsearch
 
 unit-tests:elasticsearch-5.x:
   stage: test
   services:
     - elasticsearch:5-alpine
   script:
-    - bin/phpunit
+    - bin/phpunit --group elasticsearch
   allow_failure: true
 
 code-sniffer:
