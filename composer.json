@@ -8,9 +8,6 @@
 			"email": "s.hulard@chstudio.fr"
 		}
 	],
-	"config": {
-		"bin-dir": "bin"
-	},
 	"autoload": {
 		"psr-4": {
 			"BeeBot\\Entity\\": "src"

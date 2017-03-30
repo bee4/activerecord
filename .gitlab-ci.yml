@@ -16,31 +16,31 @@ unit-tests:
     - elasticsearch:2-alpine
     - mysql:latest
   script:
-    - bin/phpunit --coverage-text --colors=never
+    - vendor/bin/phpunit --coverage-text --colors=never
 
 unit-tests:elasticsearch-1.7:
   stage: test
   services:
     - elasticsearch:1.7-alpine
   script:
-    - bin/phpunit --group elasticsearch
+    - vendor/bin/phpunit --group elasticsearch
 
 unit-tests:elasticsearch-2.x:
   stage: test
   services:
     - elasticsearch:2-alpine
   script:
-    - bin/phpunit --group elasticsearch
+    - vendor/bin/phpunit --group elasticsearch
 
 unit-tests:elasticsearch-5.x:
   stage: test
   services:
     - elasticsearch:5-alpine
   script:
-    - bin/phpunit --group elasticsearch
+    - vendor/bin/phpunit --group elasticsearch
   allow_failure: true
 
 code-sniffer:
   stage: check
   script:
-    - bin/phpcs --standard=phpcs.xml src
+    - vendor/bin/phpcs --standard=phpcs.xml src
