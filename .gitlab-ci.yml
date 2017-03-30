@@ -4,9 +4,15 @@ before_script:
   - composer install --no-interaction --prefer-dist
 
 unit-tests:
+  stage: test
+  service:
+    - elasticsearch:1.7-alpine
   script:
+    - cp phpunit.xml.dist phpunit.xml
+    - sed -i -e "s/http:\/\/127.0.0.1:9200/http:\/\/elasticsearch:9200/" phpunit.xml
     - bin/phpunit
 
 code-sniffer:
+  stage: test
   script:
     - bin/phpcs --standard=phpcs.xml src
