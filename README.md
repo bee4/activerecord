@@ -1,8 +1,8 @@
 BeeBot - Active Record
 ======================
 
-[![build status](https://gitlab.com/bee4/activerecord/badges/master/build.svg)](https://gitlab.com/bee4/activerecord/commits/master)
-[![coverage report](https://gitlab.com/bee4/activerecord/badges/master/coverage.svg)](https://gitlab.com/bee4/activerecord/commits/master)
+[![build status](https://gitlab.com/bee4/beebot/activerecord/badges/master/build.svg)](https://gitlab.com/bee4/beebot/activerecord/commits/master)
+[![coverage report](https://gitlab.com/bee4/beebot/activerecord/badges/master/coverage.svg)](https://gitlab.com/bee4/beebot/activerecord/commits/master)
 
 This package define an [ActiveRecord](http://en.wikipedia.org/wiki/Active_record_pattern) implementation which allow :
 
