@@ -28,19 +28,5 @@
 	"require-dev": {
 		"phpunit/phpunit": "^5.7",
         "squizlabs/php_codesniffer": "~2"
-	},
-	"scripts": {
-		"install:phpmetrics": [
-			"mkdir -p bin && php -r \"file_put_contents('bin/phpmetrics', file_get_contents('https://github.com/Halleck45/PhpMetrics/raw/master/build/phpmetrics.phar'));\"",
-			"chmod 755 bin/phpmetrics"
-		],
-		"install:phpcpd": [
-			"mkdir -p bin && php -r \"file_put_contents('bin/phpcpd', file_get_contents('https://phar.phpunit.de/phpcpd-2.0.2.phar'));\"",
-			"chmod 755 bin/phpcpd"
-		],
-		"install:phploc": [
-			"mkdir -p bin && php -r \"file_put_contents('bin/phploc', file_get_contents('https://phar.phpunit.de/phploc-2.1.3.phar'));\"",
-			"chmod 755 bin/phploc"
-		]
 	}
 }
