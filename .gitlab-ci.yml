@@ -1,5 +1,10 @@
 image: chstudio/php-ci:7.1
 
+stages:
+  - check
+  - test
+  - build
+
 before_script:
   - composer install --no-interaction --prefer-dist
 
@@ -31,6 +36,6 @@ unit-tests:es2:
     - bin/phpunit
 
 code-sniffer:
-  stage: test
+  stage: check
   script:
     - bin/phpcs --standard=phpcs.xml src
